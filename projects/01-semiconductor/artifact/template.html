@@ -1,0 +1,663 @@
+<style>
+  :root{
+    --bg:#F4F5F7; --surface:#FFFFFF; --surface-2:#EDEFF3; --ink:#161A20;
+    --muted:#5B636E; --border:#E1E4EA; --accent:#A85B2B; --accent-ink:#8A4A22;
+    --accent-soft:rgba(168,91,43,.10); --pos:#3F7A54; --grid:rgba(22,26,32,.06);
+    --shadow:0 1px 2px rgba(16,20,28,.06),0 6px 20px rgba(16,20,28,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0E1218; --surface:#161B22; --surface-2:#1D2530; --ink:#E8EDF4;
+      --muted:#9BA6B4; --border:#262E39; --accent:#D98E5A; --accent-ink:#E7A472;
+      --accent-soft:rgba(217,142,90,.14); --pos:#68B487; --grid:rgba(232,237,244,.06);
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F4F5F7; --surface:#FFFFFF; --surface-2:#EDEFF3; --ink:#161A20;
+    --muted:#5B636E; --border:#E1E4EA; --accent:#A85B2B; --accent-ink:#8A4A22;
+    --accent-soft:rgba(168,91,43,.10); --pos:#3F7A54; --grid:rgba(22,26,32,.06);
+    --shadow:0 1px 2px rgba(16,20,28,.06),0 6px 20px rgba(16,20,28,.05);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1218; --surface:#161B22; --surface-2:#1D2530; --ink:#E8EDF4;
+    --muted:#9BA6B4; --border:#262E39; --accent:#D98E5A; --accent-ink:#E7A472;
+    --accent-soft:rgba(217,142,90,.14); --pos:#68B487; --grid:rgba(232,237,244,.06);
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    font-variant-numeric:tabular-nums;}
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 20px 60px;}
+  a{color:var(--accent-ink);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  button{font:inherit;cursor:pointer;}
+  h1,h2,h3{margin:0;line-height:1.2;text-wrap:balance;font-weight:650;}
+  h1{font-size:23px;letter-spacing:-.01em;}
+  h2{font-size:17px;letter-spacing:-.005em;margin-bottom:2px;}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:600;}
+  .sub{color:var(--muted);font-size:13.5px;}
+  header.top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;
+    border-bottom:1px solid var(--border);padding-bottom:16px;}
+  .meta{font-size:12px;color:var(--muted);text-align:right;}
+  .meter{margin-top:8px;min-width:220px;}
+  .meter .bar{height:7px;border-radius:99px;background:var(--surface-2);overflow:hidden;border:1px solid var(--border);}
+  .meter .fill{height:100%;background:var(--accent);border-radius:99px;transition:width .5s ease;}
+  .meter .lab{font-size:11.5px;color:var(--muted);margin-top:4px;}
+  nav.tabs{display:flex;flex-wrap:wrap;gap:4px;margin:18px 0 20px;}
+  nav.tabs button{border:1px solid transparent;background:transparent;color:var(--muted);
+    padding:7px 13px;border-radius:9px;font-size:13.5px;font-weight:550;transition:.15s;}
+  nav.tabs button:hover{color:var(--ink);background:var(--surface-2);}
+  nav.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);
+    border-color:var(--border);box-shadow:var(--shadow);}
+  section[hidden]{display:none;}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px;}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
+  .stat .n{font-size:26px;font-weight:680;letter-spacing:-.02em;}
+  .stat .k{font-size:12px;color:var(--muted);margin-top:2px;}
+  .stat .k b{color:var(--accent-ink);font-weight:600;}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px;}
+  .toolbar-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
+  input[type="search"],select{background:var(--surface);color:var(--ink);border:1px solid var(--border);
+    border-radius:9px;padding:8px 11px;font:inherit;font-size:13.5px;}
+  input[type="search"]{min-width:200px;flex:1;}
+  input[type="search"]::placeholder{color:var(--muted);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;
+    box-shadow:var(--shadow);text-align:left;transition:.15s;position:relative;width:100%;}
+  .card:hover{border-color:var(--accent);transform:translateY(-1px);}
+  .card .cn{font-weight:620;font-size:15px;display:flex;align-items:center;gap:7px;}
+  .dot{width:8px;height:8px;border-radius:99px;flex:none;}
+  .dot.filled{background:var(--accent);} .dot.pending{background:var(--muted);opacity:.5;}
+  .tick{font-size:11.5px;color:var(--muted);}
+  .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px;}
+  .chip{font-size:10.5px;letter-spacing:.02em;padding:2.5px 7px;border-radius:99px;
+    background:var(--surface-2);color:var(--muted);border:1px solid var(--border);white-space:nowrap;}
+  .chip.choke{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent;font-weight:600;}
+  .fig{display:flex;gap:16px;margin-top:11px;}
+  .fig .lab{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+  .fig .val{font-size:15px;font-weight:600;}
+  .fig .val.pend{color:var(--muted);font-weight:500;font-size:12.5px;font-style:italic;}
+  .star{position:absolute;top:12px;right:12px;background:none;border:none;font-size:15px;color:var(--muted);opacity:.55;padding:2px;line-height:1;}
+  .star.on{color:var(--accent);opacity:1;}
+  /* value chain */
+  .flow{display:flex;flex-direction:column;align-items:stretch;gap:0;}
+  .band{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 15px;
+    box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:12px;
+    text-align:left;width:100%;transition:.15s;}
+  .band:hover{border-color:var(--accent);}
+  .band .bt{font-weight:600;font-size:14.5px;}
+  .band .bd{font-size:12px;color:var(--muted);}
+  .band .bc{font-size:12px;color:var(--accent-ink);font-weight:600;white-space:nowrap;}
+  .arrow{align-self:center;color:var(--muted);font-size:13px;line-height:1;padding:5px 0;opacity:.7;}
+  /* tables */
+  .tbl{width:100%;border-collapse:collapse;font-size:13px;}
+  .tbl th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;padding:7px 10px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);}
+  .tbl td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+  .tbl tr:hover td{background:var(--surface-2);}
+  .rel-type{font-size:11px;font-weight:600;color:var(--accent-ink);white-space:nowrap;}
+  .conf{font-size:10.5px;padding:1.5px 6px;border-radius:99px;border:1px solid var(--border);color:var(--muted);}
+  .scrollx{overflow-x:auto;}
+  /* drawer */
+  .scrim{position:fixed;inset:0;background:rgba(8,11,16,.5);opacity:0;pointer-events:none;transition:.2s;z-index:40;}
+  .scrim.open{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(440px,92vw);background:var(--surface);
+    border-left:1px solid var(--border);box-shadow:-8px 0 30px rgba(0,0,0,.2);z-index:50;
+    transform:translateX(100%);transition:transform .24s ease;overflow-y:auto;padding:22px;}
+  .drawer.open{transform:translateX(0);}
+  .drawer .dclose{position:absolute;top:14px;right:16px;background:var(--surface-2);border:1px solid var(--border);
+    border-radius:8px;width:30px;height:30px;font-size:15px;color:var(--ink);}
+  .kv{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin:14px 0;font-size:13.5px;}
+  .kv .k{color:var(--muted);} .kv .v{font-weight:600;text-align:right;}
+  .note-in{width:100%;min-height:70px;background:var(--surface-2);border:1px solid var(--border);
+    border-radius:9px;padding:9px 11px;font:inherit;font-size:13px;color:var(--ink);resize:vertical;}
+  .srcnote{font-size:12px;color:var(--muted);background:var(--surface-2);border:1px solid var(--border);
+    border-radius:9px;padding:9px 11px;margin-top:8px;}
+  .disc{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;margin-top:14px;}
+  .empty{color:var(--muted);font-size:13px;padding:8px 2px;}
+  .reflist{display:flex;flex-direction:column;gap:14px;}
+  .refco{border-bottom:1px solid var(--border);padding-bottom:12px;}
+  .refco h3{font-size:14.5px;margin-bottom:5px;}
+  .refco a{font-size:12.5px;word-break:break-all;}
+  .bars .row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;margin:6px 0;font-size:12.5px;}
+  .bars .track{background:var(--surface-2);border-radius:6px;height:16px;position:relative;overflow:hidden;border:1px solid var(--border);}
+  .bars .seg{height:100%;position:absolute;left:0;top:0;border-radius:6px;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px;}
+  .swatch{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle;}
+  /* financials */
+  .finpick{border:1px solid var(--border);background:transparent;color:var(--muted);padding:6px 12px;border-radius:8px;font-size:13px;font-weight:550;transition:.15s;}
+  .finpick:hover{color:var(--ink);background:var(--surface-2);}
+  .finpick[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent);}
+  .ratios{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0;}
+  .ratio{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 14px;box-shadow:var(--shadow);}
+  .ratio .rv{font-size:21px;font-weight:660;letter-spacing:-.01em;}
+  .ratio .rk{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .ratio .rd{font-size:11px;margin-top:4px;}
+  .up{color:var(--pos);} .down{color:var(--accent-ink);}
+  .chartwrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 10px 10px;box-shadow:var(--shadow);}
+  .chartwrap svg{display:block;width:100%;height:auto;}
+  .clg{fill:var(--muted);} .cln{stroke:var(--grid);stroke-width:1;}
+  .cbar{fill:var(--accent);opacity:.85;}
+  .czero{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;opacity:.6;}
+  .fintable{margin-top:16px;}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Living map</div>
+      <h1>Semiconductor ecosystem</h1>
+      <div class="sub">Who makes the world's chips, how big they are, and how they depend on each other.</div>
+    </div>
+    <div class="meta">
+      <div id="buildmeta"></div>
+      <div class="meter">
+        <div class="bar"><div class="fill" id="mfill" style="width:0%"></div></div>
+        <div class="lab" id="mlab"></div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+
+  <section id="tab-overview">
+    <div class="stats" id="ovstats"></div>
+    <div class="panel">
+      <div class="eyebrow">The value chain</div>
+      <h2>How value flows, top to bottom</h2>
+      <div class="sub" style="margin-bottom:14px;">This is a supply chain, not an ownership chart. Tap any layer to see its companies.</div>
+      <div class="flow" id="ovflow"></div>
+    </div>
+    <div class="disc" id="disclaimer"></div>
+  </section>
+
+  <section id="tab-companies" hidden>
+    <div class="toolbar-row">
+      <input type="search" id="q" placeholder="Search company or ticker">
+      <select id="rolefilter"></select>
+      <select id="statusfilter">
+        <option value="all">All companies</option>
+        <option value="filled">Financials filled</option>
+        <option value="pending">Financials pending</option>
+        <option value="watch">My watchlist</option>
+      </select>
+    </div>
+    <div class="grid" id="cards"></div>
+    <div class="empty" id="cardsempty" hidden>No companies match those filters.</div>
+  </section>
+
+  <section id="tab-fin" hidden>
+    <div class="sub" style="margin-bottom:14px;">Five-year income-statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. This is where the fabless-versus-fab economics and the memory cycle show up.</div>
+    <div class="toolbar-row" id="finsel"></div>
+    <div id="finbody"></div>
+  </section>
+
+  <section id="tab-chain" hidden>
+    <div class="panel">
+      <div class="eyebrow">The value chain</div>
+      <h2>Nine layers, one flow</h2>
+      <div class="sub" style="margin-bottom:14px;">Each layer sells to the one below it. Tap a layer to jump to its companies.</div>
+      <div class="flow" id="chainflow"></div>
+    </div>
+  </section>
+
+  <section id="tab-rel" hidden>
+    <div class="toolbar-row">
+      <input type="search" id="relq" placeholder="Filter by company">
+      <select id="reltypefilter"></select>
+    </div>
+    <div class="panel scrollx">
+      <table class="tbl"><thead><tr><th>From</th><th>Relationship</th><th>To</th><th>What</th><th>Confidence</th></tr></thead>
+      <tbody id="reltbody"></tbody></table>
+      <div class="empty" id="relempty" hidden>No relationships match.</div>
+    </div>
+  </section>
+
+  <section id="tab-choke" hidden>
+    <div class="sub" style="margin-bottom:14px;">The companies the rest of the industry has the fewest alternatives to, ranked by market value. The bars show the fabless-versus-fab divide: who sells vs. who spends to build.</div>
+    <div id="chokelist"></div>
+  </section>
+
+  <section id="tab-refs" hidden>
+    <div class="sub" style="margin-bottom:14px;">Every figure in this map traces to a primary source. Links open the original filing.</div>
+    <div class="panel"><div class="reflist" id="reflist"></div></div>
+  </section>
+
+  <section id="tab-notes" hidden>
+    <div class="panel">
+      <div class="eyebrow">Your data</div>
+      <h2>Watchlist and notes</h2>
+      <div class="sub" style="margin-bottom:8px;">Your stars and notes live only in this browser. Export them to keep a real backup.</div>
+      <div id="toolbar"></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-bottom:10px;">Watchlist</h2>
+      <div id="watchlist"></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-bottom:6px;">All notes</h2>
+      <div class="sub" style="margin-bottom:10px;">A place for what you are learning as the map grows.</div>
+      <textarea class="note-in" id="globalnote" placeholder="General notes on the semiconductor industry..."></textarea>
+      <div id="companynotes" style="margin-top:14px;"></div>
+    </div>
+  </section>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"></aside>
+
+<script>
+/* ==== durable-state.js (inlined; artifacts cannot fetch external files) ==== */
+(function (root) {
+  'use strict';
+  function deepClone(v){ return v==null?v:JSON.parse(JSON.stringify(v)); }
+  function createStore(opts){
+    var key=opts.key; if(!key) throw new Error('createStore needs a stable `key`.');
+    var version=opts.version||1; var baseline=opts.baseline!=null?opts.baseline:null;
+    var validate=typeof opts.validate==='function'?opts.validate:null;
+    var VKEY=key+':v'+version; var seeded=false;
+    function load(){
+      try{ var raw=localStorage.getItem(VKEY);
+        if(raw){ var p=JSON.parse(raw); if(!validate||validate(p)) return p; }
+      }catch(e){}
+      seeded=true; return deepClone(baseline);
+    }
+    var api={
+      state:load(),
+      save:function(){ try{ localStorage.setItem(VKEY,JSON.stringify(api.state)); return true; }catch(e){ return false; } },
+      reset:function(){ api.state=deepClone(baseline); api.save(); return api.state; },
+      wasSeeded:function(){ return seeded; },
+      exportJSON:function(){ return JSON.stringify(api.state,null,2); },
+      download:function(filename){
+        var json=api.exportJSON();
+        try{ var blob=new Blob([json],{type:'application/json'}); var url=URL.createObjectURL(blob);
+          var a=document.createElement('a'); a.href=url; a.download=filename||(key+'-state.json');
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+        }catch(e){}
+        try{ if(navigator.clipboard) navigator.clipboard.writeText(json); }catch(e){}
+        return json;
+      },
+      importJSON:function(text){ var p=JSON.parse(text);
+        if(validate&&!validate(p)) throw new Error('That data does not match this map.');
+        api.state=p; api.save(); return true; }
+    };
+    if(seeded&&baseline!=null) api.save();
+    return api;
+  }
+  function mountStateToolbar(container,store,opts){
+    opts=opts||{}; var label=opts.label||'data';
+    var onChange=typeof opts.onChange==='function'?opts.onChange:function(){};
+    var wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
+    var msg=document.createElement('span'); msg.style.cssText='font-size:12px;color:var(--muted);';
+    if(store.wasSeeded()) msg.textContent='Started fresh on this browser.';
+    function btn(t,title){ var b=document.createElement('button'); b.type='button'; b.textContent=t; b.title=title||'';
+      b.style.cssText='font-weight:600;padding:7px 13px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--ink);'; return b; }
+    var eb=btn('Export','Download your watchlist and notes as JSON.');
+    eb.addEventListener('click',function(){ store.download('semiconductor-map-notes.json'); msg.textContent='Exported (downloaded and copied to clipboard).'; });
+    var imp=document.createElement('input'); imp.type='file'; imp.accept='application/json,.json'; imp.style.display='none';
+    var ib=btn('Import','Restore from a previously exported file.');
+    ib.addEventListener('click',function(){ imp.click(); });
+    imp.addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f) return;
+      var fr=new FileReader(); fr.onload=function(){ try{ store.importJSON(fr.result); msg.textContent='Imported.'; onChange(); }
+        catch(err){ msg.textContent='Import failed: '+err.message; } imp.value=''; }; fr.readAsText(f); });
+    var rb=btn('Reset','Clear your watchlist and notes.');
+    rb.addEventListener('click',function(){ if(!confirm('Clear your watchlist and notes on this browser?')) return; store.reset(); msg.textContent='Cleared.'; onChange(); });
+    wrap.appendChild(eb); wrap.appendChild(ib); wrap.appendChild(imp); wrap.appendChild(rb); wrap.appendChild(msg);
+    container.appendChild(wrap);
+  }
+  root.DurableState={version:'1.0.0',createStore:createStore,mountStateToolbar:mountStateToolbar};
+})(window);
+/* ==== end durable-state.js ==== */
+
+/* ==== baked data (regenerated from the CSVs by build_artifact.py) ==== */
+const BUILD = __BUILDMETA__;
+const COMPANIES = __COMPANIES__;
+const RELATIONSHIPS = __RELATIONSHIPS__;
+const TIMESERIES = __TIMESERIES__;
+
+/* value-chain layer order + human labels (dash-free) */
+const LAYERS = [
+  {role:'ip-eda',           label:'IP and EDA',              desc:'Design tools and licensable blueprints'},
+  {role:'equipment',        label:'Equipment makers',        desc:'The machines that build chips'},
+  {role:'fabless-chip',     label:'Fabless chip designers',  desc:'Design chips, outsource the making'},
+  {role:'fabless-system',   label:'System firms',            desc:'Design their own in-house silicon'},
+  {role:'foundry',          label:'Foundries',               desc:'Fabricate chips to order'},
+  {role:'idm',              label:'Integrated device makers',desc:'Design and fabricate under one roof'},
+  {role:'component-supplier',label:'Component suppliers',    desc:'Passives, substrates and materials'},
+  {role:'osat',             label:'Assembly and test',       desc:'Package and test finished chips'},
+  {role:'oem',              label:'Device makers',           desc:'Build the products you buy'},
+];
+const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
+
+/* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
+const CHOKE_WHY = {
+  'Nvidia':'Dominant designer of the AI accelerators the whole industry is racing to buy.',
+  'TSMC':'Fabricates most of the world\'s leading-edge chips; almost no one can replace it.',
+  'ASML':'The only company on Earth that makes EUV lithography machines.',
+  'Arm':'Its instruction set sits inside almost every phone chip made.',
+  'Samsung':'Vertically integrated across memory, foundry, components and finished devices.',
+  'Intel':'A major integrated maker now opening its fabs to outside customers.',
+  'Applied Materials':'The largest maker of the equipment that fabricates chips.',
+  'SK hynix':'A key supplier of the HBM memory that AI accelerators depend on.',
+};
+
+/* source-tier labels for the verification badge */
+const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
+
+const store = DurableState.createStore({
+  key:'semiconductor-map', version:1, baseline:{watch:{},notes:{}},
+  validate:v=>v&&typeof v==='object'&&typeof v.watch==='object'&&typeof v.notes==='object',
+});
+let S = store.state;
+
+const $ = s=>document.querySelector(s);
+const isFilled = c=>c.revenue_usd_b!=='';
+const rolesOf = c=>c.roles.split(';').filter(Boolean);
+function fmtB(v){ if(v===''||v==null) return null; const n=parseFloat(v);
+  if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(2)+'T';
+  return '$'+n.toFixed(n<10?2:1)+'B'; }
+
+/* ---- tabs ---- */
+const TABS=[['overview','Overview'],['companies','Companies'],['fin','Financials'],['chain','Value chain'],
+  ['rel','Relationships'],['choke','Chokepoints'],['refs','References'],['notes','My notes']];
+function buildTabs(){
+  const nav=$('#tabs');
+  TABS.forEach(([id,label],i)=>{
+    const b=document.createElement('button'); b.textContent=label; b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', i===0?'true':'false'); b.dataset.tab=id;
+    b.addEventListener('click',()=>selectTab(id)); nav.appendChild(b);
+  });
+}
+function selectTab(id){
+  TABS.forEach(([t])=>{ $('#tab-'+t).hidden = t!==id; });
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===id?'true':'false'));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---- header + overview ---- */
+function renderHeader(){
+  $('#buildmeta').innerHTML = 'Updated '+BUILD.date+' &middot; '+BUILD.filled+' of '+BUILD.total+' companies costed';
+  const pct = Math.round(100*BUILD.filled/BUILD.total);
+  $('#mfill').style.width = pct+'%';
+  $('#mlab').textContent = pct+'% of financials filled &middot; grows each research burst';
+  $('#mlab').innerHTML = pct+'% of financials filled &middot; grows each research burst';
+}
+function renderOverview(){
+  const filled=COMPANIES.filter(isFilled);
+  const chokes=COMPANIES.filter(c=>c.chokepoint==='yes');
+  const stats=[
+    [COMPANIES.length,'companies mapped'],
+    [RELATIONSHIPS.length,'relationships traced'],
+    [chokes.length,'chokepoints flagged'],
+    [filled.length+' / '+COMPANIES.length,'financials sourced'],
+  ];
+  $('#ovstats').innerHTML = stats.map(([n,k])=>
+    `<div class="stat"><div class="n mono">${n}</div><div class="k">${k}</div></div>`).join('');
+  $('#ovflow').innerHTML = flowHTML();
+  $('#chainflow').innerHTML = flowHTML();
+  $('#disclaimer').innerHTML = '<b>Educational only.</b> This is public company and market data gathered for learning and reference. It is not investment advice or a recommendation to buy or sell anything.';
+  bindFlow();
+}
+function flowHTML(){
+  return LAYERS.map((l,i)=>{
+    const count=COMPANIES.filter(c=>rolesOf(c).includes(l.role)).length;
+    const arrow = i<LAYERS.length-1 ? '<div class="arrow">&#9660;</div>' : '';
+    return `<button class="band" data-role="${l.role}">
+      <span><span class="bt">${l.label}</span><br><span class="bd">${l.desc}</span></span>
+      <span class="bc">${count}</span></button>${arrow}`;
+  }).join('');
+}
+function bindFlow(){
+  document.querySelectorAll('.band').forEach(b=>b.addEventListener('click',()=>{
+    $('#rolefilter').value=b.dataset.role; selectTab('companies'); renderCards();
+  }));
+}
+
+/* ---- companies ---- */
+function roleOptions(){
+  const sel=$('#rolefilter');
+  sel.innerHTML='<option value="all">All layers</option>'+
+    LAYERS.map(l=>`<option value="${l.role}">${l.label}</option>`).join('');
+}
+function renderCards(){
+  const q=$('#q').value.trim().toLowerCase();
+  const role=$('#rolefilter').value, status=$('#statusfilter').value;
+  const list=COMPANIES.filter(c=>{
+    if(q && !(c.company.toLowerCase().includes(q)||c.ticker.toLowerCase().includes(q))) return false;
+    if(role!=='all' && !rolesOf(c).includes(role)) return false;
+    if(status==='filled' && !isFilled(c)) return false;
+    if(status==='pending' && isFilled(c)) return false;
+    if(status==='watch' && !S.watch[c.company]) return false;
+    return true;
+  });
+  const wrap=$('#cards');
+  $('#cardsempty').hidden = list.length>0;
+  wrap.innerHTML = list.map(c=>{
+    const filled=isFilled(c);
+    const chips=rolesOf(c).map(r=>`<span class="chip">${ROLE_LABEL[r]||r}</span>`).join('')
+      + (c.chokepoint==='yes'?'<span class="chip choke">chokepoint</span>':'');
+    const fig = filled
+      ? `<div class="fig"><div><div class="lab">Revenue</div><div class="val mono">${fmtB(c.revenue_usd_b)}</div></div>
+           <div><div class="lab">Market cap</div><div class="val mono">${fmtB(c.market_cap_usd_b)||'&mdash;'}</div></div></div>`
+      : `<div class="fig"><div class="val pend">Financials pending</div></div>`;
+    return `<button class="card" data-co="${encodeURIComponent(c.company)}">
+      <span class="star ${S.watch[c.company]?'on':''}" data-star="${encodeURIComponent(c.company)}" title="Add to watchlist">&#9733;</span>
+      <div class="cn"><span class="dot ${filled?'filled':'pending'}"></span>${c.company}</div>
+      <div class="tick mono">${c.ticker} &middot; ${c.hq_country}</div>
+      <div class="chips">${chips}</div>${fig}</button>`;
+  }).join('');
+  wrap.querySelectorAll('.card').forEach(el=>el.addEventListener('click',e=>{
+    if(e.target.closest('[data-star]')) return;
+    openDrawer(decodeURIComponent(el.dataset.co));
+  }));
+  wrap.querySelectorAll('[data-star]').forEach(el=>el.addEventListener('click',e=>{
+    e.stopPropagation(); toggleWatch(decodeURIComponent(el.dataset.star)); renderCards();
+  }));
+}
+function toggleWatch(name){ if(S.watch[name]) delete S.watch[name]; else S.watch[name]=true; store.save(); }
+
+/* ---- drawer ---- */
+function edgesFor(name){
+  const out=RELATIONSHIPS.filter(r=>r.from_company===name);
+  const inc=RELATIONSHIPS.filter(r=>r.to_company===name);
+  return {out,inc};
+}
+function openDrawer(name){
+  const c=COMPANIES.find(x=>x.company===name); if(!c) return;
+  const {out,inc}=edgesFor(name);
+  const money=(k,lab)=>`<div class="k">${lab}</div><div class="v mono">${isFilled(c)?(fmtB(c[k])||'&mdash;'):'&mdash;'}</div>`;
+  const relRow=r=>`<div style="margin:5px 0;font-size:12.5px;"><span class="rel-type">${r.relationship_type}</span> &rarr; <b>${r.from_company===name?r.to_company:r.from_company}</b><br><span class="sub">${r.description}</span></div>`;
+  const tierBadge = c.source_tier ? `<span class="conf" title="Verification source tier" style="margin-left:8px;color:var(--accent-ink);border-color:var(--accent);">${TIER_LABEL[c.source_tier]||('Tier '+c.source_tier)}</span>` : '';
+  const srcLink = c.filing_source && c.filing_source.startsWith('http')
+    ? `<div><a href="${c.filing_source.split(';')[0].trim()}" target="_blank" rel="noopener">View primary filing &#8599;</a>${tierBadge}</div>` : '';
+  const d=$('#drawer'); d.classList.add('open'); $('#scrim').classList.add('open'); d.setAttribute('aria-hidden','false');
+  d.innerHTML = `
+    <button class="dclose" id="dclose" aria-label="Close">&times;</button>
+    <div class="eyebrow">${rolesOf(c).map(r=>ROLE_LABEL[r]).join(' &middot; ')}</div>
+    <h2 style="font-size:20px;margin-top:2px;">${c.company}
+      <button class="star ${S.watch[c.company]?'on':''}" id="dstar" style="position:static;font-size:18px;" title="Watchlist">&#9733;</button></h2>
+    <div class="tick mono">${c.ticker} &middot; ${c.exchange} &middot; ${c.hq_country}</div>
+    <div class="sub" style="margin-top:6px;">${c.primary_segment}</div>
+    ${c.chokepoint==='yes'?'<div class="chip choke" style="display:inline-block;margin-top:8px;">Industry chokepoint</div>':''}
+    <div class="kv">
+      ${money('revenue_usd_b','Revenue')}
+      ${money('net_income_usd_b','Net income')}
+      ${money('market_cap_usd_b','Market cap')}
+      ${money('rd_spend_usd_b','R&amp;D spend')}
+      ${money('capex_usd_b','Capex')}
+      <div class="k">Fiscal year</div><div class="v">${c.fiscal_year||'&mdash;'}</div>
+    </div>
+    ${srcLink}
+    ${c.notes?`<div class="srcnote">${c.notes}</div>`:''}
+    <h3 style="margin-top:20px;font-size:14px;">Relationships (${out.length+inc.length})</h3>
+    ${(out.concat(inc)).length?(out.concat(inc)).map(relRow).join(''):'<div class="empty">None traced yet. These fill in during relationship bursts.</div>'}
+    <h3 style="margin-top:20px;font-size:14px;">My note</h3>
+    <textarea class="note-in" id="conote" placeholder="What did you learn about ${c.company}?">${(S.notes[c.company]||'').replace(/</g,'&lt;')}</textarea>
+  `;
+  $('#dclose').addEventListener('click',closeDrawer);
+  $('#dstar').addEventListener('click',()=>{ toggleWatch(name); $('#dstar').classList.toggle('on'); renderCards(); });
+  $('#conote').addEventListener('input',e=>{ S.notes[name]=e.target.value; store.save(); });
+}
+function closeDrawer(){ $('#drawer').classList.remove('open'); $('#scrim').classList.remove('open'); $('#drawer').setAttribute('aria-hidden','true'); }
+
+/* ---- relationships ---- */
+function relTypeOptions(){
+  const types=[...new Set(RELATIONSHIPS.map(r=>r.relationship_type))].sort();
+  $('#reltypefilter').innerHTML='<option value="all">All relationship types</option>'+
+    types.map(t=>`<option value="${t}">${t}</option>`).join('');
+}
+function renderRel(){
+  const q=$('#relq').value.trim().toLowerCase(), ty=$('#reltypefilter').value;
+  const list=RELATIONSHIPS.filter(r=>{
+    if(ty!=='all'&&r.relationship_type!==ty) return false;
+    if(q&&!(r.from_company.toLowerCase().includes(q)||r.to_company.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  $('#relempty').hidden=list.length>0;
+  $('#reltbody').innerHTML=list.map(r=>{
+    const src=r.evidence_source&&r.evidence_source.startsWith('http')
+      ? ` <a href="${r.evidence_source}" target="_blank" rel="noopener">src</a>`:'';
+    return `<tr><td><b>${r.from_company}</b></td><td class="rel-type">${r.relationship_type}</td>
+      <td><b>${r.to_company}</b></td><td>${r.description}${src}</td>
+      <td><span class="conf">${r.confidence||'?'}</span></td></tr>`;
+  }).join('');
+}
+
+/* ---- chokepoints ---- */
+function renderChoke(){
+  const chokes=COMPANIES.filter(c=>c.chokepoint==='yes'&&isFilled(c))
+    .sort((a,b)=>parseFloat(b.market_cap_usd_b||0)-parseFloat(a.market_cap_usd_b||0));
+  const maxV=Math.max(...chokes.map(c=>parseFloat(c.revenue_usd_b)));
+  $('#chokelist').innerHTML = chokes.map(c=>{
+    const rev=parseFloat(c.revenue_usd_b), cap=parseFloat(c.capex_usd_b||0);
+    const rw=Math.max(2,100*rev/maxV), cw=Math.max(2,100*cap/maxV);
+    return `<div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${c.company} <span class="tick mono">${c.ticker}</span></h2>
+        <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      <div class="bars">
+        <div class="row"><span>Revenue</span><div class="track"><div class="seg" style="width:${rw}%;background:var(--pos)"></div></div></div>
+        <div class="row"><span>Capex (builds)</span><div class="track"><div class="seg" style="width:${cw}%;background:var(--accent)"></div></div></div>
+      </div>
+      <div class="legend"><span><span class="swatch" style="background:var(--pos)"></span>Revenue ${fmtB(c.revenue_usd_b)}</span>
+        <span><span class="swatch" style="background:var(--accent)"></span>Capex ${fmtB(c.capex_usd_b)||'&mdash;'}</span></div>
+    </div>`;
+  }).join('');
+}
+
+/* ---- references ---- */
+function renderRefs(){
+  const withSrc=COMPANIES.filter(c=>c.filing_source&&c.filing_source.startsWith('http'));
+  $('#reflist').innerHTML = withSrc.map(c=>{
+    const urls=c.filing_source.split(';').map(u=>u.trim()).filter(u=>u.startsWith('http'));
+    return `<div class="refco"><h3>${c.company} <span class="tick mono">${c.fiscal_year}</span></h3>
+      ${urls.map(u=>`<div><a href="${u}" target="_blank" rel="noopener">${u}</a></div>`).join('')}</div>`;
+  }).join('') || '<div class="empty">Sources appear here as financials are filled.</div>';
+}
+
+/* ---- notes tab ---- */
+function renderNotes(){
+  DurableState.mountStateToolbar($('#toolbar'), store, {label:'watchlist and notes', onChange:()=>{ S=store.state; $('#globalnote').value=S.notes.__global||''; renderAll(); }});
+  const w=Object.keys(S.watch);
+  $('#watchlist').innerHTML = w.length
+    ? '<div class="grid">'+w.map(n=>{ const c=COMPANIES.find(x=>x.company===n); if(!c) return '';
+        return `<button class="card" data-co="${encodeURIComponent(n)}"><div class="cn">${n}</div>
+          <div class="tick mono">${c.ticker}</div>${isFilled(c)?`<div class="fig"><div><div class="lab">Revenue</div><div class="val mono">${fmtB(c.revenue_usd_b)}</div></div></div>`:'<div class="fig"><div class="val pend">pending</div></div>'}</button>`;
+      }).join('')+'</div>'
+    : '<div class="empty">Star companies to build a watchlist. It rides along in your Export.</div>';
+  $('#watchlist').querySelectorAll('.card').forEach(el=>el.addEventListener('click',()=>openDrawer(decodeURIComponent(el.dataset.co))));
+  const gn=$('#globalnote'); gn.value=S.notes.__global||'';
+  gn.oninput=e=>{ S.notes.__global=e.target.value; store.save(); };
+  const withNotes=Object.keys(S.notes).filter(k=>k!=='__global'&&S.notes[k]);
+  $('#companynotes').innerHTML = withNotes.length
+    ? '<h3 style="font-size:13px;margin-bottom:6px;">Company notes</h3>'+withNotes.map(k=>
+        `<div class="srcnote" style="margin-top:6px;"><b>${k}:</b> ${(S.notes[k]||'').replace(/</g,'&lt;')}</div>`).join('')
+    : '';
+}
+
+/* ---- financials (5-year trends + ratios) ---- */
+let finSel=null;
+function pf(v){ if(v===''||v==null) return null; const n=parseFloat(v); return isNaN(n)?null:n; }
+function tsCompanies(){
+  const order=COMPANIES.filter(c=>c.chokepoint==='yes').map(c=>c.company);
+  const have=[...new Set(TIMESERIES.map(r=>r.company))];
+  return order.filter(c=>have.includes(c)).concat(have.filter(c=>!order.includes(c)));
+}
+function seriesFor(name){
+  return TIMESERIES.filter(r=>r.company===name)
+    .slice().sort((a,b)=>String(a.period_end||a.fiscal_year).localeCompare(String(b.period_end||b.fiscal_year)))
+    .map(r=>{ const rev=pf(r.revenue_usd_b), pct=x=>(x!=null&&rev)?x/rev*100:null;
+      return {year:r.fiscal_year, rev, gm:pct(pf(r.gross_profit_usd_b)), om:pct(pf(r.operating_income_usd_b)),
+        nm:pct(pf(r.net_income_usd_b)), rdi:pct(pf(r.rd_spend_usd_b)), cxi:pct(pf(r.capex_usd_b))}; });
+}
+function finChart(s){
+  const W=680,H=320,L=54,R=52,T=18,B=42, pw=W-L-R, ph=H-T-B;
+  const revMax=Math.max(...s.map(d=>d.rev||0),0.001);
+  const margins=s.flatMap(d=>[d.gm,d.om,d.nm]).filter(v=>v!=null);
+  let mMin=Math.min(0,...margins), mMax=Math.max(...margins,1);
+  const pad=((mMax-mMin)*0.08)||5; mMin-=pad; mMax+=pad;
+  const n=s.length, step=pw/n, xAt=i=>L+step*(i+0.5);
+  const yRev=v=>T+ph*(1-(v/revMax)), yM=m=>T+ph*(1-((m-mMin)/(mMax-mMin)));
+  const bw=Math.min(40,step*0.5);
+  const bars=s.map((d,i)=>d.rev!=null?`<rect class="cbar" x="${(xAt(i)-bw/2).toFixed(1)}" y="${yRev(d.rev).toFixed(1)}" width="${bw.toFixed(1)}" height="${(T+ph-yRev(d.rev)).toFixed(1)}" rx="2"/>`:'').join('');
+  const line=(key,color,w)=>{ const pts=s.map((d,i)=>d[key]!=null?`${xAt(i).toFixed(1)},${yM(d[key]).toFixed(1)}`:null).filter(Boolean);
+    const poly=pts.length>1?`<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"/>`:'';
+    const dots=s.map((d,i)=>d[key]!=null?`<circle cx="${xAt(i).toFixed(1)}" cy="${yM(d[key]).toFixed(1)}" r="3" fill="${color}"/>`:'').join(''); return poly+dots; };
+  const zero=mMin<0?`<line class="czero" x1="${L}" y1="${yM(0).toFixed(1)}" x2="${W-R}" y2="${yM(0).toFixed(1)}"/>`:'';
+  const leftTicks=[0,revMax/2,revMax].map(v=>`<text class="ts clg" x="${L-8}" y="${(yRev(v)+3).toFixed(1)}" text-anchor="end">$${v>=100?v.toFixed(0):v.toFixed(v<10?1:0)}B</text>`).join('');
+  const rtk=[...new Set([Math.ceil((mMax-pad)/10)*10,0,Math.floor((mMin+pad)/10)*10])].filter(v=>v>=mMin&&v<=mMax);
+  const rightTicks=rtk.map(v=>`<text class="ts clg" x="${W-R+8}" y="${(yM(v)+3).toFixed(1)}" text-anchor="start">${v}%</text>`).join('');
+  const xlabels=s.map((d,i)=>`<text class="ts clg" x="${xAt(i).toFixed(1)}" y="${H-B+22}" text-anchor="middle">${String(d.year).replace(/[^0-9]/g,'')}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img"><title>${finSel} five-year revenue and margin trend</title>
+    <line class="cln" x1="${L}" y1="${T+ph}" x2="${W-R}" y2="${T+ph}"/>${zero}${bars}
+    ${line('gm','var(--pos)',2)}${line('om','#5E8BEF',2)}${line('nm','var(--ink)',2.4)}
+    ${leftTicks}${rightTicks}${xlabels}</svg>`;
+}
+function finLegend(){
+  const item=(c,l,bar)=>`<span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);">
+    <span style="width:${bar?'12px':'14px'};height:${bar?'12px':'3px'};border-radius:${bar?'3px':'2px'};background:${c};display:inline-block;"></span>${l}</span>`;
+  return `<div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 2px 0;">
+    ${item('var(--accent)','Revenue',true)}${item('var(--pos)','Gross margin')}${item('#5E8BEF','Operating margin')}${item('var(--ink)','Net margin')}</div>`;
+}
+function finTable(s){
+  const cell=(v,suf)=>v!=null?(suf==='%'?v.toFixed(1)+'%':'$'+v.toFixed(1)+'B'):'&mdash;';
+  const row=d=>`<tr><td class="mono">${String(d.year).replace(/[^0-9]/g,'')}</td><td class="mono">${cell(d.rev)}</td>
+    <td class="mono">${cell(d.gm,'%')}</td><td class="mono">${cell(d.om,'%')}</td><td class="mono">${cell(d.nm,'%')}</td><td class="mono">${cell(d.rdi,'%')}</td></tr>`;
+  return `<div class="panel scrollx fintable"><table class="tbl"><thead><tr><th>Year</th><th>Revenue</th><th>Gross</th><th>Operating</th><th>Net</th><th>R&amp;D</th></tr></thead><tbody>${s.map(row).join('')}</tbody></table></div>`;
+}
+function renderFinancials(){
+  const cos=tsCompanies(), sel=$('#finsel'), body=$('#finbody');
+  if(!cos.length){ sel.innerHTML=''; body.innerHTML='<div class="panel"><div class="empty">Financial time series lands in the next research burst. This tab will show 5-year revenue, margin, and capex trends for the chokepoints.</div></div>'; return; }
+  if(!finSel||!cos.includes(finSel)) finSel=cos[0];
+  sel.innerHTML=cos.map(c=>`<button class="finpick" data-fin="${encodeURIComponent(c)}" aria-pressed="${c===finSel}">${c}</button>`).join('');
+  sel.querySelectorAll('[data-fin]').forEach(b=>b.addEventListener('click',()=>{ finSel=decodeURIComponent(b.dataset.fin); renderFinancials(); }));
+  const s=seriesFor(finSel), last=s[s.length-1]||{}, prev=s.length>1?s[s.length-2]:null;
+  const tile=(label,key)=>{ const v=last[key], pv=prev?prev[key]:null;
+    if(v==null) return `<div class="ratio"><div class="rv">&mdash;</div><div class="rk">${label}</div></div>`;
+    let d=''; if(pv!=null){ const diff=v-pv; d=`<div class="rd ${diff>=0?'up':'down'}">${diff>=0?'&#9650;':'&#9660;'} ${Math.abs(diff).toFixed(1)} pt vs prior</div>`; }
+    return `<div class="ratio"><div class="rv mono">${v.toFixed(1)}%</div><div class="rk">${label}</div>${d}</div>`; };
+  const ratios=`<div class="ratios">${tile('Gross margin','gm')}${tile('Operating margin','om')}${tile('Net margin','nm')}${tile('R&amp;D intensity','rdi')}${tile('Capex intensity','cxi')}</div>`;
+  body.innerHTML=`<div class="chartwrap">${finChart(s)}${finLegend()}</div>${ratios}${finTable(s)}`;
+}
+
+function renderAll(){ renderCards(); renderRel(); renderChoke(); renderRefs(); renderOverview(); renderFinancials(); }
+
+/* ---- init ---- */
+buildTabs(); renderHeader(); roleOptions(); relTypeOptions(); renderAll(); renderNotes();
+$('#q').addEventListener('input',renderCards);
+$('#rolefilter').addEventListener('change',renderCards);
+$('#statusfilter').addEventListener('change',renderCards);
+$('#relq').addEventListener('input',renderRel);
+$('#reltypefilter').addEventListener('change',renderRel);
+$('#scrim').addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+</script>

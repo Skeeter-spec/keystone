@@ -1,0 +1,9 @@
+# staging + working scratch
+**/data/_incoming/
+.DS_Store
+__pycache__/
+*.pyc
+*.tmp
+
+# internal tracker — not a public product
+mission-control/
