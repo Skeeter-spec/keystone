@@ -500,10 +500,22 @@ function renderRel(){
 
 /* ---- chokepoints ---- */
 function renderChoke(){
-  const chokes=COMPANIES.filter(c=>c.chokepoint==='yes'&&isFilled(c))
+  const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
     .sort((a,b)=>parseFloat(b.market_cap_usd_b||0)-parseFloat(a.market_cap_usd_b||0));
-  const maxV=Math.max(...chokes.map(c=>parseFloat(c.revenue_usd_b)));
+  const filled=chokes.filter(isFilled);
+  const maxV=filled.length?Math.max(...filled.map(c=>parseFloat(c.revenue_usd_b))):1;
   $('#chokelist').innerHTML = chokes.map(c=>{
+    if(!isFilled(c)){
+      // Foundation map: the hypothesis exists, the financials do not yet. Show the WHY (every map
+      // now carries a chokepoint_why line) rather than an empty tab.
+      return `<div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${c.company}${c.ticker?` <span class="tick mono">${c.ticker}</span>`:''}</h2>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      <div class="chip" style="display:inline-block;">Financials and edges land in the next research burst</div>
+    </div>`;
+    }
     const rev=parseFloat(c.revenue_usd_b), cap=parseFloat(c.capex_usd_b||0);
     const rw=Math.max(2,100*rev/maxV), cw=Math.max(2,100*cap/maxV);
     return `<div class="panel">
