@@ -1,0 +1,66 @@
+{
+  "title": "Semiconductor ecosystem",
+  "subtitle": "Who makes the world's chips, how big they are, and how they depend on each other.",
+  "financials_note": "Five-year income-statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. This is where the fabless-versus-fab economics and the memory cycle show up.",
+  "chokepoints_note": "The companies the rest of the industry has the fewest alternatives to, ranked by market value. The bars show the fabless-versus-fab divide: who sells vs. who spends to build.",
+  "notes_placeholder": "General notes on the semiconductor industry...",
+  "storage_key": "semiconductor-map",
+  "export_filename": "semiconductor-map-notes.json",
+  "layers": [
+    {
+      "role": "ip-eda",
+      "label": "IP and EDA",
+      "desc": "Design tools and licensable blueprints"
+    },
+    {
+      "role": "equipment",
+      "label": "Equipment makers",
+      "desc": "The machines that build chips"
+    },
+    {
+      "role": "fabless-chip",
+      "label": "Fabless chip designers",
+      "desc": "Design chips, outsource the making"
+    },
+    {
+      "role": "fabless-system",
+      "label": "System firms",
+      "desc": "Design their own in-house silicon"
+    },
+    {
+      "role": "foundry",
+      "label": "Foundries",
+      "desc": "Fabricate chips to order"
+    },
+    {
+      "role": "idm",
+      "label": "Integrated device makers",
+      "desc": "Design and fabricate under one roof"
+    },
+    {
+      "role": "component-supplier",
+      "label": "Component suppliers",
+      "desc": "Passives, substrates and materials"
+    },
+    {
+      "role": "osat",
+      "label": "Assembly and test",
+      "desc": "Package and test finished chips"
+    },
+    {
+      "role": "oem",
+      "label": "Device makers",
+      "desc": "Build the products you buy"
+    }
+  ],
+  "chokepoint_why": {
+    "Nvidia": "Dominant designer of the AI accelerators the whole industry is racing to buy.",
+    "TSMC": "Fabricates most of the world's leading-edge chips; almost no one can replace it.",
+    "ASML": "The only company on Earth that makes EUV lithography machines.",
+    "Arm": "Its instruction set sits inside almost every phone chip made.",
+    "Samsung": "Vertically integrated across memory, foundry, components and finished devices.",
+    "Intel": "A major integrated maker now opening its fabs to outside customers.",
+    "Applied Materials": "The largest maker of the equipment that fabricates chips.",
+    "SK hynix": "A key supplier of the HBM memory that AI accelerators depend on."
+  }
+}

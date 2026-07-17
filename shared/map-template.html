@@ -1,4 +1,4 @@
-<title>Semiconductor ecosystem &middot; living map</title>
+<title>__TITLE__ &middot; living map</title>
 <style>
   :root{
     --bg:#F4F5F7; --surface:#FFFFFF; --surface-2:#EDEFF3; --ink:#161A20;
@@ -152,8 +152,8 @@
   <header class="top">
     <div>
       <div class="eyebrow">Living map</div>
-      <h1>Semiconductor ecosystem</h1>
-      <div class="sub">Who makes the world's chips, how big they are, and how they depend on each other.</div>
+      <h1>__TITLE__</h1>
+      <div class="sub">__SUBTITLE__</div>
     </div>
     <div class="meta">
       <div id="buildmeta"></div>
@@ -193,7 +193,7 @@
   </section>
 
   <section id="tab-fin" hidden>
-    <div class="sub" style="margin-bottom:14px;">Five-year income-statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. This is where the fabless-versus-fab economics and the memory cycle show up.</div>
+    <div class="sub" style="margin-bottom:14px;">__FINANCIALS_NOTE__</div>
     <div class="toolbar-row" id="finsel"></div>
     <div id="finbody"></div>
   </section>
@@ -220,7 +220,7 @@
   </section>
 
   <section id="tab-choke" hidden>
-    <div class="sub" style="margin-bottom:14px;">The companies the rest of the industry has the fewest alternatives to, ranked by market value. The bars show the fabless-versus-fab divide: who sells vs. who spends to build.</div>
+    <div class="sub" style="margin-bottom:14px;">__CHOKEPOINTS_NOTE__</div>
     <div id="chokelist"></div>
   </section>
 
@@ -243,7 +243,7 @@
     <div class="panel">
       <h2 style="margin-bottom:6px;">All notes</h2>
       <div class="sub" style="margin-bottom:10px;">A place for what you are learning as the map grows.</div>
-      <textarea class="note-in" id="globalnote" placeholder="General notes on the semiconductor industry..."></textarea>
+      <textarea class="note-in" id="globalnote" placeholder="__NOTES_PLACEHOLDER__"></textarea>
       <div id="companynotes" style="margin-top:14px;"></div>
     </div>
   </section>
@@ -310,36 +310,17 @@ const RELATIONSHIPS = __RELATIONSHIPS__;
 const TIMESERIES = __TIMESERIES__;
 
 /* value-chain layer order + human labels (dash-free) */
-const LAYERS = [
-  {role:'ip-eda',           label:'IP and EDA',              desc:'Design tools and licensable blueprints'},
-  {role:'equipment',        label:'Equipment makers',        desc:'The machines that build chips'},
-  {role:'fabless-chip',     label:'Fabless chip designers',  desc:'Design chips, outsource the making'},
-  {role:'fabless-system',   label:'System firms',            desc:'Design their own in-house silicon'},
-  {role:'foundry',          label:'Foundries',               desc:'Fabricate chips to order'},
-  {role:'idm',              label:'Integrated device makers',desc:'Design and fabricate under one roof'},
-  {role:'component-supplier',label:'Component suppliers',    desc:'Passives, substrates and materials'},
-  {role:'osat',             label:'Assembly and test',       desc:'Package and test finished chips'},
-  {role:'oem',              label:'Device makers',           desc:'Build the products you buy'},
-];
+const LAYERS = __LAYERS__;
 const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
 
 /* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
-const CHOKE_WHY = {
-  'Nvidia':'Dominant designer of the AI accelerators the whole industry is racing to buy.',
-  'TSMC':'Fabricates most of the world\'s leading-edge chips; almost no one can replace it.',
-  'ASML':'The only company on Earth that makes EUV lithography machines.',
-  'Arm':'Its instruction set sits inside almost every phone chip made.',
-  'Samsung':'Vertically integrated across memory, foundry, components and finished devices.',
-  'Intel':'A major integrated maker now opening its fabs to outside customers.',
-  'Applied Materials':'The largest maker of the equipment that fabricates chips.',
-  'SK hynix':'A key supplier of the HBM memory that AI accelerators depend on.',
-};
+const CHOKE_WHY = __CHOKE_WHY__;
 
 /* source-tier labels for the verification badge */
 const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
 
 const store = DurableState.createStore({
-  key:'semiconductor-map', version:1, baseline:{watch:{},notes:{}},
+  key:'__STORAGE_KEY__', version:1, baseline:{watch:{},notes:{}},
   validate:v=>v&&typeof v==='object'&&typeof v.watch==='object'&&typeof v.notes==='object',
 });
 let S = store.state;
