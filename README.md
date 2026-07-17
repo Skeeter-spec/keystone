@@ -24,7 +24,7 @@ Every map follows the same shape, so the workflow carries from one industry to t
 | # | Map | Status |
 |---|-----|--------|
 | 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | **Mapped.** 41 companies costed, 48 sourced relationship edges, 8 chokepoints, five year financials for every chokepoint. Politics and economics lenses next |
-| 02 | [Critical minerals](projects/02-critical-minerals/) | Foundation only |
+| 02 | [Critical minerals](projects/02-critical-minerals/) | **Edges started.** 14 sourced relationship edges, 6 of them real dependencies, 5 chokepoint hypotheses. No financials yet |
 | 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
 | 04 | [AI compute stack](projects/04-ai-compute/) | Foundation only |
 | 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |

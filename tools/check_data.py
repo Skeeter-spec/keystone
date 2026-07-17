@@ -119,14 +119,22 @@ def check_readme(readme_text, facts):
             problems.append(f"README has no status row for project {slug}")
             continue
         status = row.group(1)
+        # Three states, because a map earns them in order: no edges -> edges -> edges AND financials.
+        # "Edges started" exists because 02 reached a state the first version of this rule could not
+        # express, and the honest fix is a new label, not a looser check.
         mapped = "Mapped" in status
         foundation = "Foundation only" in status
-        if not mapped and not foundation:
-            problems.append(f"README row {num} has an unrecognised status, expected 'Mapped' or 'Foundation only'")
+        edges_started = "Edges started" in status
+        if not (mapped or foundation or edges_started):
+            problems.append(f"README row {num} has an unrecognised status, expected 'Mapped', 'Edges started' or 'Foundation only'")
         if mapped and f["edges"] == 0:
             problems.append(f"README calls {slug} 'Mapped' but it has 0 relationship edges")
+        if mapped and f["costed"] == 0:
+            problems.append(f"README calls {slug} 'Mapped' but not one company is costed")
         if foundation and f["edges"] > 0:
             problems.append(f"README calls {slug} 'Foundation only' but it has {f['edges']} edges, so it has outgrown the label")
+        if edges_started and f["edges"] == 0:
+            problems.append(f"README calls {slug} 'Edges started' but it has 0 relationship edges")
     return problems
 
 
@@ -235,6 +243,14 @@ def selftest():
          "| 02 | y | Foundation only |", {"02-b": {"edges": 12, "costed": 0}}, True),
         ("rule 6: missing row",
          "| 01 | x | Mapped. |", {"07-z": {"edges": 0, "costed": 0}}, True),
+        ("control: 'Edges started' with edges but no financials passes",
+         "| 02 | y | Edges started |", {"02-b": {"edges": 14, "costed": 0}}, False),
+        ("rule 6: 'Edges started' with no edges",
+         "| 02 | y | Edges started |", {"02-b": {"edges": 0, "costed": 0}}, True),
+        ("rule 6: 'Mapped' with edges but nothing costed",
+         "| 01 | x | Mapped. |", {"01-a": {"edges": 48, "costed": 0}}, True),
+        ("rule 6: an invented status label",
+         "| 02 | y | Mostly done |", {"02-b": {"edges": 3, "costed": 0}}, True),
     ]
     runbook_cases = [
         ("control: runbook saying yes/no passes",
