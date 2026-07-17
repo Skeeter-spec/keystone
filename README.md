@@ -19,6 +19,22 @@ Every map follows the same shape, so the workflow carries from one industry to t
 - **Sourced or it does not exist.** Every figure and edge carries a real source and a tier, from primary regulatory filings down to news. Volatile numbers get two independent sources.
 - **Self contained artifacts.** Each map renders to a single offline page with the data baked in, so it stays honest and portable.
 
+## Pick up here
+
+```
+./tools/gate.sh                       does the repo still match what it claims? run this first
+tail -3 projects/*/PROGRESS.log       what each map actually did last, and what it needs next
+```
+
+Deliberately a pointer, not a summary. Every status written in prose is a copy of something the data
+already knows, and copies rot: this README once called 01 "in progress" two phases after it shipped,
+and a map's own log once told a reader to build a renderer that already existed. **`PROGRESS.log` is
+append only, so the newest entry wins. Read it bottom up.** The table below is the one exception, and
+only because `tools/gate.sh` fails if it stops matching the data.
+
+The open work, in rough order of leverage: give maps 03 to 10 a `map.json` so they can render, fill
+financials for 02's chokepoints, and add the politics lens to 01.
+
 ## Projects
 
 | # | Map | Status |
