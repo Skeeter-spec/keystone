@@ -28,6 +28,12 @@ The rules, each tied to the promise or the mechanism it protects:
   5. timeseries  Every financial-history row carries its own source_url and tier.
   6. readme      The status table matches the data. "Mapped" must have edges; "Foundation only" must
                  not. A status typed in prose is a COPY of the truth, and copies rot.
+  7. runbooks    No AGENT-RUNBOOK tells a research agent to write TRUE/FALSE for chokepoint. This rule
+                 gates the GENERATOR, not the output. The TRUE/FALSE drift was not agent sloppiness:
+                 projects/_kit/AGENT-RUNBOOK.md literally SAID "set chokepoint TRUE", shared/new-map.sh
+                 copied the kit into all nine maps, and each research agent did as it was told. Fixing
+                 the 163 rows without fixing the instruction would just have rebuilt the bug on the next
+                 foundation burst. Rule 3 catches the symptom; this catches the cause.
 
 Exit 0 = clean. Exit 1 = a real problem. Exit 2 = the checker itself is broken.
 """
@@ -124,6 +130,16 @@ def check_readme(readme_text, facts):
     return problems
 
 
+def check_runbook(text, label):
+    """Rule 7. The instruction that produced the drift, not the drift."""
+    problems = []
+    if re.search(r"chokepoint[ =]+(TRUE|FALSE)", text, re.I):
+        problems.append(
+            f"{label} tells research agents to write TRUE/FALSE for chokepoint. The template tests "
+            f"chokepoint==='yes', so this instruction regenerates the silent-zero bug on the next burst")
+    return problems
+
+
 def load(path):
     if not path.exists():
         return []
@@ -145,6 +161,11 @@ def run(root):
         problems += check_relationships(rels, f"{slug}/relationships.csv")
         problems += check_timeseries(ts, f"{slug}/financials_timeseries.csv")
         facts[slug] = {"edges": len(rels), "costed": sum(1 for c in companies if has_financials(c))}
+    # Rule 7 covers _kit too: it is the template every future map is stamped from, so it is the
+    # one file where a wrong instruction costs the most.
+    for rb in sorted(glob.glob(str(root / "projects" / "*" / "AGENT-RUNBOOK.md"))):
+        p = pathlib.Path(rb)
+        problems += check_runbook(p.read_text(), f"{p.parent.name}/AGENT-RUNBOOK.md")
     readme = (root / "README.md")
     if readme.exists():
         problems += check_readme(readme.read_text(), facts)
@@ -215,6 +236,21 @@ def selftest():
         ("rule 6: missing row",
          "| 01 | x | Mapped. |", {"07-z": {"edges": 0, "costed": 0}}, True),
     ]
+    runbook_cases = [
+        ("control: runbook saying yes/no passes",
+         "set chokepoint yes for suspected chokepoints", False),
+        ("rule 7: the exact kit text that caused the drift",
+         "financials blank; set chokepoint TRUE\n  for suspected chokepoints", True),
+        ("rule 7: the discipline heading variant",
+         "## Chokepoint discipline (applies whenever chokepoint=TRUE is set)", True),
+    ]
+    for name, text, expect_fire in runbook_cases:
+        fired = bool(check_runbook(text, "selftest"))
+        ok = fired == expect_fire
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
+
     for name, text, facts, expect_fire in readme_cases:
         fired = bool(check_readme(text, facts))
         ok = fired == expect_fire
@@ -228,7 +264,7 @@ def selftest():
         for f in failures:
             print(f"  - {f}")
         return 2
-    print(f"SELFTEST PASSED. {len(cases) + len(readme_cases)} cases: every rule fires on its own mutant "
+    print(f"SELFTEST PASSED. {len(cases) + len(readme_cases) + len(runbook_cases)} cases: every rule fires on its own mutant "
           f"and stays silent on clean and on merely-incomplete data.")
     return 0
 

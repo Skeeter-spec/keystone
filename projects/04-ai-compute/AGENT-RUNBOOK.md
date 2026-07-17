@@ -4,8 +4,9 @@ Shared schema across every Keystone map. Never invent figures; every number and 
 
 ## Bursts
 - FOUNDATION: lock the layer taxonomy (README onion), seed ~20 to 30 real companies into data/companies.csv
-  (company,ticker,exchange,hq_country,roles,primary_segment filled; financials blank; set chokepoint TRUE
-  for suspected chokepoints; lens=accounting), and write FOUNDATION.md (chokepoint hypotheses + free sources).
+  (company,ticker,exchange,hq_country,roles,primary_segment filled; financials blank; set chokepoint yes
+  for suspected chokepoints (the value must be exactly `yes` or `no`, never TRUE/FALSE:
+  the artifact template tests chokepoint==='yes', so TRUE renders as NOT a chokepoint, silently); lens=accounting), and write FOUNDATION.md (chokepoint hypotheses + free sources).
 - FINANCIALS: fill revenue/net income/market cap/R&D/capex for the next company with empty revenue_usd_b,
   from a primary filing URL; convert to USD billions and note the FX rate. Chokepoints first.
 - RELATIONSHIPS: read a company's latest filing customer/supplier/risk sections; add supplier side edges to
