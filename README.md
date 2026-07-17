@@ -23,9 +23,22 @@ Every map follows the same shape, so the workflow carries from one industry to t
 
 | # | Map | Status |
 |---|-----|--------|
-| 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | Foundation and financials done; relationships and the politics and economics lenses in progress |
+| 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | **Mapped.** 41 companies costed, 48 sourced relationship edges, 8 chokepoints, five year financials for every chokepoint. Politics and economics lenses next |
+| 02 | [Critical minerals](projects/02-critical-minerals/) | Foundation only |
+| 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
+| 04 | [AI compute stack](projects/04-ai-compute/) | Foundation only |
+| 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |
+| 06 | [Shipping](projects/06-shipping/) | Foundation only |
+| 07 | [Food and fertilizer](projects/07-food-fertilizer/) | Foundation only |
+| 08 | [Payment rails](projects/08-payment-rails/) | Foundation only |
+| 09 | [Aerospace](projects/09-aerospace/) | Foundation only |
+| 10 | [Nuclear fuel](projects/10-nuclear-fuel/) | Foundation only |
 
-More maps join as siblings under `projects/`. Candidates on deck: critical minerals, EV batteries, the AI compute stack, payment rails.
+**What "foundation only" means, precisely.** A foundation brief is a taxonomy, a ranked set of chokepoint
+*hypotheses*, and the list of free filing portals a later burst should pull from. Its seed companies carry
+roles and notes but **no financials and no per row source tier**. They are the questions the map intends to
+answer, not answers. Only a map marked **Mapped** has cleared the sourcing bar described above. Treat every
+foundation row as unverified until its relationship and financial bursts land.
 
 ## How a project works
 
