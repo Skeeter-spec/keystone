@@ -1,0 +1,30 @@
+{
+  "title": "Aerospace",
+  "subtitle": "Titanium and jet engines through structural castings and avionics to commercial airframes and military systems, and the handful of sole source and duopoly firms the whole chain cannot route around.",
+  "financials_note": "Investor relations filings and SEC Edgar for public filers (Boeing, Airbus, RTX, GE Aerospace, Rolls-Royce, Howmet Aerospace, Honeywell, TransDigm, HEICO, ATI, AerCap, Air Lease, Embraer). Airbus is a Euronext Paris filer. Rolls-Royce is listed on the London Stock Exchange. VSMPO-Avisma trades on the Moscow Exchange with limited disclosure. Precision Castparts remains private under Berkshire Hathaway and will not produce public financials. Spirit AeroSystems was delisted after Boeing's acquisition completed December 8, 2025.",
+  "chokepoints_note": "Eight firms that cannot be routed around: two large jetliner makers (Boeing and Airbus form a duopoly), three jet engine designers (GE Aerospace, Rolls-Royce, and RTX form an oligopoly), one aerospace titanium supplier (VSMPO-Avisma supplies roughly a third of global aerospace titanium), and two structural castings makers (Precision Castparts and Howmet Aerospace). All eight are either duopoly/oligopoly players or single-source suppliers for mission critical components, with lead times measured in years that prevent quick supplier switching. Every call here is a foundation hypothesis until relationship edges test it.",
+  "notes_placeholder": "General notes on aerospace value chain...",
+  "storage_key": "aerospace-map",
+  "export_filename": "aerospace-map-notes.json",
+  "layers": [
+    {"role": "titanium-supplier", "label": "Titanium suppliers", "desc": "Produce aerospace-grade titanium sponge, ingot and mill products"},
+    {"role": "structural-castings", "label": "Casting makers", "desc": "Cast and forge large titanium and superalloy structural components"},
+    {"role": "engine-maker", "label": "Jet engines", "desc": "Design and manufacture commercial and military jet engines"},
+    {"role": "tier1-systems", "label": "Systems suppliers", "desc": "Supply landing gear, seats, nacelles, hydraulics and integrated systems"},
+    {"role": "avionics", "label": "Avionics suppliers", "desc": "Provide flight control, navigation and cabin electronics"},
+    {"role": "airframe-oem", "label": "Airframe makers", "desc": "Design and assemble commercial jetliners and regional aircraft"},
+    {"role": "defense-prime", "label": "Defense primes", "desc": "Build military aircraft, missiles and defense systems"},
+    {"role": "mro", "label": "MRO providers", "desc": "Provide maintenance, repair and overhaul for commercial aircraft"},
+    {"role": "lessor", "label": "Aircraft lessors", "desc": "Finance and lease commercial aircraft to airlines"}
+  ],
+  "chokepoint_why": {
+    "Boeing": "No third manufacturer builds and certifies 150+ seat jetliners at commercial scale, and airlines cannot route around Boeing for large narrowbody and widebody orders. The acquisition of Spirit AeroSystems completed in December 2025 concentrated the fuselage bottleneck inside Boeing itself.",
+    "Airbus": "Airbus is the other half of the large jetliner duopoly with Boeing, and airlines have no third route around it for large aircraft orders. COMAC's C919 remains reliant on Western engines and avionics, failing to break the Boeing Airbus duopoly at scale as of 2026.",
+    "GE Aerospace": "GE Aerospace co-owns CFM International 50/50 with Safran and is sole engine supplier for the Boeing 737 and a top option on the Airbus A320. Exactly three companies make large civil jet engines, and losing any one would ground programs with no substitute powerplant available on short notice.",
+    "Rolls-Royce Holdings": "One of only three makers of large civil jet engines, and specific programs are sole-sourced to one of them (Rolls-Royce Trent variants on many 787 and A350 builds). Losing any one of the three would ground programs with no substitute powerplant available on short notice.",
+    "RTX Corporation": "Pratt and Whitney is the third member of the jet engine oligopoly and the sole-source geared turbofan on the Airbus A220. RTX's Collins Aerospace subsidiary is also a top tier avionics and systems supplier, compounding RTX's leverage across the industry.",
+    "VSMPO-Avisma": "VSMPO-Avisma historically supplied roughly a third of world aerospace titanium, with direct sourcing and JV ties to both Boeing and Airbus. Global titanium sponge and ingot melt capacity is limited and full Western substitution takes years, keeping this a live chokepoint despite partial sanctions on parent Rostec.",
+    "Precision Castparts Corp": "One of only two firms qualified to supply large structural titanium and superalloy castings and forgings for airframes and engines. Part qualification for castings of this size and complexity takes years, so airlines and OEMs cannot simply switch suppliers if either firm faces quality or capacity problems.",
+    "Howmet Aerospace": "One of only two firms qualified to supply large structural titanium and superalloy castings and forgings for airframes and engines. Part qualification for castings of this size and complexity takes years, so airlines and OEMs cannot simply switch suppliers if either firm faces quality or capacity problems."
+  }
+}

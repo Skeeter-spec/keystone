@@ -1,0 +1,36 @@
+{
+  "title": "Maritime shipping",
+  "subtitle": "Shipbuilders through liner operators, ports, canals, straits, containers and logistics to the final shipper and receiver, with geographic and corporate chokepoints threaded throughout.",
+  "financials_note": "Five year income statement trends for the listed chokepoints (the four shipyards and the five main liner operators). Revenue bars read on the left; margins read on the right. Geographic nodes (straits, canals, authorities) have no financial filings and appear as infrastructure. Insurance and classification society data is limited; Lloyd's Register is charity owned, and the P&I pool is a mutual arrangement with no consolidated public accounts.",
+  "chokepoints_note": "The canals, straits and a handful of shipyards and insurers the industry cannot route around. Geography here is more consequential than corporate market share. Suez and Panama are state controlled or single nation assets; the straits are either ungoverned (Hormuz, Malacca, Bab el Mandeb) or a single sovereign (Turkey/Bosphorus). The shipbuilding layer is concentrated among four yards spanning China and South Korea, each building with multiyear backlogs. The P&I insurance pool is a soft power chokepoint with hard leverage in sanctions and credit regimes.",
+  "notes_placeholder": "General notes on maritime shipping...",
+  "storage_key": "shipping-map",
+  "export_filename": "shipping-map-notes.json",
+  "layers": [
+    {"role": "shipbuilder", "label": "Shipbuilders", "desc": "Build large commercial vessels and tankers on multiyear order books"},
+    {"role": "liner-operator", "label": "Liner operators", "desc": "Own and operate container ships and bulk carriers in global routes and regional services"},
+    {"role": "port-operator", "label": "Port operators", "desc": "Develop and operate container terminal facilities in major trade hubs"},
+    {"role": "terminal-operator", "label": "Terminal operators", "desc": "Operate container and breakbulk terminals inside port facilities"},
+    {"role": "canal-authority", "label": "Canal authorities", "desc": "Operate the Suez and Panama Canals as transit chokepoints for intercontinental trade"},
+    {"role": "strait-chokepoint", "label": "Strategic straits", "desc": "Geographic chokepoints including Hormuz, Malacca, Bab el Mandeb and Bosphorus"},
+    {"role": "box-lessor", "label": "Box lessors", "desc": "Lease dry containers and refrigerated containers to liners and forwarders"},
+    {"role": "freight-forwarder", "label": "Freight forwarders", "desc": "Book capacity from liners, consolidate small shipments, manage clearance"},
+    {"role": "logistics", "label": "Logistics operators", "desc": "Provide door to door supply chain management and last mile delivery"},
+    {"role": "classification-society", "label": "Classification societies", "desc": "Certify ship design, inspect hulls and machinery, issue class certificates"},
+    {"role": "p&i-insurer", "label": "P&I insurers", "desc": "Pool and reinsure liability, crew and cargo coverage for ocean going vessels"},
+    {"role": "national-authority", "label": "National authorities", "desc": "Exercise sovereign control over straits and maritime governance (Montreux Convention)"}
+  ],
+  "chokepoint_why": {
+    "China CSSC Holdings (CSSC)": "The world's largest shipbuilder by tonnage delivered following the August 2025 merger with rival China Shipbuilding Industry. China alone has built over half of global gross shipbuilding tonnage in recent years; losing this yard constrains the pace at which the entire fleet can be replaced, decarbonized or surged in crisis.",
+    "HD Hyundai Heavy Industries": "One of Korea's three premier yards alongside Samsung Heavy and Hanwha Ocean. These four shipyards (China CSSC plus the three Korean yards) build the overwhelming majority of the world's large commercial vessels with multiyear order backlogs, constraining fleet renewal and decarbonization pace.",
+    "Samsung Heavy Industries": "One of Korea's three premier yards and the leading builder of large LNG carriers, a vessel class with very few qualified yards worldwide. This concentrated expertise makes this yard irreplaceable for the LNG shipping segment.",
+    "Hanwha Ocean": "One of Korea's three premier yards (formerly Daewoo Shipbuilding & Marine Engineering). Alongside China CSSC and fellow Korean yards, these four together build the overwhelming majority of large commercial vessels globally and constrain the pace of fleet replacement.",
+    "Suez Canal Authority (SCA)": "The sole operator of the Suez Canal under Egyptian state ownership since the 1956 nationalization. The only alternative is the Cape of Good Hope route, roughly 10 to 14 days longer and far more fuel intensive. The 2021 Ever Given grounding and the 2023 to 2025 Houthi attacks proved real world fragility.",
+    "Panama Canal Authority (ACP)": "Critical for US East Coast to Asia trade and US grain and LNG exports. The 2023 to 2024 drought forced draft and transit restrictions, showing weather alone can throttle global trade through this single node. Also a 2025 to 2026 flashpoint in US political rhetoric over canal control.",
+    "Strait of Hormuz (chokepoint)": "Roughly a fifth of global oil and a third of global LNG passes through this approximately 33 kilometer wide gap that Iran has repeatedly threatened to close. No governing authority exists; only international law and military patrols regulate transit. Economic disruption here exceeds either canal because energy flows concentrate more heavily.",
+    "Strait of Malacca (chokepoint)": "An estimated 25 percent or more of world seaborne trade transits this strait between the Indian Ocean and South China Sea. No single authority governs it, but physical alternatives (Lombok, Sunda, Makassar straits) add time and cannot handle the largest vessels, making this the only practical route for major shipping.",
+    "Bab-el-Mandeb Strait (chokepoint)": "Feeds the Suez Canal from the Indian Ocean side. The 2023 to 2025 Houthi attacks forced most major liners to reroute around Africa, demonstrating that losing this roughly 30 kilometer strait functionally closes the Suez Canal behind it because ships had no incentive to transit if they still faced the Bab el Mandeb gauntlet.",
+    "Bosphorus Strait (Turkey)": "The sole geographic chokepoint with a single sovereign gatekeeper. The 1936 Montreux Convention gives Turkey legal right to regulate and, in wartime, close the strait, which Ankara partially exercised after 2022 (restricting some warship and tanker transits tied to the Russia Ukraine conflict).",
+    "International Group of P&I Clubs": "A pooling and reinsurance agreement among 12 mutual clubs that together insure roughly 90 percent of world merchant tonnage for pollution, cargo, crew and collision liability. A ship without valid P&I cover cannot get port access, canal transit or classification renewal, making this pool functionally load bearing for the industry and exposed to London reinsurance market disruptions."
+  }
+}

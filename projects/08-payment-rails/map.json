@@ -1,0 +1,32 @@
+{
+  "title": "Payment rails",
+  "subtitle": "Global and regional networks, processors, and settlement systems that move money from cardholders and merchants through acquirers, issuers, and central bank reserves.",
+  "financials_note": "Five year income statement trends for the chokepoints and major processors. Revenue bars read on the left; margins read on the right. Visa and Mastercard operate as near duopolies with structural pricing power; regional players and stablecoins remain competitive and substitutable despite scale.",
+  "chokepoints_note": "Six firms the system genuinely cannot route around without geopolitical or operational consequence: the two global card networks, three government or government-anchored payment authorities, and a member cooperative that has been weaponized as a financial blockade. Every other player faces competitive alternatives.",
+  "notes_placeholder": "General notes on payment rails...",
+  "storage_key": "payment-rails-map",
+  "export_filename": "payment-rails-map-notes.json",
+  "layers": [
+    {"role": "card-network", "label": "Card networks", "desc": "Global and regional payment networks that set rules and route card transactions"},
+    {"role": "domestic-switch", "label": "Domestic switches", "desc": "Country level payment switches and networks mandated for domestic transactions"},
+    {"role": "issuer", "label": "Card issuers", "desc": "Banks and financial institutions that issue cards to consumers"},
+    {"role": "core-banking", "label": "Core banking systems", "desc": "Infrastructure software that runs issuing and settlement"},
+    {"role": "issuer-processor", "label": "Issuer processors", "desc": "Card processing platforms for fintech and bank card programs"},
+    {"role": "acquirer", "label": "Merchant acquirers", "desc": "Banks and processors that acquire payments from merchants"},
+    {"role": "processor", "label": "Payment processors", "desc": "Software vendors that process transactions for banks and networks"},
+    {"role": "gateway", "label": "Payment gateways", "desc": "Online checkout and payment collection platforms"},
+    {"role": "interbank-messaging", "label": "Interbank messaging", "desc": "Networks for cross-border payment instructions between banks"},
+    {"role": "settlement", "label": "Settlement systems", "desc": "Central and private clearing houses for transaction settlement"},
+    {"role": "cross-border", "label": "Cross-border payment", "desc": "Platforms for international money transfers and FX"},
+    {"role": "alt-rail", "label": "Alternative rails", "desc": "Digital wallets, P2P networks, and non-card payment systems"},
+    {"role": "stablecoin-issuer", "label": "Stablecoin issuers", "desc": "Crypto platforms issuing dollar-backed digital currencies"}
+  ],
+  "chokepoint_why": {
+    "Visa Inc.": "One of two networks that clear the large majority of the world's card transactions. Any bank, merchant, or country that wants global card acceptance has no viable substitute.",
+    "Mastercard Incorporated": "The second half of the global card network duopoly with Visa. Together the two route the overwhelming majority of cross-border card volume with no structural substitute.",
+    "UnionPay": "China's mandatory domestic card switch for RMB-denominated transactions, and by transaction value the world's largest card network. No domestic competing network is permitted to operate at scale in China.",
+    "SWIFT (Society for Worldwide Interbank Financial Telecommunication)": "The de facto sole global standard for interbank payment messaging. Disconnecting a country's banks from SWIFT (used against Russian and Iranian banks) functions as a de facto financial blockade, evidence no substitute exists at scale.",
+    "Federal Reserve System (Fedwire Funds Service)": "The literal end of the line for US dollar settlement. Every private USD rail ultimately settles through central-bank reserve accounts, which only the Fed can create, with no private alternative by design.",
+    "NPCI (National Payments Corporation of India) / UPI": "Sole operator of India's UPI real-time payment switch, the domestic rail that essentially all Indian retail digital payments route through, a government-backed monopoly with no permitted alternative."
+  }
+}

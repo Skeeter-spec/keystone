@@ -1,0 +1,28 @@
+{
+  "title": "Nuclear fuel",
+  "subtitle": "Uranium mining and enrichment through fuel fabrication to reactor operation and reprocessing, concentrated at the enrichment and fuel making steps.",
+  "financials_note": "Five year income statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. Chokepoints span state corporations (France, Russia, China) alongside public Western firms, so expect varying filing quality and regulatory transparency; read the tier badge before comparing numbers.",
+  "chokepoints_note": "The companies the rest of the chain has the fewest alternatives to. Mining and reactor operation are dispersed; enrichment, fuel fabrication for specific reactor types, and conversion capacity are where the routing options run out. Every chokepoint here is a foundation hypothesis until relationship edges test it.",
+  "notes_placeholder": "General notes on the nuclear fuel cycle...",
+  "storage_key": "nuclear-fuel-map",
+  "export_filename": "nuclear-fuel-map-notes.json",
+  "layers": [
+    {"role": "uranium-miner", "label": "Miners", "desc": "Extract uranium ore from the ground"},
+    {"role": "converter", "label": "Converters", "desc": "Transform uranium oxide into uranium hexafluoride"},
+    {"role": "enricher", "label": "Enrichers", "desc": "Increase the U 235 concentration through centrifugation"},
+    {"role": "fuel-fabricator", "label": "Fuel fabricators", "desc": "Assemble enriched uranium into reactor fuel assemblies"},
+    {"role": "reactor-vendor", "label": "Reactor vendors", "desc": "Design and build nuclear reactors"},
+    {"role": "utility", "label": "Utilities", "desc": "Operate nuclear power plants"},
+    {"role": "reprocessor", "label": "Reprocessors", "desc": "Extract usable material from spent reactor fuel"},
+    {"role": "trader", "label": "Traders", "desc": "Buy and sell enriched uranium and nuclear materials"}
+  ],
+  "chokepoint_why": {
+    "Orano": "One of only four commercial enrichers globally and a major conversion operator at Malvesi and Comurhex. Also runs La Hague, the world's largest commercial spent fuel reprocessing plant.",
+    "Rosatom / TENEX": "Russia controls 40 to 46 percent of global enrichment capacity, making it the single largest node in the cycle. Partially restricted by the US Prohibiting Russian Uranium Imports Act effective 2024.",
+    "TVEL Fuel Company": "The sole qualified supplier of VVER fuel assemblies for Soviet design reactors across Eastern Europe. Westinghouse and Framatome only began qualifying alternatives after 2022.",
+    "Urenco Group": "One of the big four global enrichers and the only major enrichment operator in the West at scale. Operates plants in the UK, Germany, Netherlands and US.",
+    "China National Nuclear Corporation (CNNC)": "The fourth member of the global enrichment oligopoly controlling most of China's domestic enrichment capacity. Vertically integrated from mining through reprocessing.",
+    "Centrus Energy Corp": "The only US enricher with operating centrifuges and the sole current US domestic HALEU producer. Volumes remain constrained relative to advanced reactor fuel demand.",
+    "Honeywell International (Metropolis Works)": "The sole UF6 conversion facility in the United States. A single site outage would leave the entire US fuel cycle dependent on foreign conversion capacity."
+  }
+}

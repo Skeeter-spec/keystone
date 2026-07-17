@@ -1,0 +1,30 @@
+{
+  "title": "EV batteries",
+  "subtitle": "Lithium and nickel through cathode, cell and pack to the automaker, and the handful of firms the whole chain buys from.",
+  "financials_note": "Five-year income-statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. Several chokepoints here are Chinese A-share or Beijing Stock Exchange filers reporting in RMB, so expect lower source tiers than a map of SEC filers, and read the tier badge before trusting a number.",
+  "chokepoints_note": "The companies the rest of the chain has the fewest alternatives to. Cell assembly and vehicle making are comparatively diverse; the materials layers beneath them, separator film, graphite anode and electrolyte salt, are where the routing options run out. Every call here is a foundation hypothesis until relationship edges test it.",
+  "notes_placeholder": "General notes on EV batteries...",
+  "storage_key": "ev-batteries-map",
+  "export_filename": "ev-batteries-map-notes.json",
+  "layers": [
+    {"role": "miner", "label": "Miners", "desc": "Pull lithium, nickel, cobalt and graphite out of the ground"},
+    {"role": "refiner", "label": "Refiners", "desc": "Turn ore and brine into battery grade chemicals"},
+    {"role": "cathode-maker", "label": "Cathode makers", "desc": "Build the positive electrode material and its precursor"},
+    {"role": "anode-maker", "label": "Anode makers", "desc": "Purify and graphitize the negative electrode material"},
+    {"role": "electrolyte-maker", "label": "Electrolyte makers", "desc": "Formulate the electrolyte and the lithium salt it carries"},
+    {"role": "separator-maker", "label": "Separator makers", "desc": "Coat the precision film that keeps the electrodes apart"},
+    {"role": "cell-maker", "label": "Cell makers", "desc": "Assemble the finished cells and packs"},
+    {"role": "automaker", "label": "Automakers", "desc": "Buy the packs and build the vehicles"},
+    {"role": "recycler", "label": "Recyclers", "desc": "Recover metal from scrap and spent cells"}
+  ],
+  "chokepoint_why": {
+    "CATL": "The world's largest EV cell maker, over a third of global output on its own, and most non-Chinese automakers rely on it for at least one platform. The single hardest node to route around in this chain.",
+    "BYD": "The second largest cell maker and the only one that is also a top tier automaker, so it does not depend on the rest of the chain the way other cell makers do. Vertically integrated from cells to vehicles, which makes it a chokepoint on the supply and the demand side at once.",
+    "BTR New Energy Materials": "The world's largest graphite anode producer. Anode purification and graphitization is almost entirely a Chinese industrial capability today, and China's late 2023 graphite export permit requirement showed how exposed the rest of the chain is to it.",
+    "Asahi Kasei": "Owns Celgard and Hipore, and is the main non-Chinese alternative in separator film. One of a handful of firms whose separator technology underpins the industry.",
+    "Yunnan Energy New Material (SEMCORP)": "The largest separator maker globally by shipment volume, in a country that holds the large majority of separator capacity. Separator film is low margin, capital intensive precision coating, so entry is slow and a quality or export problem here stalls cell output industry wide.",
+    "Guangzhou Tinci Materials Technology": "The largest electrolyte maker globally, and a major source of the LiPF6 salt nearly every electrolyte formulation uses. LiPF6 production is itself concentrated among a small number of Chinese chemical makers.",
+    "Glencore": "One of the largest cobalt producers and traders, and a top operator in the DRC, where global cobalt supply is heavily concentrated. Its position makes DRC political and infrastructure risk a chain wide risk.",
+    "CMOC Group": "The Chinese controlled miner that overtook Glencore as the world's top cobalt producer through its DRC operations at Tenke Fungurume and Kisanfu. The other half of the cobalt concentration story."
+  }
+}

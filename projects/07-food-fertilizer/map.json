@@ -1,0 +1,29 @@
+{
+  "title": "Food and fertilizer",
+  "subtitle": "Phosphate, potash and nitrogen from mining and synthesis through fertilizer production to the farmers and grain traders who move food globally.",
+  "financials_note": "Five year income statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. Several chokepoints here are non SEC filers or centrally administered state enterprises with limited public disclosure, so expect lower source tiers than a map of US public companies, and read the tier badge before trusting a number.",
+  "chokepoints_note": "The companies the rest of the chain has the fewest alternatives to. Phosphate supply routes through Morocco's reserve base and OCP's processing. Potash supply concentrates in Belarus, Russia and Canada. Nitrogen production ties to natural gas prices in the region. Seed genetics and crop protection chemistry are controlled by a handful of majors. Grain and oilseed trading routes through a quartet of mega traders. Every call here is a foundation hypothesis until relationship edges test it.",
+  "notes_placeholder": "General notes on food and fertilizer supply chains...",
+  "storage_key": "food-fertilizer-map",
+  "export_filename": "food-fertilizer-map-notes.json",
+  "layers": [
+    {"role": "phosphate-rock-miner", "label": "Phosphate rock miners", "desc": "Extract phosphate rock from deposits and beneficiate it"},
+    {"role": "phosphate-maker", "label": "Phosphate fertilizer producers", "desc": "Process phosphate rock into fertilizer products"},
+    {"role": "potash-maker", "label": "Potash producers", "desc": "Mine and process potash salts into fertilizer"},
+    {"role": "nitrogen-maker", "label": "Nitrogen fertilizer producers", "desc": "Synthesize ammonia and nitrogen fertilizers from natural gas"},
+    {"role": "salt-miner", "label": "Salt miners", "desc": "Extract salt, often alongside potash production"},
+    {"role": "specialty-minerals", "label": "Specialty mineral suppliers", "desc": "Supply specialized mineral and trace element fertilizers"},
+    {"role": "seed-agrochem", "label": "Seed and agrochemical companies", "desc": "Supply commercial seeds and crop protection chemicals"},
+    {"role": "agrochem", "label": "Agrochemical specialists", "desc": "Develop and supply crop protection chemicals"},
+    {"role": "processor", "label": "Commodity processors", "desc": "Process agricultural commodities into ingredients and products"},
+    {"role": "grain-trader", "label": "Grain and oilseed traders", "desc": "Originate, store, transport and trade grain and oilseeds globally"},
+    {"role": "ag-retailer", "label": "Agricultural retailers", "desc": "Distribute seeds, fertilizers and chemicals to farmers"}
+  ],
+  "chokepoint_why": {
+    "OCP Group": "Morocco holds roughly 70 percent of the world's known phosphate rock reserves and OCP Group, state owned, is the dominant miner and processor of that rock into fertilizer. There is no comparable second country to route around Morocco's reserve base over any multi decade horizon, making this the single hardest physical chokepoint in the food and fertilizer chain.",
+    "Yara International ASA": "One of the two largest Western nitrogen producers; ammonia and urea synthesis requires natural gas and cost and availability move directly with regional gas prices and gas access. The 2021 to 2023 European gas price spike that curtailed Yara's own ammonia output showed how exposed the nitrogen supply chain is to gas market stress.",
+    "CF Industries Holdings": "Largest North American nitrogen producer, advantaged by cheap US shale gas, anchoring the other half of the gas linked nitrogen chokepoint. The same natural gas supply constraints that affect Yara affect CF's cost structure and production capacity.",
+    "Belaruskali": "State owned; with Uralkali one of the two sanctioned and export restricted potash giants whose output cannot be easily replaced. Since 2022, EU and US sanctions, closure of the Lithuanian rail line to Klaipeda, and Belarusian export licensing have made the Belarus and Russia potash leg a live supply chokepoint rather than a diversified market.",
+    "Uralkali PJSC": "Majority controlled via Uralchem; alongside Belaruskali forms the Belarus and Russia potash bloc that Western sanctions and logistics restrictions have made a persistent supply chokepoint. The two together account for the large majority of globally traded potash outside Canada."
+  }
+}

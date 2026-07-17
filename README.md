@@ -32,8 +32,10 @@ and a map's own log once told a reader to build a renderer that already existed.
 append only, so the newest entry wins. Read it bottom up.** The table below is the one exception, and
 only because `tools/gate.sh` fails if it stops matching the data.
 
-The open work, in rough order of leverage: give maps 03 to 10 a `map.json` so they can render, fill
-financials for 02's chokepoints, and add the politics lens to 01.
+The open work, in rough order of leverage: fill financials and relationship edges for the maps that are
+still foundation only (03 to 10), fill financials for 02's chokepoints, and add the politics lens to 01.
+All ten maps now render: each has a `map.json`, so a foundation map draws its value chain the moment its
+data lands.
 
 ## Projects
 

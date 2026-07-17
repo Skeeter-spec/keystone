@@ -1,0 +1,27 @@
+{
+  "title": "Pharmaceuticals",
+  "subtitle": "Active ingredients through manufacturing, distribution, and insurance to the patient, and the handful of firms the whole system cannot route around.",
+  "financials_note": "Five-year income-statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. Most chokepoints here are SEC filers or major public companies on developed exchanges, so expect solid source tiers on accounting data.",
+  "chokepoints_note": "The companies the rest of the chain has the fewest alternatives to. Drug originators and generic makers are comparatively diverse; the API layer, sterile manufacturing, physical distribution, and insurance administration are where routing options run out. Every call here is a foundation hypothesis until relationship edges test it.",
+  "notes_placeholder": "General notes on pharmaceuticals...",
+  "storage_key": "pharma-map",
+  "export_filename": "pharma-map-notes.json",
+  "layers": [
+    {"role": "api-maker", "label": "API producers", "desc": "Manufacture active pharmaceutical ingredients and chemical precursors"},
+    {"role": "originator", "label": "Drug originators", "desc": "Develop and market branded drugs across therapeutic areas"},
+    {"role": "generics-maker", "label": "Generic manufacturers", "desc": "Produce generic versions of off-patent drugs"},
+    {"role": "cdmo", "label": "Contract manufacturers", "desc": "Provide sterile fill-finish, biologics, and small-molecule manufacturing for originators and generics"},
+    {"role": "distributor", "label": "Distributors", "desc": "Move finished pharmaceuticals from makers to pharmacies and hospitals"},
+    {"role": "pharmacy", "label": "Pharmacies", "desc": "Dispense drugs to patients at retail and specialty locations"},
+    {"role": "pbm", "label": "Pharmacy benefit managers", "desc": "Administer insurance claims and manage formulary access and rebates"},
+    {"role": "payer", "label": "Payers", "desc": "Provide health insurance and fund drug purchases"}
+  ],
+  "chokepoint_why": {
+    "Zhejiang Huahai Pharmaceutical": "A large share of the world's generic drug active pharmaceutical ingredients come from a small number of Chinese and Indian plants; Huahai's 2018 valsartan/sartan API contamination triggered a global multi-country recall, showing how concentrated this layer is and how a single plant failure can halt production worldwide.",
+    "Scientific Protein Laboratories": "Supplies nearly all crude heparin, an anticoagulant extracted from pig intestine with no synthetic substitute at scale, from a sourcing chain in Changzhou China; the 2007-2008 contaminated-heparin crisis traced to SPL's supply chain killed patients in the US.",
+    "Lonza Group": "A handful of contract development and manufacturing organizations provide the sterile fill-finish and biologics capacity that originators increasingly depend on; Lonza is one of the few with large-scale biologics and sterile-injectable lines, and a shutdown here cannot be quickly absorbed elsewhere.",
+    "WuXi Biologics": "One of the world's largest biologics CDMOs; capacity is genuinely scarce because specialized cleanrooms and bioreactor trains take years to build, and WuXi is explicitly named in the proposed US BIOSECURE Act, creating a geopolitical as well as industrial chokepoint.",
+    "McKesson Corporation": "One of the big-three US drug wholesalers; McKesson, Cencora, and Cardinal Health together move roughly 90 percent of US pharmaceutical volume, and almost every manufacturer routes through one of these three with no fourth-scale alternative.",
+    "CVS Health (Caremark)": "CVS Caremark, Express Scripts, and OptumRx together administer roughly 80 percent of US prescription claims; PBMs decide formulary placement and negotiate rebates that determine a drug's net price, giving this layer outsized leverage over both manufacturers and patients."
+  }
+}

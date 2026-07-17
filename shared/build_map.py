@@ -49,6 +49,22 @@ def check_coverage(companies, layers):
     return orphans, unused
 
 
+def check_choke_why(companies, choke_why):
+    """The docstring promised 'keyed by the EXACT companies.csv name' and nothing enforced it.
+
+    A key that matches no company is INCORRECT: the template looks its explanation up by name, so a
+    typo'd or stale key renders that chokepoint with no reason and the page still looks fine. That is
+    the same silent shape as the orphan bug. A chokepoint with no key is merely INCOMPLETE, which this
+    repo tolerates by design, so it is a note and not an abort.
+    """
+    names = {c["company"] for c in companies}
+    unknown = sorted(k for k in choke_why if k not in names)
+    chokes = {c["company"] for c in companies
+              if (c.get("chokepoint") or "").strip().lower() == "yes"}
+    unexplained = sorted(chokes - set(choke_why))
+    return unknown, unexplained
+
+
 def build(project, date, strict=True):
     proj = pathlib.Path(project)
     cfg = json.loads((proj / "map.json").read_text())
@@ -71,6 +87,17 @@ def build(project, date, strict=True):
             return 1
     if unused:
         print(f"  note: layers declared but unused by any company: {unused}")
+
+    unknown, unexplained = check_choke_why(companies, cfg.get("chokepoint_why", {}))
+    if unknown:
+        print(f"  ABORT: {len(unknown)} chokepoint_why key(s) match NO company in companies.csv,")
+        print(f"         so the template would find no explanation and render the chokepoint bare.")
+        print(f"         {unknown}")
+        print(f"         Keys must be the EXACT companies.csv name.")
+        if strict:
+            return 1
+    if unexplained:
+        print(f"  note: chokepoints with no chokepoint_why line: {unexplained}")
 
     filled = sum(1 for c in companies if c.get("revenue_usd_b"))
     meta = {"date": date, "total": len(companies), "filled": filled}
@@ -131,11 +158,35 @@ def selftest():
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:
             fails.append(f"{name}: expected {want} orphans, got {len(orphans)}")
+
+    # chokepoint_why: an unknown key renders a bare chokepoint without erroring.
+    comps = [{"company": "CATL", "roles": "cell-maker", "chokepoint": "yes"},
+             {"company": "Tesla", "roles": "automaker", "chokepoint": "no"}]
+    why_cases = [
+        ("control: exact key on a real chokepoint -> silent",
+         {"CATL": "x"}, 0, 0),
+        ("catches a key matching no company (the typo/stale-name case)",
+         {"CATL": "x", "Catl Inc": "x"}, 1, 0),
+        ("NEGATIVE: a correct key must not be flagged just because another is wrong",
+         {"Catl Inc": "x"}, 1, 1),
+        ("an unexplained chokepoint is INCOMPLETE, not unknown: 0 aborts, 1 note",
+         {}, 0, 1),
+        ("a why-line for a non-chokepoint company is legal, not unknown",
+         {"CATL": "x", "Tesla": "x"}, 0, 0),
+    ]
+    for name, why, want_unknown, want_unexpl in why_cases:
+        unknown, unexplained = check_choke_why(comps, why)
+        ok = len(unknown) == want_unknown and len(unexplained) == want_unexpl
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            fails.append(f"{name}: want {want_unknown}/{want_unexpl}, "
+                         f"got {len(unknown)}/{len(unexplained)}")
+
     print()
     if fails:
         print("SELFTEST FAILED:", fails)
         return 2
-    print(f"SELFTEST PASSED. {len(cases)} cases.")
+    print(f"SELFTEST PASSED. {len(cases) + len(why_cases)} cases.")
     return 0
 
 

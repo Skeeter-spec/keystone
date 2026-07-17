@@ -1,0 +1,31 @@
+{
+  "title": "AI compute",
+  "subtitle": "Accelerator silicon and high bandwidth memory, through foundries and system integration, to hyperscale clouds and model labs.",
+  "financials_note": "Five year income statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. Several chokepoints here are non US filers (SK hynix and Samsung in South Korea, TSMC in Taiwan, Siemens in Germany), so expect varying disclosure tiers and accounting standards across the set.",
+  "chokepoints_note": "The nodes where the AI stack cannot substitute when supply tightens. Accelerator design, high bandwidth memory, leading edge packaging, and large scale power infrastructure are where the routing options run narrowest. Each call here is a foundation hypothesis pending relationship testing.",
+  "notes_placeholder": "General notes on AI compute...",
+  "storage_key": "ai-compute-map",
+  "export_filename": "ai-compute-map-notes.json",
+  "layers": [
+    {"role": "accelerator-designer", "label": "Accelerator designers", "desc": "Design and architect AI training and inference chips"},
+    {"role": "hbm-maker", "label": "HBM makers", "desc": "Produce high bandwidth memory for accelerators"},
+    {"role": "foundry", "label": "Foundries", "desc": "Fabricate the silicon wafers for accelerators"},
+    {"role": "packaging", "label": "Packaging and assembly", "desc": "Bind accelerator dies to HBM stacks with advanced 2.5D/3D interconnect"},
+    {"role": "networking", "label": "Networking specialists", "desc": "Build interconnect chips and switches for cluster communication"},
+    {"role": "server-oem", "label": "Server integrators", "desc": "Assemble accelerators into GPU servers and clusters"},
+    {"role": "contract-manufacturer", "label": "Contract manufacturers", "desc": "Provide high volume assembly and system integration"},
+    {"role": "cooling", "label": "Cooling suppliers", "desc": "Supply liquid and air cooling systems for racks and facilities"},
+    {"role": "datacenter-power", "label": "Power infrastructure", "desc": "Provide transformers, switchgear and electrical distribution"},
+    {"role": "hyperscaler", "label": "Hyperscale clouds", "desc": "Operate large scale training and inference clusters"},
+    {"role": "neocloud", "label": "GPU specialist clouds", "desc": "Provide GPU focused cloud capacity independent of hyperscalers"},
+    {"role": "model-lab", "label": "Model laboratories", "desc": "Train and deploy frontier foundation models"}
+  ],
+  "chokepoint_why": {
+    "Nvidia": "The dominant AI accelerator designer with CUDA software ecosystem that creates high switching costs even where rival silicon exists, reinforced by its own networking stack (NVLink and Mellanox InfiniBand) so clusters can be end to end Nvidia.",
+    "SK hynix": "Leading supplier of high bandwidth memory to Nvidia; HBM output is a capacity constrained bottleneck across the industry with no fourth viable supplier.",
+    "Samsung Electronics": "One of only three companies on earth that can manufacture HBM at the volumes and yields modern accelerators require; also a foundry and packaging alternative.",
+    "Micron Technology": "The third member of the HBM oligopoly; HBM demand has repeatedly exceeded supply through 2025-2026 and there is no fourth supplier.",
+    "TSMC": "The sole leading edge foundry capable of manufacturing Nvidia, AMD, Google and Amazon AI silicon at the necessary volumes, and its CoWoS advanced 2.5D/3D packaging capacity has repeatedly bottlenecked AI chip shipments.",
+    "Siemens Energy": "One of a handful of manufacturers of large scale power transformers for grid interconnection; global transformer lead times have stretched to years, gating grid connection for new data center capacity."
+  }
+}
