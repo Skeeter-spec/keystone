@@ -53,6 +53,23 @@ PROGRESS.log        an append only log of what each burst did
 
 The loop: run a research burst to grow the CSVs, rebuild the page, republish to the same place, log it.
 
+## The gate
+
+```
+./tools/gate.sh     run this before every commit
+```
+
+A rule that lives only in a README is a wish. `tools/check_data.py` asserts the promises above against
+the actual CSVs: no financial figure without a source behind it, no source tier outside 1 to 3, no
+unsourced relationship edge, and a status table that still matches the data it describes.
+
+Incomplete does not fail the gate. Incorrect does. A foundation map with no financials is a question
+waiting for a burst, not an error, and a gate that failed on every foundation would simply get bypassed.
+
+The gate checks itself first. `python3 tools/check_data.py --selftest` breaks known good data on purpose
+and proves every rule fires on its own mutant, because a check that has quietly stopped working reports
+exactly the same clean result as a repo that is genuinely clean.
+
 ## License
 
 Released under AGPL 3.0. You may read, run, and build on this freely under those terms. For other licensing, contact the author.

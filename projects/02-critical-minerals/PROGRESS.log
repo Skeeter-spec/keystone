@@ -1,1 +1,2 @@
 2026-07-14 FOUNDATION: taxonomy + 27 seed companies + chokepoint hypotheses + sources.
+2026-07-16 FIX: chokepoint column normalized from TRUE/FALSE to yes/no. Not cosmetic. The artifact template tests c.chokepoint==='yes', so every chokepoint in this map would have rendered as NOT a chokepoint the moment the map was built, showing "0 chokepoints flagged" with no error raised. Six of the nine foundations had this drift (different research agents wrote different vocabularies); the four others were already yes/no. Counts preserved exactly. Now enforced by tools/gate.sh.
