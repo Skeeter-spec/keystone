@@ -24,7 +24,7 @@ Every map follows the same shape, so the workflow carries from one industry to t
 | # | Map | Status |
 |---|-----|--------|
 | 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | **Mapped.** 41 companies costed, 48 sourced relationship edges, 8 chokepoints, five year financials for every chokepoint. Politics and economics lenses next |
-| 02 | [Critical minerals](projects/02-critical-minerals/) | **Edges started.** 14 sourced relationship edges, 6 of them real dependencies, 5 chokepoint hypotheses. No financials yet |
+| 02 | [Critical minerals](projects/02-critical-minerals/) | **Edges started.** 17 sourced relationship edges, 9 of them real dependencies, 5 chokepoint hypotheses. No financials yet |
 | 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
 | 04 | [AI compute stack](projects/04-ai-compute/) | Foundation only |
 | 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |
@@ -45,13 +45,31 @@ foundation row as unverified until its relationship and financial bursts land.
 Each project folder is self driving:
 
 ```
-data/          the CSVs that hold the map
-build_artifact.py   turns the CSVs into the published page
+data/               the CSVs that hold the map
+map.json            this map's prose, storage key, and value chain layers
 AGENT-RUNBOOK.md    exact instructions for one research burst
 PROGRESS.log        an append only log of what each burst did
+artifact/           the built page (generated, never hand edited)
 ```
 
-The loop: run a research burst to grow the CSVs, rebuild the page, republish to the same place, log it.
+One renderer serves every map:
+
+```
+python3 shared/build_map.py projects/02-critical-minerals 2026-07-16
+```
+
+`shared/build_map.py` + `shared/map-template.html` turn any map's CSVs into its page. What differs
+between maps is **data, not code**: `map.json` carries the title, the notes, the storage key, and the
+value chain layers. A map author never writes JavaScript.
+
+The layers are the part that matters. Each declares a `role` that must match the roles used in that
+map's `companies.csv`, and the builder **aborts** if any company has no matching layer. That check
+exists because the failure is otherwise invisible: running the old semiconductor renderer against the
+minerals data succeeded, exit 0, and drew a map where 30 of 33 companies appeared in no layer at all.
+
+The loop: run a research burst to grow the CSVs, verify every cited source with
+`tools/verify_edges.py`, merge with `tools/merge_edges.py`, rebuild the page, republish to the same
+place, log it.
 
 ## The gate
 

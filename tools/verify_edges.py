@@ -56,6 +56,14 @@ KEY = {
     "Rio Tinto": "Rio Tinto",
     "Syrah Resources": "Syrah",
     "Yunnan Chihong Zinc & Germanium": "Chihong",
+    # Downstream buyer nodes, added 2026-07-16. Without these, `named()` falls back to the full CSV
+    # name and a filing that simply says "Tesla" fails against the literal "Tesla Inc".
+    "Tesla Inc": "Tesla",
+    "Ford Motor Company": "Ford Motor|Ford",
+    "Lucid Group": "Lucid",
+    "LG Energy Solution": "LG Energy",
+    "Samsung SDI": "Samsung SDI",
+    "POSCO Future M": "POSCO Future|POSCO",
 }
 
 # NOTE: use .search(), never .match(). match() anchors at position 0, so the mid-URL alternatives
@@ -88,8 +96,18 @@ def to_text(raw, ctype, url):
 
 
 def named(text, company):
+    """Is this company NAMED in the document? Word-bounded, and that is not a detail.
+
+    🔴 A BARE SUBSTRING MATCH SILENTLY INVENTS EVIDENCE. Found 2026-07-16 by a research worker, not by
+    me: it reported Ford as a Syrah counterparty off a case-insensitive hit on **"Abbotsford"**, the
+    suburb in the share registry's postal address. My own checker had the same class of bug and I had
+    already reported "14/14 verified" on it: `named("Vale S.A.", "cobalt is prevalent")` returned True,
+    because "prevalent" contains "vale". A false POSITIVE here is the worst possible failure for this
+    tool, because its entire job is to catch rows citing a document that does not support them.
+    \b fixes both: "Abbotsford" has no word boundary before "ford", and "prevalent" none before "vale".
+    """
     pat = KEY.get(company, re.escape(company))
-    return re.search(pat, text, re.I) is not None
+    return re.search(rf"\b(?:{pat})\b", text, re.I) is not None
 
 
 def verify(project):
@@ -161,6 +179,26 @@ def selftest():
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:
             failures.append(name)
+
+    # 🔴 REAL CASES, both of which actually happened on 2026-07-16. Keep them forever. A fixture
+    # invented next to the code only proves you can restate your own regex; these two are the shapes
+    # that really shipped, one of them in MY tool while I reported it green.
+    substring_traps = [
+        ("the worker's REAL case: 'Ford' must NOT match 'Abbotsford' (a suburb in a postal address)",
+         "Ford Motor Company", "Share registry: Computershare, Abbotsford, Victoria 3067", False),
+        ("MY OWN bug: 'Vale' must NOT match 'prevalent'",
+         "Vale S.A.", "cobalt is prevalent in the DRC", False),
+        ("...nor 'equivalent'", "Vale S.A.", "the equivalent tonnage was shipped", False),
+        ("but a real mention of Vale still counts", "Vale S.A.", "Vale S.A. operates in Indonesia", True),
+        ("and a real Ford mention still counts", "Ford Motor Company", "an MoU with Ford Motor Company", True),
+        ("a filing saying just 'Tesla' matches the node 'Tesla Inc'", "Tesla Inc", "offtake with Tesla", True),
+    ]
+    for name, comp, doc2, want in substring_traps:
+        got = named(doc2, comp)
+        ok = got == want
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(name)
     smells = [
         ("landing page: bare domain", "https://investors.mpmaterials.com", True),
         ("landing page: /investors/", "https://lynasrareearths.com/investors/", True),
@@ -176,7 +214,7 @@ def selftest():
     if failures:
         print(f"SELFTEST FAILED: {failures}")
         return 2
-    print(f"SELFTEST PASSED. {len(cases) + len(smells)} cases.")
+    print(f"SELFTEST PASSED. {len(cases) + len(substring_traps) + len(smells)} cases.")
     return 0
 
 
