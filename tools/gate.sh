@@ -23,17 +23,26 @@ fail=0
 echo "GATE"
 echo ""
 
-echo "[1/2] the checks fire (selftest before any verdict is believed)"
+echo "[1/3] the checks fire (selftest before any verdict is believed)"
 python3 tools/check_data.py --selftest >/dev/null || {
   echo "  SELFTEST FAILED. The checker is broken, so its verdict on the data means nothing."
   echo "  Run: python3 tools/check_data.py --selftest"
   exit 2
 }
+python3 tools/check_fresh.py --selftest >/dev/null || {
+  echo "  SELFTEST FAILED. The freshness checker is broken, so its verdict means nothing."
+  echo "  Run: python3 tools/check_fresh.py --selftest"
+  exit 2
+}
 echo "  ok, every rule fires on its own mutant"
 
 echo ""
-echo "[2/2] data matches what the README promises"
+echo "[2/3] data matches what the README promises"
 python3 tools/check_data.py || fail=1
+
+echo ""
+echo "[3/3] every built artifact still renders from its current CSVs"
+python3 tools/check_fresh.py || { fail=1; echo "  a committed artifact drifted from its data; rebuild it with shared/build_map.py"; }
 
 echo ""
 if [ "$fail" -ne 0 ]; then
@@ -43,5 +52,5 @@ fi
 echo "GATE PASSED."
 echo ""
 echo "Not checked here, because it needs a browser and a human eye:"
-echo "  the built artifact renders the numbers the CSVs actually hold"
-echo "  (rebuild with projects/01-semiconductor/build_artifact.py <date>, then look at it)"
+echo "  that the rendered page LOOKS right (layout, colours, no visual overflow)."
+echo "  Data drift IS now caught headless by [3/3]; the Browser pane hangs on local file:// anyway."

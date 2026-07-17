@@ -65,6 +65,36 @@ def check_choke_why(companies, choke_why):
     return unknown, unexplained
 
 
+def render(cfg, companies, rels, ts, date):
+    """The pure CSV+config -> HTML step, with no disk write. build() writes its result;
+    tools/check_fresh.py re-renders and diffs, so a committed artifact that drifted from its
+    CSV (edited, never rebuilt) cannot pass the gate. One render path, so the check cannot rot
+    away from the builder."""
+    filled = sum(1 for c in companies if c.get("revenue_usd_b"))
+    meta = {"date": date, "total": len(companies), "filled": filled}
+
+    html = TPL.read_text()
+    repl = {
+        "__TITLE__": cfg["title"],
+        "__SUBTITLE__": cfg["subtitle"],
+        "__FINANCIALS_NOTE__": cfg["financials_note"],
+        "__CHOKEPOINTS_NOTE__": cfg["chokepoints_note"],
+        "__NOTES_PLACEHOLDER__": cfg["notes_placeholder"],
+        "__STORAGE_KEY__": cfg["storage_key"],
+        "__LAYERS__": json.dumps(cfg["layers"], ensure_ascii=False),
+        "__CHOKE_WHY__": json.dumps(cfg.get("chokepoint_why", {}), ensure_ascii=False),
+        "__BUILDMETA__": json.dumps(meta, ensure_ascii=False),
+        "__COMPANIES__": json.dumps(companies, ensure_ascii=False),
+        "__RELATIONSHIPS__": json.dumps(rels, ensure_ascii=False),
+        "__TIMESERIES__": json.dumps(ts, ensure_ascii=False),
+    }
+    for k, v in repl.items():
+        html = html.replace(k, v)
+    for k in repl:
+        assert k not in html, f"placeholder {k} survived"
+    return html
+
+
 def build(project, date, strict=True):
     proj = pathlib.Path(project)
     cfg = json.loads((proj / "map.json").read_text())
@@ -99,28 +129,8 @@ def build(project, date, strict=True):
     if unexplained:
         print(f"  note: chokepoints with no chokepoint_why line: {unexplained}")
 
+    html = render(cfg, companies, rels, ts, date)
     filled = sum(1 for c in companies if c.get("revenue_usd_b"))
-    meta = {"date": date, "total": len(companies), "filled": filled}
-
-    html = TPL.read_text()
-    repl = {
-        "__TITLE__": cfg["title"],
-        "__SUBTITLE__": cfg["subtitle"],
-        "__FINANCIALS_NOTE__": cfg["financials_note"],
-        "__CHOKEPOINTS_NOTE__": cfg["chokepoints_note"],
-        "__NOTES_PLACEHOLDER__": cfg["notes_placeholder"],
-        "__STORAGE_KEY__": cfg["storage_key"],
-        "__LAYERS__": json.dumps(cfg["layers"], ensure_ascii=False),
-        "__CHOKE_WHY__": json.dumps(cfg.get("chokepoint_why", {}), ensure_ascii=False),
-        "__BUILDMETA__": json.dumps(meta, ensure_ascii=False),
-        "__COMPANIES__": json.dumps(companies, ensure_ascii=False),
-        "__RELATIONSHIPS__": json.dumps(rels, ensure_ascii=False),
-        "__TIMESERIES__": json.dumps(ts, ensure_ascii=False),
-    }
-    for k, v in repl.items():
-        html = html.replace(k, v)
-    for k in repl:
-        assert k not in html, f"placeholder {k} survived"
 
     out_dir = proj / "artifact"
     out_dir.mkdir(exist_ok=True)
