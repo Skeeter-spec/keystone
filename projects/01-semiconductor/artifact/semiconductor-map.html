@@ -254,67 +254,53 @@
 
 <script>
 /* ==== durable-state.js (inlined; artifacts cannot fetch external files) ==== */
-(function (root) {
-  'use strict';
-  function deepClone(v){ return v==null?v:JSON.parse(JSON.stringify(v)); }
-  function createStore(opts){
-    var key=opts.key; if(!key) throw new Error('createStore needs a stable `key`.');
-    var version=opts.version||1; var baseline=opts.baseline!=null?opts.baseline:null;
-    var validate=typeof opts.validate==='function'?opts.validate:null;
-    var VKEY=key+':v'+version; var seeded=false;
-    function load(){
-      try{ var raw=localStorage.getItem(VKEY);
-        if(raw){ var p=JSON.parse(raw); if(!validate||validate(p)) return p; }
-      }catch(e){}
-      seeded=true; return deepClone(baseline);
-    }
-    var api={
-      state:load(),
-      save:function(){ try{ localStorage.setItem(VKEY,JSON.stringify(api.state)); return true; }catch(e){ return false; } },
-      reset:function(){ api.state=deepClone(baseline); api.save(); return api.state; },
-      wasSeeded:function(){ return seeded; },
-      exportJSON:function(){ return JSON.stringify(api.state,null,2); },
-      download:function(filename){
-        var json=api.exportJSON();
-        try{ var blob=new Blob([json],{type:'application/json'}); var url=URL.createObjectURL(blob);
-          var a=document.createElement('a'); a.href=url; a.download=filename||(key+'-state.json');
-          document.body.appendChild(a); a.click(); a.remove();
-          setTimeout(function(){ URL.revokeObjectURL(url); },1000);
-        }catch(e){}
-        try{ if(navigator.clipboard) navigator.clipboard.writeText(json); }catch(e){}
-        return json;
-      },
-      importJSON:function(text){ var p=JSON.parse(text);
-        if(validate&&!validate(p)) throw new Error('That data does not match this map.');
-        api.state=p; api.save(); return true; }
-    };
-    if(seeded&&baseline!=null) api.save();
-    return api;
-  }
-  function mountStateToolbar(container,store,opts){
-    opts=opts||{}; var label=opts.label||'data';
-    var onChange=typeof opts.onChange==='function'?opts.onChange:function(){};
-    var wrap=document.createElement('div');
-    wrap.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
-    var msg=document.createElement('span'); msg.style.cssText='font-size:12px;color:var(--muted);';
-    if(store.wasSeeded()) msg.textContent='Started fresh on this browser.';
-    function btn(t,title){ var b=document.createElement('button'); b.type='button'; b.textContent=t; b.title=title||'';
-      b.style.cssText='font-weight:600;padding:7px 13px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--ink);'; return b; }
-    var eb=btn('Export','Download your watchlist and notes as JSON.');
-    eb.addEventListener('click',function(){ store.download('semiconductor-map-notes.json'); msg.textContent='Exported (downloaded and copied to clipboard).'; });
-    var imp=document.createElement('input'); imp.type='file'; imp.accept='application/json,.json'; imp.style.display='none';
-    var ib=btn('Import','Restore from a previously exported file.');
-    ib.addEventListener('click',function(){ imp.click(); });
-    imp.addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f) return;
-      var fr=new FileReader(); fr.onload=function(){ try{ store.importJSON(fr.result); msg.textContent='Imported.'; onChange(); }
-        catch(err){ msg.textContent='Import failed: '+err.message; } imp.value=''; }; fr.readAsText(f); });
-    var rb=btn('Reset','Clear your watchlist and notes.');
-    rb.addEventListener('click',function(){ if(!confirm('Clear your watchlist and notes on this browser?')) return; store.reset(); msg.textContent='Cleared.'; onChange(); });
-    wrap.appendChild(eb); wrap.appendChild(ib); wrap.appendChild(imp); wrap.appendChild(rb); wrap.appendChild(msg);
-    container.appendChild(wrap);
-  }
-  root.DurableState={version:'1.0.0',createStore:createStore,mountStateToolbar:mountStateToolbar};
-})(window);
+/* durable-state.js (inlined) v2.0.0, see the durable-artifacts skill.
+   v2 (2026-07-14): download() REMOVED. It never produced a file: the artifact iframe's sandbox has no
+   allow-downloads, so a.click() is silently dropped, and with allow=<absent> the clipboard-write policy
+   is never delegated, so navigator.clipboard.writeText() REJECTS (async -> a try/catch catches nothing).
+   The old toolbar reported success after doing neither. exportState() now drives the UI off
+   execCommand('copy'), verified in a real cross-origin sandbox as the only way out. */
+(function(root){'use strict';
+  function deepClone(v){return v==null?v:JSON.parse(JSON.stringify(v));}
+  /* Needs a REAL user gesture (execCommand requires transient activation). Returns a real boolean. */
+  function copyViaTextarea(text){var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;';document.body.appendChild(ta);var prev=document.activeElement,ok=false;try{ta.focus();ta.select();if(ta.setSelectionRange)ta.setSelectionRange(0,text.length);ok=document.execCommand('copy')===true;}catch(e){ok=false;}try{ta.remove();}catch(e){}try{if(prev&&prev.focus)prev.focus();}catch(e){}return ok;}
+  /* Fire and forget. Returns NOTHING on purpose: the outcome is unknowable here, so no caller is able
+     to claim it. Do not "fix" this by returning true. */
+  function attemptDownload(j,fn){try{var b=new Blob([j],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=fn||'state.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(e){}}
+  function createStore(opts){var key=opts.key;if(!key)throw new Error('createStore needs a stable `key`.');
+    var version=opts.version||1,baseline=opts.baseline!=null?opts.baseline:null,validate=typeof opts.validate==='function'?opts.validate:null,VKEY=key+':v'+version,seeded=false;
+    function load(){try{var raw=localStorage.getItem(VKEY);if(raw){var p=JSON.parse(raw);if(!validate||validate(p))return p;}}catch(e){}seeded=true;return deepClone(baseline);}
+    var api={state:load(),
+      save:function(){try{localStorage.setItem(VKEY,JSON.stringify(api.state));return true;}catch(e){return false;}},
+      reset:function(){api.state=deepClone(baseline);api.save();return api.state;},wasSeeded:function(){return seeded;},
+      exportJSON:function(){return JSON.stringify(api.state,null,2);},
+      /* Returns {json,copied}. There is deliberately NO `downloaded` field. */
+      exportState:function(fn){var j=api.exportJSON();attemptDownload(j,fn||(key+'-state.json'));return{json:j,copied:copyViaTextarea(j)};},
+      importJSON:function(t){var p=JSON.parse(t);if(validate&&!validate(p))throw new Error('That data does not match this artifact\u2019s shape.');api.state=p;api.save();return true;}};
+    if(seeded&&baseline!=null)api.save();return api;}
+  function mountStateToolbar(container,store,opts){opts=opts||{};var label=opts.label||'data',onChange=typeof opts.onChange==='function'?opts.onChange:function(){};
+    var wrap=document.createElement('div');wrap.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;font:13px system-ui,sans-serif;';
+    var msg=document.createElement('span');msg.style.cssText='font-size:12px;opacity:.7;';if(store.wasSeeded())msg.textContent='Restored from saved snapshot.';
+    var out=opts.outputEl||document.createElement('textarea'),ownsOut=!opts.outputEl;
+    out.readOnly=true;out.setAttribute('aria-label','Exported '+label+' JSON');
+    if(ownsOut)out.style.cssText='display:none;width:100%;margin-top:8px;min-height:96px;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.45;';
+    out.addEventListener('focus',function(){out.select();});
+    function revealOut(){if(ownsOut){out.style.display='block';return;}out.hidden=false;for(var n=out;n;n=n.parentNode){if(n.hidden)n.hidden=false;}}
+    function btn(t,ti){var b=document.createElement('button');b.type='button';b.textContent=t;b.title=ti||'';b.style.cssText='font:inherit;font-weight:600;padding:6px 12px;border-radius:8px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;cursor:pointer;';return b;}
+    var eB=btn('\u2B07 Export','Copy your '+label+' as JSON so you can paste it into a file.');
+    eB.addEventListener('click',function(){var r=store.exportState(opts.filename);out.value=r.json;revealOut();
+      msg.textContent=r.copied?'Copied to clipboard. Paste it into a file now. Downloads are blocked inside artifacts.':'Select the text below and press Cmd+C.';
+      if(!r.copied){try{out.focus();out.select();}catch(e){}}});
+    var iI=document.createElement('input');iI.type='file';iI.accept='application/json,.json';iI.style.display='none';
+    var iB=btn('\u2B06 Import','Restore '+label+' from a previously saved JSON file.');iB.addEventListener('click',function(){iI.click();});
+    iI.addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var fr=new FileReader();fr.onload=function(){try{store.importJSON(fr.result);msg.textContent='Imported '+label+'.';onChange();}catch(err){msg.textContent='Import failed: '+err.message;}iI.value='';};fr.readAsText(f);});
+    /* confirmReset defaults OFF: confirm() returns undefined in the sandbox (no allow-modals), so the
+       old `!confirm(...)` guard bailed on EVERY click and Reset was dead. */
+    var rB=btn('\u21BA Reset','Clear '+label+'.');rB.addEventListener('click',function(){if(opts.confirmReset===true&&typeof confirm==='function'&&!confirm('Clear '+label+'?'))return;store.reset();msg.textContent='Cleared '+label+'.';onChange();});
+    wrap.appendChild(eB);wrap.appendChild(iB);wrap.appendChild(iI);wrap.appendChild(rB);wrap.appendChild(msg);if(ownsOut)wrap.appendChild(out);container.appendChild(wrap);
+    return{message:function(t){msg.textContent=t;}};}
+  root.DurableState={version:'2.0.0',createStore:createStore,mountStateToolbar:mountStateToolbar};
+})(typeof window!=='undefined'?window:globalThis);
 /* ==== end durable-state.js ==== */
 
 /* ==== baked data (regenerated from the CSVs by build_artifact.py) ==== */
