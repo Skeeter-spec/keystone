@@ -28,3 +28,11 @@ player. Target roughly 15 to 25 percent of a map's nodes, no more.
 2 official statistics / first party disclosure (newsroom, gov agency)
 3 trackers / aggregators / think tanks
 4 news
+
+## Where the figures live
+
+Before costing a batch, read `shared/SOURCING-ROUTES.md` and ROUTE the companies first (which host, which
+language, structured or PDF). Extraction is cheap once the route is known; finding the route is what costs.
+It also carries the traps: cninfo serves Shenzhen not Shanghai, consolidated vs parent-company statements
+share row labels, net income means attributable-to-parent, and an identifier that resolves is not the
+entity you meant.

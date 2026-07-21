@@ -54,3 +54,11 @@ one or two companies.
   finances or give investment advice.
 - Only free, public sources. No paywalled data.
 - Report honestly. If a run found nothing verifiable, say so in PROGRESS.log.
+
+## Where the figures live
+
+Before costing a batch, read `shared/SOURCING-ROUTES.md` and ROUTE the companies first (which host, which
+language, structured or PDF). Extraction is cheap once the route is known; finding the route is what costs.
+It also carries the traps: cninfo serves Shenzhen not Shanghai, consolidated vs parent-company statements
+share row labels, net income means attributable-to-parent, and an identifier that resolves is not the
+entity you meant.
