@@ -25,3 +25,32 @@ STILL foundation-adjacent, not Mapped: 0 relationship edges, and Siemens Energy 
 not costed. NEXT: the SEC-filer batch (Marvell, Arista, Astera Labs, Super Micro, Dell, HPE, Vertiv, Eaton,
 Oracle, CoreWeave, Nebius via tools/xbrl_extract.py), then Siemens Energy on a new Xetra route, then the
 relationships burst. Cerebras, Groq, OpenAI and Anthropic stay blank on purpose: private, no audited filing.
+
+2026-07-20 FINANCIALS (part 2), THE SEC BATCH: 11 more companies costed at tier 1, taking 04 to 23 of 30.
+Marvell, Arista, Astera Labs, Super Micro, Dell, HPE, Vertiv, Eaton, Oracle, CoreWeave and Nebius, all
+through tools/xbrl_extract.py against SEC XBRL companyfacts. Routed first, per shared/SOURCING-ROUTES.md:
+ONE fetch of company_tickers.json resolved all eleven and printed all eleven registrants for approval,
+rather than eleven separate lookups. Every registrant was read before its binding was approved; the two
+worth a second look were ETN (Eaton Corp plc, Ireland domiciled, correct) and NBIS (Nebius Group N.V. on
+CIK 1513845, which is the former Yandex N.V. entity renamed, not a collision).
+
+MARKET CAP GOT A BETTER ROUTE THAN 01 HAD. 01 took market caps from trackers (stockanalysis.com,
+companiesmarketcap.com) at tier 3 in a tier 1 row. Here the SHARE COUNT comes from the filing cover page
+and only the PRICE is market data, so the weaker half is as small as it can be. Before trusting it, the
+method was run as a CONTROL against two market caps 01 had already sourced independently: NVDA came out
+4940B against 01's 5109B (-3.3%) and MSFT 2990B against 2917B (+2.5%), both consistent with a week of
+price drift. That control is what made Oracle's $349B and Super Micro's $14B believable as data rather
+than as an instrument error, which is exactly how they first read.
+
+EMPTY WHERE IT SHOULD BE EMPTY. Dell, CoreWeave and Nebius tag no cover-page share count, so their market
+cap is blank rather than approximated (Dell's dual class structure would make a single class count wrong
+even if one existed). Cerebras, Groq, OpenAI and Anthropic stay blank permanently: private, no audited
+filing, and a press reported valuation is not a financial statement.
+
+Two figures that look like typos and are not, both noted in their rows: HPE's FY2025 net income is $0.06B,
+down from $2.60B; Oracle's capex is $55.66B against $17.09B of net income. Eaton and Oracle both had a
+consolidated ProfitLoss line differing from the attributable one, and the extractor took attributable in
+both, which is the rule shared/SOURCING-ROUTES.md states.
+
+NEXT: Siemens Energy (the sixth chokepoint, Xetra, a jurisdiction this repo has no route for yet), then
+Schneider Electric and Foxconn, then the relationships burst that would make 04 Mapped.

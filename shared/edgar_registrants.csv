@@ -7,30 +7,40 @@ cik,sec_registrant,company,approved
 6281,ANALOG DEVICES INC,Analog Devices,yes
 320193,Apple Inc.,Apple,yes
 6951,APPLIED MATERIALS INC /DE,Applied Materials,yes
+1596532,"Arista Networks, Inc.",Arista Networks,yes
 1973239,ARM HOLDINGS PLC /UK,Arm,yes
 937966,ASML HOLDING NV,ASML,yes
+1736297,"Astera Labs, Inc.",Astera Labs,yes
 811809,BHP Group Ltd,BHP Group,yes
 1730168,Broadcom Inc.,Broadcom,yes
 813672,CADENCE DESIGN SYSTEMS INC,Cadence,yes
+1769628,"CoreWeave, Inc.",CoreWeave,yes
+1571996,Dell Technologies Inc.,Dell Technologies,yes
+1551182,Eaton Corp plc,Eaton Corporation,yes
 1385849,ENERGY FUELS INC,Energy Fuels Inc,yes
 37996,FORD MOTOR CO,Ford Motor Company,yes
 1709048,GLOBALFOUNDRIES Inc.,GlobalFoundries,yes
 1467858,General Motors Co,GM,yes
+1645590,Hewlett Packard Enterprise Co,Hewlett Packard Enterprise,yes
 47217,HP INC,HP,yes
 50863,INTEL CORP,Intel,yes
 319201,KLA CORP,KLA,yes
 707549,LAM RESEARCH CORP,Lam Research,yes
 1966983,LITHIUM AMERICAS CORP.,Lithium Americas Corp,yes
 1811210,"Lucid Group, Inc.",Lucid Group,yes
+1835632,"Marvell Technology, Inc.",Marvell Technology,yes
 1326801,"Meta Platforms, Inc.",Meta,yes
 723125,MICRON TECHNOLOGY INC,Micron,yes
 789019,MICROSOFT CORP,Microsoft,yes
 1801368,MP Materials Corp. / DE,MP Materials,yes
+1513845,Nebius Group N.V.,Nebius Group,yes
 1045810,NVIDIA CORP,Nvidia,yes
+1341439,ORACLE CORP,Oracle,yes
 804328,QUALCOMM INC/DE,Qualcomm,yes
 863064,RIO TINTO PLC,Rio Tinto,yes
 2120882,SK hynix Inc.,SK hynix,yes
 909037,CHEMICAL & MINING CO OF CHILE INC,SQM (Sociedad Quimica y Minera de Chile),yes
+1375365,"Super Micro Computer, Inc.",Super Micro Computer,yes
 883241,SYNOPSYS INC,Synopsys,yes
 1318605,"Tesla, Inc.",Tesla,yes
 1318605,"Tesla, Inc.",Tesla Inc,yes
@@ -39,3 +49,4 @@ cik,sec_registrant,company,approved
 1033767,UNITED MICROELECTRONICS CORP,UMC,yes
 1970622,"USA Rare Earth, Inc.",USA Rare Earth Inc,yes
 917851,Vale S.A.,Vale S.A.,yes
+1674101,Vertiv Holdings Co,Vertiv Holdings,yes
