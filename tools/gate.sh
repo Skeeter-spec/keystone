@@ -39,6 +39,12 @@ python3 tools/check_identity.py --selftest >/dev/null || {
   echo "  Run: python3 tools/check_identity.py --selftest"
   exit 2
 }
+python3 tools/xbrl_extract.py --selftest >/dev/null || {
+  echo "  SELFTEST FAILED. The extractor's encoded rules (attributable vs consolidated net income,"
+  echo "  cash-flow vs additions capex, stale-period rejection) no longer hold."
+  echo "  Run: python3 tools/xbrl_extract.py --selftest"
+  exit 2
+}
 echo "  ok, every rule fires on its own mutant"
 
 echo ""
