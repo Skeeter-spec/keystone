@@ -64,6 +64,34 @@ KEY = {
     "LG Energy Solution": "LG Energy",
     "Samsung SDI": "Samsung SDI",
     "POSCO Future M": "POSCO Future|POSCO",
+    # 04-ai-compute, added 2026-07-20. Ten of the map's first 42 edges failed verification purely
+    # because THE ROSTER NAME IS OURS, NOT THE DOCUMENT'S. No filing on earth writes "Amazon (AWS)"
+    # or "Foxconn (Hon Hai Precision)" -- those parentheticals are disambiguators this atlas added for
+    # its own readers. Nvidia's 10-K says "Hon Hai Precision Industry Co., Ltd."; Vertiv's says
+    # "Amazon Web Services". Without these entries the checker reports a clean, confident, and
+    # completely wrong "document never names X" on a document that names X perfectly well.
+    # Kept TIGHT on purpose: a false POSITIVE is this tool's worst failure mode, so each alternative
+    # is a name the company actually trades under, never an abbreviation that could collide.
+    "Amazon (AWS)": "Amazon|Amazon Web Services|AWS",
+    "Alphabet (Google Cloud)": "Alphabet|Google",
+    "Meta Platforms": "Meta Platforms|Meta",
+    "Foxconn (Hon Hai Precision)": "Foxconn|Hon Hai",
+    "Nebius Group": "Nebius",
+    "Micron Technology": "Micron",
+    "Marvell Technology": "Marvell",
+    "Arista Networks": "Arista",
+    "Astera Labs": "Astera",
+    "Vertiv Holdings": "Vertiv",
+    "Eaton Corporation": "Eaton",
+    "Dell Technologies": "Dell",
+    "Super Micro Computer": "Super Micro|Supermicro|SMCI",
+    "Hewlett Packard Enterprise": "Hewlett Packard Enterprise|Hewlett-Packard Enterprise|HPE",
+    "Samsung Electronics": "Samsung Electronics|Samsung",
+    "TSMC": "TSMC|Taiwan Semiconductor",
+    "SK hynix": "SK hynix|SK Hynix",
+    "Siemens Energy": "Siemens Energy",
+    "Schneider Electric": "Schneider Electric|Schneider",
+    "Cerebras Systems": "Cerebras",
 }
 
 # NOTE: use .search(), never .match(). match() anchors at position 0, so the mid-URL alternatives
@@ -72,10 +100,44 @@ KEY = {
 LANDING_SMELL = re.compile(r"^https?://[^/]+/?$|/investors/?$|/news/?$|/search|\?q=", re.I)
 
 
+# A corporate newsroom is not a filing portal and does not want a robot. Measured 2026-07-20: three
+# 04 edges came back UNREACHABLE (connection reset, 403) against the project UA, and two of them
+# returned HTTP 200 immediately under a browser UA -- real documents, 162KB and 98KB, refusing the
+# label rather than the request. UNREACHABLE is a dangerous verdict to get wrong in EITHER direction:
+# treat it as "citation is bad" and you delete a sound edge; wave it through and you keep an unchecked
+# one. So the fetch retries once with a browser UA before anything is called unreachable.
+# The project UA stays FIRST because SEC asks automated clients to identify themselves, and SEC in
+# fact 403s the browser UA -- the two hosts want opposite things, which is exactly why both are tried.
+BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+
+
 def fetch(url):
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return r.read(), r.getcode(), r.headers.get("Content-Type", "")
+    last = None
+    for ua in (UA, BROWSER_UA):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": ua, "Accept": "*/*"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return r.read(), r.getcode(), r.headers.get("Content-Type", "")
+        except Exception as e:  # noqa: BLE001 -- any transport failure is worth one retry
+            last = e
+    raise last
+
+
+# 🔴 AN ERROR PAGE CAN SATISFY A BOTH-NAMES CHECK. Measured 2026-07-20 on the one edge that stayed
+# unreachable: marvell.com returns an Akamai "Access Denied" body that ECHOES THE REQUESTED URL, and
+# that URL contains the slug "marvell-expands-strategic-collaboration-aws". So the 525-byte refusal
+# names both "Marvell" and "AWS" and would verify CLEAN as the document it is denying access to.
+# This tool is safe today only because a 403 raises before the body is read -- which means the
+# protection is an accident of control flow, not a decision. Made explicit: a body too short to be a
+# filing, or one that reads like an error page, is never evidence of anything.
+ERROR_SMELL = re.compile(r"access denied|forbidden|are you a robot|enable javascript|"
+                         r"request blocked|errors\.edgesuite\.net|cloudflare", re.I)
+MIN_DOC_BYTES = 2000
+
+
+def looks_like_error_page(text):
+    return len(text) < MIN_DOC_BYTES or bool(ERROR_SMELL.search(text[:4000]))
 
 
 def to_text(raw, ctype, url):
@@ -141,6 +203,11 @@ def verify(project):
         if code != 200 or text is None:
             verdicts.append(("UNREACHABLE", edge, url, err or f"http {code}"))
             continue
+        if looks_like_error_page(text):
+            verdicts.append(("UNREACHABLE", edge, url,
+                             f"served a block/error page, not a document ({len(text)} chars). "
+                             f"An error page that echoes the URL can name both endpoints"))
+            continue
         a, b = named(text, r["from_company"]), named(text, r["to_company"])
         if a and b:
             verdicts.append(("OK", edge, url, f"both named, {nbytes//1024} KB"))
@@ -192,7 +259,55 @@ def selftest():
         ("but a real mention of Vale still counts", "Vale S.A.", "Vale S.A. operates in Indonesia", True),
         ("and a real Ford mention still counts", "Ford Motor Company", "an MoU with Ford Motor Company", True),
         ("a filing saying just 'Tesla' matches the node 'Tesla Inc'", "Tesla Inc", "offtake with Tesla", True),
+        # 04's roster names carry parenthetical disambiguators no filing uses. These must match the
+        # real trading names, and must NOT match the near-collisions those short forms invite.
+        ("'Amazon (AWS)' matches a filing that says 'Amazon Web Services'",
+         "Amazon (AWS)", "customers include Amazon Web Services and others", True),
+        ("'Foxconn (Hon Hai Precision)' matches the full legal name in Nvidia's 10-K",
+         "Foxconn (Hon Hai Precision)", "Hon Hai Precision Industry Co., Ltd. assembles", True),
+        ("'Meta Platforms' matches a filing that says just 'Meta'",
+         "Meta Platforms", "sales to Meta increased", True),
+        ("🔴 'Meta Platforms' must NOT match 'metadata'",
+         "Meta Platforms", "the metadata was incomplete", False),
+        ("🔴 'Meta Platforms' must NOT match 'metallurgical'",
+         "Meta Platforms", "metallurgical coal prices rose", False),
+        ("🔴 'Intel' must NOT match 'intelligence'",
+         "Intel", "artificial intelligence workloads", False),
+        ("🔴 'Dell Technologies' must NOT match 'Dellinger'",
+         "Dell Technologies", "signed by A. Dellinger, counsel", False),
+        ("🔴 'Eaton Corporation' must NOT match 'Eatonville'",
+         "Eaton Corporation", "the Eatonville facility", False),
+        ("🔴 'Arista Networks' must NOT match 'Aristarchus'",
+         "Arista Networks", "Aristarchus Capital holds a stake", False),
+        ("'TSMC' matches a filing that spells out Taiwan Semiconductor",
+         "TSMC", "Taiwan Semiconductor Manufacturing Company fabricates", True),
     ]
+    # 🔴 THE REAL AKAMAI BODY from 2026-07-20, verbatim. It names both endpoints and is not a document.
+    denied = ('Access Denied Access Denied You don\'t have permission to access '
+              '"http://www.marvell.com/company/newsroom/marvell-expands-strategic-collaboration-aws-'
+              'enable-accelerated-infrastructure-ai-cloud.html" on this server. '
+              'Reference #18.ab0c2e17 https://errors.edgesuite.net/18.ab0c2e17')
+    page_traps = [
+        ("🔴 the REAL Akamai 403 body names both endpoints via the echoed URL", denied, True),
+        ("🔴 ...and it would otherwise pass named() for BOTH companies",
+         denied, True),  # asserted explicitly below
+        ("a short but legitimate snippet is still rejected as too short to be a filing",
+         "Nvidia buys HBM from SK hynix.", True),
+        ("a real document body is NOT flagged as an error page",
+         "Nvidia " + ("audited consolidated financial statements and notes thereto. " * 80), False),
+    ]
+    for name, body, want in page_traps:
+        got = looks_like_error_page(body)
+        ok = got == want
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(name)
+    # The trap only matters BECAUSE named() is satisfied by it. Assert that, or the case above is
+    # just testing a string length and proves nothing about the danger it claims to guard.
+    both = named(denied, "Marvell Technology") and named(denied, "Amazon (AWS)")
+    print(f"  {'ok  ' if both else 'DEAD'}  🔴 confirms the danger is real: named() DOES match both on the 403 body")
+    if not both:
+        failures.append("the error-page fixture no longer demonstrates the false positive")
     for name, comp, doc2, want in substring_traps:
         got = named(doc2, comp)
         ok = got == want
@@ -214,7 +329,8 @@ def selftest():
     if failures:
         print(f"SELFTEST FAILED: {failures}")
         return 2
-    print(f"SELFTEST PASSED. {len(cases) + len(substring_traps) + len(smells)} cases.")
+    # +1 for the standalone named()-on-the-403-body assertion, which is not in any list.
+    print(f"SELFTEST PASSED. {len(cases) + len(substring_traps) + len(smells) + len(page_traps) + 1} cases.")
     return 0
 
 

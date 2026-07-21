@@ -80,3 +80,46 @@ average, not a period-end count. Deriving one would be an approximation dressed 
 
 NEXT: the relationships burst, which is what would make 04 Mapped. Schneider Electric (Euronext) and
 Foxconn (TWSE) remain uncosted and are NOT chokepoints, so they rank below edges.
+
+2026-07-20 RELATIONSHIPS BURST -- 04 IS MAPPED. 40 sourced edges from 3 parallel Sonnet workers (silicon /
+systems+power / clouds+labs), 41 staged, 41/41 verified by refetch, 1 dropped, 1 duplicate collapsed as a
+confirmation. 24 of 30 costed, all 6 chokepoints costed, 40 edges.
+
+🔑 ZERO competes-with, out of 40. 02's burst returned 8 of 14 as competes-with and was graded a partial
+failure. The fix was to say so in the prompt: name the failure, state that dependencies are what gets
+graded, and list competes-with last among the allowed types. The silicon worker found a ready made
+competitor list sitting in Nvidia's own 10-K (AMD, Arista, Broadcom, Cisco, HPE, Huawei, Intel, Lumentum,
+Marvell) and deliberately left every one of them on the floor. Telling a worker what counts as padding
+works better than hoping it self-restrains.
+
+🔑 THE DELIBERATE OVERLAP PAID OFF, IN THE AGREEING DIRECTION. Two workers were pointed independently at
+Nvidia's customer concentration note. Both returned the SAME numbers (FY2026: one direct customer 22%,
+another 14%) and the same crucial negative: the customers are NOT NAMED, not even as "Customer A".
+Neither wrote an edge guessing who they are. Agreement between independent reads is evidence; on the 02
+burst the same technique produced a DISAGREEMENT and the document settled it. Either way it earns its cost.
+
+🔴 THE MOST VALUABLE RESULTS WERE ABSENCES, AND THEY ALMOST ALL LIVE IN THE POWER TIER.
+  - NOT ONE of Microsoft, Meta, Alphabet or Amazon names Nvidia anywhere in its own 10-K. Checked by
+    full text search, not assumed. Everyone knows they buy the GPUs; no filing of theirs says so.
+  - Siemens Energy's own 266 page annual report, Schneider's FY2025 release and Eaton's 10-K name NO
+    data center counterparty at all. Zero edges for all three. Vertiv is the lone exception, and only
+    because its 10-K's "Our Customers" section names Microsoft, AWS, Google Cloud, CoreWeave and Nebius
+    outright, which is 5 of the map's 8 sells-equipment-to edges.
+  - TSMC's 20-F never names a customer ANYWHERE ("our largest customer", "our ten largest customers"),
+    so the CoWoS packaging edge -- the highest value single target on the list -- could not be written.
+    No document ties TSMC + CoWoS + a named customer in one place.
+  - Astera Labs uses "Customer A" through "Customer G"; Super Micro anonymises its 20% customer;
+    Oracle's $638B remaining performance obligations name no counterparty; Alphabet's $64.1B of
+    non marketable equity breaks out no holding, so no Alphabet -> Anthropic edge despite the reporting.
+  ⇒ THE AI COMPUTE STACK IS WIDELY REPORTED AND THINLY DISCLOSED. A map that only wrote down what
+    filings actually say is a genuinely different artifact from the consensus picture, and that gap IS
+    the finding. Recorded rather than papered over.
+
+⚠ SIEMENS ENERGY IS FLAGGED AS A CHOKEPOINT ON ZERO EDGES. Flag KEPT: the transformer argument is about
+supplier concentration and multi year lead times, not about any one disclosed contract, and an absence of
+disclosure is not an absence of dependency. But it is now the weakest evidenced claim on the map, and the
+caveat is written into map.json's chokepoint_why so it renders ON THE PAGE rather than hiding in this log.
+
+NEXT: Schneider Electric and Foxconn financials (neither is a chokepoint); a politics lens (BIS export
+controls sit directly on this map's silicon chokepoints); timeseries. The CoWoS edge stays open until a
+document names a customer.

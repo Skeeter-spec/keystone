@@ -44,7 +44,7 @@ data lands.
 | 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | **Mapped.** 41 companies costed, 48 sourced relationship edges, 8 chokepoints, five year financials for every chokepoint. Politics and economics lenses next |
 | 02 | [Critical minerals](projects/02-critical-minerals/) | **Mapped.** 17 sourced relationship edges, 9 of them real dependencies, all 5 chokepoints costed from FY2025 audited filings. 17 of 33 companies costed (16 of them with revenue; Lithium Americas is pre-revenue), with no timeseries and no politics lens yet, so it is a thinner map than 01 |
 | 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
-| 04 | [AI compute stack](projects/04-ai-compute/) | **Costed.** 24 of 30 companies costed, including all 6 chokepoints. Twelve figures reused from 01 (shared nodes, same filings), eleven from SEC XBRL, Siemens Energy from its own audited statements. Four companies are private and stay blank. No relationship edges yet, so it is not yet Mapped |
+| 04 | [AI compute stack](projects/04-ai-compute/) | **Mapped.** 24 of 30 companies costed including all 6 chokepoints, and 40 sourced relationship edges, every one of them a dependency rather than a rivalry. Four companies are private and stay blank. Siemens Energy is flagged as a chokepoint on zero edges, deliberately and visibly: no filing read here names a data center counterparty |
 | 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |
 | 06 | [Shipping](projects/06-shipping/) | Foundation only |
 | 07 | [Food and fertilizer](projects/07-food-fertilizer/) | Foundation only |
