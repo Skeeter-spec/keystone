@@ -121,6 +121,13 @@
   .disc{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;margin-top:14px;}
   .empty{color:var(--muted);font-size:13px;padding:8px 2px;}
   .reflist{display:flex;flex-direction:column;gap:14px;}
+  .gapnote{border-left:3px solid var(--warn,#c98a2b);background:var(--surface-2);
+    padding:9px 12px;border-radius:0 8px 8px 0;margin:0 0 12px;font-size:13.5px;line-height:1.55;}
+  .gaplink{color:var(--muted);}
+  .gaprow{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--border);
+    font-size:14px;line-height:1.5;}
+  .gapk{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;}
+  @media (max-width:560px){ .gaprow{grid-template-columns:1fr;gap:2px;} }
   .refco{border-bottom:1px solid var(--border);padding-bottom:12px;}
   .refco h3{font-size:14.5px;margin-bottom:5px;}
   .refco a{font-size:12.5px;word-break:break-all;}
@@ -224,6 +231,21 @@
     <div id="chokelist"></div>
   </section>
 
+  <section id="tab-gaps" hidden>
+    <div class="panel">
+      <div class="eyebrow">Evidence</div>
+      <h2>What the filings won't say</h2>
+      <div class="sub">Every edge on this map is sourced. That is a rule about what the map may
+      <em>claim</em>, not a claim about what exists. These are the things we went looking for and could
+      not source, each one recorded with the documents actually read to establish it, and with what
+      would close it. An absence that names where it looked can be checked. One that does not is a shrug,
+      so the gate refuses to accept it.</div>
+    </div>
+    <div id="gaplist"></div>
+    <div class="empty" id="gapsempty" hidden>No gaps recorded yet. This map has not run a
+      research burst, so it has nothing to say about what it could not find.</div>
+  </section>
+
   <section id="tab-refs" hidden>
     <div class="sub" style="margin-bottom:14px;">Every figure in this map traces to a primary source. Links open the original filing.</div>
     <div class="panel"><div class="reflist" id="reflist"></div></div>
@@ -304,7 +326,7 @@
 /* ==== end durable-state.js ==== */
 
 /* ==== baked data (regenerated from the CSVs by build_artifact.py) ==== */
-const BUILD = {"date": "2026-07-17", "total": 28, "filled": 0};
+const BUILD = {"date": "2026-07-20", "total": 28, "filled": 0};
 const COMPANIES = [{"company": "Pfizer", "ticker": "PFE", "exchange": "NYSE", "hq_country": "United States", "roles": "originator", "primary_segment": "Branded pharmaceuticals and vaccines", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Large-cap originator across oncology, vaccines, and internal medicine; broad portfolio, not a single-point chokepoint.", "lens": "accounting", "source_tier": ""}, {"company": "Johnson & Johnson (Innovative Medicine)", "ticker": "JNJ", "exchange": "NYSE", "hq_country": "United States", "roles": "originator", "primary_segment": "Branded pharmaceuticals and biologics", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Pharma segment of a diversified healthcare conglomerate (also devices/consumer health, reported separately).", "lens": "accounting", "source_tier": ""}, {"company": "Roche Holding", "ticker": "ROG.SW", "exchange": "SIX Swiss Exchange", "hq_country": "Switzerland", "roles": "originator", "primary_segment": "Branded biologics and oncology", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Also owns Genentech and a large diagnostics business; pharma division is one of several segments.", "lens": "accounting", "source_tier": ""}, {"company": "Novartis", "ticker": "NVS", "exchange": "NYSE", "hq_country": "Switzerland", "roles": "originator", "primary_segment": "Branded pharmaceuticals", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Spun off Sandoz (generics) as an independent company in 2023; now a pure originator.", "lens": "accounting", "source_tier": ""}, {"company": "Merck & Co", "ticker": "MRK", "exchange": "NYSE", "hq_country": "United States", "roles": "originator", "primary_segment": "Branded pharmaceuticals and vaccines", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Known outside North America as MSD; broad oncology and vaccine portfolio.", "lens": "accounting", "source_tier": ""}, {"company": "AstraZeneca", "ticker": "AZN", "exchange": "LSE / NASDAQ", "hq_country": "United Kingdom", "roles": "originator", "primary_segment": "Branded pharmaceuticals and biologics", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Dual-listed; strong oncology and rare disease pipeline.", "lens": "accounting", "source_tier": ""}, {"company": "Sanofi", "ticker": "SNY", "exchange": "Euronext Paris / NASDAQ", "hq_country": "France", "roles": "originator", "primary_segment": "Branded pharmaceuticals and vaccines", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Also a major vaccine maker (Sanofi Pasteur).", "lens": "accounting", "source_tier": ""}, {"company": "Eli Lilly", "ticker": "LLY", "exchange": "NYSE", "hq_country": "United States", "roles": "originator", "primary_segment": "Branded pharmaceuticals (GLP-1 / diabetes / obesity)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Currently capacity-constrained on GLP-1 drugs (tirzepatide), a demand-side not supply-chokepoint issue.", "lens": "accounting", "source_tier": ""}, {"company": "AbbVie", "ticker": "ABBV", "exchange": "NYSE", "hq_country": "United States", "roles": "originator", "primary_segment": "Branded immunology and specialty pharmaceuticals", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Spun off from Abbott in 2013; Humira/Skyrizi/Rinvoq-led immunology franchise.", "lens": "accounting", "source_tier": ""}, {"company": "Novo Nordisk", "ticker": "NVO", "exchange": "NYSE / Copenhagen", "hq_country": "Denmark", "roles": "originator", "primary_segment": "Insulin and GLP-1 diabetes/obesity drugs", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Owns Novo Holdings' controlling stake structure; acquired Catalent's fill-finish sites in 2024-2025 to secure its own supply.", "lens": "accounting", "source_tier": ""}, {"company": "Teva Pharmaceutical Industries", "ticker": "TEVA", "exchange": "NYSE / TASE", "hq_country": "Israel", "roles": "originator;generics-maker", "primary_segment": "Generic drugs plus some branded specialty", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "World's largest generics maker by volume; also holds branded specialty products (e.g. Austedo, Ajovy).", "lens": "accounting", "source_tier": ""}, {"company": "Sun Pharmaceutical Industries", "ticker": "SUNPHARMA.NS", "exchange": "NSE India", "hq_country": "India", "roles": "generics-maker;api-maker", "primary_segment": "Generic drugs and active pharmaceutical ingredients", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "India's largest pharma company by revenue; vertically integrated into API production.", "lens": "accounting", "source_tier": ""}, {"company": "Dr. Reddy's Laboratories", "ticker": "RDY", "exchange": "NYSE / NSE India", "hq_country": "India", "roles": "generics-maker;api-maker", "primary_segment": "Generic drugs and active pharmaceutical ingredients", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Major API and generic-finished-dose exporter to the US and EU.", "lens": "accounting", "source_tier": ""}, {"company": "Aurobindo Pharma", "ticker": "AUROPHARMA.NS", "exchange": "NSE India", "hq_country": "India", "roles": "generics-maker;api-maker", "primary_segment": "Generic drugs and active pharmaceutical ingredients", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "One of the largest suppliers of generic injectables and APIs to the US market.", "lens": "accounting", "source_tier": ""}, {"company": "Cipla", "ticker": "CIPLA.NS", "exchange": "NSE India", "hq_country": "India", "roles": "generics-maker;api-maker", "primary_segment": "Generic drugs and active pharmaceutical ingredients", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Major respiratory and generics maker; significant API self-supply.", "lens": "accounting", "source_tier": ""}, {"company": "Zhejiang Huahai Pharmaceutical", "ticker": "600521.SS", "exchange": "Shanghai Stock Exchange", "hq_country": "China", "roles": "api-maker", "primary_segment": "Active pharmaceutical ingredients (sartans and others)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Source of the 2018 global valsartan/sartan API recall (NDMA contamination); illustrates how concentrated a handful of Chinese/Indian API plants are for globally used generic drug classes.", "lens": "accounting", "source_tier": ""}, {"company": "Scientific Protein Laboratories", "ticker": "", "exchange": "private", "hq_country": "United States", "roles": "api-maker", "primary_segment": "Heparin active pharmaceutical ingredient (from porcine intestine)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Central to the 2007-2008 contaminated-heparin crisis traced to a Changzhou, China sourcing/fractionation facility; heparin API supply remains concentrated in a small number of Chinese crude-heparin processors with no synthetic substitute at scale.", "lens": "accounting", "source_tier": ""}, {"company": "Lonza Group", "ticker": "LONN.SW", "exchange": "SIX Swiss Exchange", "hq_country": "Switzerland", "roles": "cdmo", "primary_segment": "Biologics and sterile injectable contract manufacturing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "One of a handful of CDMOs with large-scale biologics/sterile-fill capacity that originators depend on; capacity bottlenecks here can delay launches industry-wide.", "lens": "accounting", "source_tier": ""}, {"company": "Catalent", "ticker": "", "exchange": "private (Novo Holdings)", "hq_country": "United States", "roles": "cdmo", "primary_segment": "Sterile injectable fill-finish and softgel contract manufacturing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Acquired by Novo Holdings in December 2024 (with select fill-finish sites sold on to Novo Nordisk); taken private, no longer separately traded.", "lens": "accounting", "source_tier": ""}, {"company": "Samsung Biologics", "ticker": "207940.KS", "exchange": "Korea Exchange", "hq_country": "South Korea", "roles": "cdmo", "primary_segment": "Large-scale biologics contract manufacturing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Rapidly growing biologics CDMO capacity; a real alternative to WuXi Biologics amid Western derisking from Chinese biomanufacturing, which is why it is not (yet) itself flagged as a chokepoint.", "lens": "accounting", "source_tier": ""}, {"company": "WuXi AppTec", "ticker": "603259.SS", "exchange": "Shanghai Stock Exchange", "hq_country": "China", "roles": "cdmo;api-maker", "primary_segment": "Small-molecule drug substance, API, and R&D contract manufacturing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Also dual-listed in Hong Kong (2359.HK); named alongside WuXi Biologics in the US BIOSECURE Act as a national-security supply-chain concern.", "lens": "accounting", "source_tier": ""}, {"company": "WuXi Biologics", "ticker": "2269.HK", "exchange": "Hong Kong Stock Exchange", "hq_country": "China", "roles": "cdmo", "primary_segment": "Biologics contract manufacturing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "One of the world's largest biologics CDMOs; explicitly named in the proposed US BIOSECURE Act, which would restrict federal contracts with the firm, making it a geopolitical as well as an industrial chokepoint.", "lens": "accounting", "source_tier": ""}, {"company": "McKesson Corporation", "ticker": "MCK", "exchange": "NYSE", "hq_country": "United States", "roles": "distributor", "primary_segment": "Pharmaceutical wholesale distribution", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "One of the 'big three' US drug wholesalers; McKesson, Cencora, and Cardinal Health together move roughly 90% of US pharmaceutical volume, so any one of the three carries systemic weight.", "lens": "accounting", "source_tier": ""}, {"company": "Cencora (formerly AmerisourceBergen)", "ticker": "COR", "exchange": "NYSE", "hq_country": "United States", "roles": "distributor", "primary_segment": "Pharmaceutical wholesale distribution", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Second of the big-three US wholesalers; renamed from AmerisourceBergen in 2023.", "lens": "accounting", "source_tier": ""}, {"company": "Cardinal Health", "ticker": "CAH", "exchange": "NYSE", "hq_country": "United States", "roles": "distributor", "primary_segment": "Pharmaceutical wholesale distribution", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Third of the big-three US wholesalers.", "lens": "accounting", "source_tier": ""}, {"company": "CVS Health (Caremark)", "ticker": "CVS", "exchange": "NYSE", "hq_country": "United States", "roles": "pbm;payer;pharmacy", "primary_segment": "Pharmacy benefit management, health insurance (Aetna), and retail/specialty pharmacy", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "CVS Caremark, Express Scripts (Cigna), and OptumRx (UnitedHealth) together administer roughly 80% of US prescription claims, giving the PBM layer outsized control over formulary access and rebates; CVS is the largest and also vertically integrated into retail dispensing.", "lens": "accounting", "source_tier": ""}, {"company": "Cigna (Express Scripts)", "ticker": "CI", "exchange": "NYSE", "hq_country": "United States", "roles": "pbm;payer", "primary_segment": "Pharmacy benefit management and health insurance", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Owns Express Scripts, the second-largest US PBM.", "lens": "accounting", "source_tier": ""}, {"company": "UnitedHealth Group (OptumRx)", "ticker": "UNH", "exchange": "NYSE", "hq_country": "United States", "roles": "pbm;payer", "primary_segment": "Pharmacy benefit management and health insurance", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Owns OptumRx, the third of the big-three US PBMs.", "lens": "accounting", "source_tier": ""}];
 const RELATIONSHIPS = [];
 const TIMESERIES = [];
@@ -315,6 +337,8 @@ const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
 
 /* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
 const CHOKE_WHY = {"Zhejiang Huahai Pharmaceutical": "A large share of the world's generic drug active pharmaceutical ingredients come from a small number of Chinese and Indian plants; Huahai's 2018 valsartan/sartan API contamination triggered a global multi-country recall, showing how concentrated this layer is and how a single plant failure can halt production worldwide.", "Scientific Protein Laboratories": "Supplies nearly all crude heparin, an anticoagulant extracted from pig intestine with no synthetic substitute at scale, from a sourcing chain in Changzhou China; the 2007-2008 contaminated-heparin crisis traced to SPL's supply chain killed patients in the US.", "Lonza Group": "A handful of contract development and manufacturing organizations provide the sterile fill-finish and biologics capacity that originators increasingly depend on; Lonza is one of the few with large-scale biologics and sterile-injectable lines, and a shutdown here cannot be quickly absorbed elsewhere.", "WuXi Biologics": "One of the world's largest biologics CDMOs; capacity is genuinely scarce because specialized cleanrooms and bioreactor trains take years to build, and WuXi is explicitly named in the proposed US BIOSECURE Act, creating a geopolitical as well as industrial chokepoint.", "McKesson Corporation": "One of the big-three US drug wholesalers; McKesson, Cencora, and Cardinal Health together move roughly 90 percent of US pharmaceutical volume, and almost every manufacturer routes through one of these three with no fourth-scale alternative.", "CVS Health (Caremark)": "CVS Caremark, Express Scripts, and OptumRx together administer roughly 80 percent of US prescription claims; PBMs decide formulary placement and negotiate rebates that determine a drug's net price, giving this layer outsized leverage over both manufacturers and patients."};
+const GAPS = [];
+const OPEN_GAPS = GAPS.filter(g=>(g.status||"open")!=="closed");
 
 /* source-tier labels for the verification badge */
 const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
@@ -328,13 +352,19 @@ let S = store.state;
 const $ = s=>document.querySelector(s);
 const isFilled = c=>c.revenue_usd_b!=='';
 const rolesOf = c=>c.roles.split(';').filter(Boolean);
+// Gap prose is long-form English written by a researcher, not a short CSV field: it carries
+// quotes, ampersands and the odd angle bracket. Everything here is baked in at build time from
+// this repo's own CSVs, so this is hygiene rather than an untrusted-input defence.
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c=>(
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtB(v){ if(v===''||v==null) return null; const n=parseFloat(v);
   if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(2)+'T';
   return '$'+n.toFixed(n<10?2:1)+'B'; }
 
 /* ---- tabs ---- */
 const TABS=[['overview','Overview'],['companies','Companies'],['fin','Financials'],['chain','Value chain'],
-  ['rel','Relationships'],['choke','Chokepoints'],['refs','References'],['notes','My notes']];
+  ['rel','Relationships'],['choke','Chokepoints'],['gaps',"What the filings won't say"],
+  ['refs','References'],['notes','My notes']];
 function buildTabs(){
   const nav=$('#tabs');
   TABS.forEach(([id,label],i)=>{
@@ -365,6 +395,9 @@ function renderOverview(){
     [RELATIONSHIPS.length,'relationships traced'],
     [chokes.length,'chokepoints flagged'],
     [filled.length+' / '+COMPANIES.length,'financials sourced'],
+    // The absence count sits on the FRONT PAGE beside the edge count on purpose. A viewer who only
+    // sees 40 confident edges forms an impression of completeness the data does not support.
+    [OPEN_GAPS.length,'gaps recorded'],
   ];
   $('#ovstats').innerHTML = stats.map(([n,k])=>
     `<div class="stat"><div class="n mono">${n}</div><div class="k">${k}</div></div>`).join('');
@@ -498,6 +531,48 @@ function renderRel(){
   }).join('');
 }
 
+/* ---- what the filings won't say ---- */
+const GAP_KIND={
+  'undisclosed':      ['Undisclosed','The authoritative document exists and declines to say'],
+  'unreachable':      ['Unreachable','A real source we could not read'],
+  'contradiction':    ['Reported, not disclosed','What everyone reports is in no filing we read'],
+  'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
+};
+function renderGaps(){
+  const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));
+  $('#gapsempty').hidden = rows.length>0;
+  $('#gaplist').innerHTML = rows.map(g=>{
+    const k=GAP_KIND[g.kind]||[g.kind,''];
+    const closed=(g.status||'open')==='closed';
+    return `<div class="panel"${closed?' style="opacity:.62"':''}>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${esc(g.subject||'')}</h2>
+        <span class="chip" title="${esc(k[1])}">${esc(k[0])}${closed?' &middot; closed':''}</span>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;"><b>We looked for:</b> ${esc(g.sought||'')}</div>
+      <div class="gaprow"><span class="gapk">Searched</span><span>${esc(g.searched||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Found instead</span><span>${esc(g.found_instead||'')}</span></div>
+      <div class="gaprow"><span class="gapk">What it blocks</span><span>${esc(g.blocks||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Would close it</span><span>${esc(g.would_close_it||'')}</span></div>
+      <div class="sub mono" style="margin-top:10px;font-size:12px;">last checked ${esc(g.last_checked||'')}</div>
+    </div>`;
+  }).join('');
+}
+/* A chokepoint flagged with no sourced edge behind it must admit that at the point of the claim,
+   not only in the gaps tab. Matching is on the gap's `subject` naming the company, which is the same
+   join-by-exact-name the rest of this page uses. */
+function gapsFor(company){
+  return OPEN_GAPS.filter(g=>(g.subject||'').indexOf(company)!==-1);
+}
+function gapBadge(company){
+  const gs=gapsFor(company);
+  if(!gs.length) return '';
+  const flag=gs.some(g=>g.kind==='unevidenced-flag');
+  return `<div class="gapnote">${flag
+    ? 'Flagged as a chokepoint with <b>no sourced edge behind it</b>.'
+    : 'This node has an evidence gap.'} ${esc(gs[0].blocks||'')}
+    <span class="gaplink">See <b>What the filings won&#39;t say</b>.</span></div>`;
+}
 /* ---- chokepoints ---- */
 function renderChoke(){
   const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
@@ -513,6 +588,7 @@ function renderChoke(){
         <h2>${c.company}${c.ticker?` <span class="tick mono">${c.ticker}</span>`:''}</h2>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="chip" style="display:inline-block;">Financials and edges land in the next research burst</div>
     </div>`;
     }
@@ -524,6 +600,7 @@ function renderChoke(){
         <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="bars">
         <div class="row"><span>Revenue</span><div class="track"><div class="seg" style="width:${rw}%;background:var(--pos)"></div></div></div>
         <div class="row"><span>Capex (builds)</span><div class="track"><div class="seg" style="width:${cw}%;background:var(--accent)"></div></div></div>
@@ -629,7 +706,7 @@ function renderFinancials(){
   body.innerHTML=`<div class="chartwrap">${finChart(s)}${finLegend()}</div>${ratios}${finTable(s)}`;
 }
 
-function renderAll(){ renderCards(); renderRel(); renderChoke(); renderRefs(); renderOverview(); renderFinancials(); }
+function renderAll(){ renderCards(); renderRel(); renderChoke(); renderGaps(); renderRefs(); renderOverview(); renderFinancials(); }
 
 /* ---- init ---- */
 buildTabs(); renderHeader(); roleOptions(); relTypeOptions(); renderAll(); renderNotes();

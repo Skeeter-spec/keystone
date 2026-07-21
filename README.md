@@ -17,7 +17,34 @@ Every map follows the same shape, so the workflow carries from one industry to t
 - **A graph, not a roster.** Companies are nodes; the real work is the directed relationship edges between them.
 - **Three lenses.** Accounting (audited financial reality), politics (export controls, sanctions, subsidies), and economics (industry structure, concentration, cycles).
 - **Sourced or it does not exist.** Every figure and edge carries a real source and a tier, from primary regulatory filings down to news. Volatile numbers get two independent sources.
+- **And the gaps are data too.** What no filing will say is recorded in `data/gaps.csv`, with the documents we read to establish it. The map is what is **disclosed**, not what is **true**, and the distance between those two is a finding in its own right.
 - **Self contained artifacts.** Each map renders to a single offline page with the data baked in, so it stays honest and portable.
+
+## Reported is not disclosed
+
+"Sourced or it does not exist" is a rule about what a map may **claim**. Read as a claim about the world
+it would be false, and the difference matters enough to spend a section on.
+
+Building the AI compute map turned up two facts worth more than most of the edges on it:
+
+- **Every hyperscaler buys Nvidia silicon. Not one of their 10-Ks says so.** Microsoft, Meta, Alphabet
+  and Amazon were each searched in full: zero mentions of Nvidia. Not in a supplier list, not in a risk
+  factor, not in a note.
+- **TSMC packages the accelerators the industry runs on, and its 20-F will only say "our largest
+  customer".** No filing anywhere ties TSMC's CoWoS capacity to a named customer, so the map's third
+  ranked chokepoint carries no sourced packaging edge at all.
+
+Both are checked facts about **documents**, not speculation about companies. And on a map that drew only
+what it could source, both would have been invisible: a dependency nobody discloses and a dependency that
+does not exist render identically, as nothing.
+
+So the absences are recorded like everything else. Each row names what was sought, **the documents
+actually searched**, what those documents said instead, what conclusion it blocks, and what would close
+it. That last pair is the point. An absence that names where it looked can be checked by a reader and
+closed by the next burst; one that does not is a shrug, and `tools/check_data.py` refuses it.
+
+Every map's page carries these under **What the filings won't say**, with the open count on the front
+page beside the edge count, and a marker on any chokepoint whose flag has no sourced edge behind it.
 
 ## Pick up here
 
@@ -44,7 +71,7 @@ data lands.
 | 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | **Mapped.** 41 companies costed, 48 sourced relationship edges, 8 chokepoints, five year financials for every chokepoint. Politics and economics lenses next |
 | 02 | [Critical minerals](projects/02-critical-minerals/) | **Mapped.** 17 sourced relationship edges, 9 of them real dependencies, all 5 chokepoints costed from FY2025 audited filings. 17 of 33 companies costed (16 of them with revenue; Lithium Americas is pre-revenue), with no timeseries and no politics lens yet, so it is a thinner map than 01 |
 | 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
-| 04 | [AI compute stack](projects/04-ai-compute/) | **Mapped.** 24 of 30 companies costed including all 6 chokepoints, and 40 sourced relationship edges, every one of them a dependency rather than a rivalry. Four companies are private and stay blank. Siemens Energy is flagged as a chokepoint on zero edges, deliberately and visibly: no filing read here names a data center counterparty |
+| 04 | [AI compute stack](projects/04-ai-compute/) | **Mapped.** 24 of 30 companies costed including all 6 chokepoints, and 40 sourced relationship edges, every one of them a dependency rather than a rivalry. Four companies are private and stay blank. Also the first map to record what it could **not** source: 9 gaps, including four hyperscalers whose filings never name Nvidia |
 | 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |
 | 06 | [Shipping](projects/06-shipping/) | Foundation only |
 | 07 | [Food and fertilizer](projects/07-food-fertilizer/) | Foundation only |

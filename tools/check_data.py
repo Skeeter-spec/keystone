@@ -44,6 +44,21 @@ The rules, each tied to the promise or the mechanism it protects:
                  for style; both teach vocabulary just as effectively as the runbook does. So this rule
                  now covers AGENT-RUNBOOK.md, FOUNDATION.md, and the notes column of companies.csv.
 
+  8. gaps        A recorded gap names the documents that were SEARCHED and what WOULD CLOSE it.
+
+                 Added 2026-07-20, because the 04 burst's most valuable findings were absences: no
+                 hyperscaler names Nvidia in its own 10-K, TSMC's 20-F never names a customer, Nvidia's
+                 22% and 14% customers are unnamed. Those lived in a PROGRESS.log while the MAP, which
+                 is the product, rendered 40 confident edges and no way to tell "no relationship here"
+                 from "a relationship no filing will confirm". Two opposite states, drawn identically.
+
+                 The danger in recording absences is that an absence is trivially easy to assert and
+                 impossible to refute. "We could not find anything" is not a finding, it is a shrug, and
+                 a map full of shrugs is worse than one that stays silent. So the rule is the one thing
+                 that makes an absence evidence: it must say WHERE IT LOOKED. "TSMC FY2025 20-F, full
+                 text" can be checked by anyone. It must also say what would close it, which turns a
+                 dead end into the next burst's task instead of a permanent excuse.
+
 Exit 0 = clean. Exit 1 = a real problem. Exit 2 = the checker itself is broken.
 """
 import csv, glob, pathlib, re, sys
@@ -53,6 +68,16 @@ FINANCIAL_COLS = ("revenue_usd_b", "net_income_usd_b", "market_cap_usd_b",
                   "rd_spend_usd_b", "capex_usd_b")
 VALID_TIERS = {"1", "2", "3"}
 VALID_CHOKE = {"yes", "no"}
+# Rule 8's vocabulary, fixed HERE before anything writes a gap row. The chokepoint TRUE/FALSE drift
+# happened because a schema's columns were agreed and its VALUES were not, and six maps shipped a
+# vocabulary the renderer silently disagreed with.
+VALID_GAP_KIND = {
+    "undisclosed",       # the authoritative document exists and declines to say (TSMC, Nvidia, Astera)
+    "unreachable",       # a real source we could not read (Marvell behind Akamai)
+    "contradiction",     # two sources disagree, or the reported world contradicts the disclosed one
+    "unevidenced-flag",  # a claim this map makes with no sourced edge behind it (Siemens Energy)
+}
+VALID_GAP_STATUS = {"open", "closed"}
 
 
 def g(row, key):
@@ -115,6 +140,37 @@ def check_timeseries(rows, label):
             problems.append(f"{label}:{i} {who} has financials with no source_tier")
         elif tier not in VALID_TIERS:
             problems.append(f"{label}:{i} {who} has source_tier {tier!r}, expected 1, 2 or 3")
+    return problems
+
+
+def check_gaps(rows, label):
+    """Rule 8. An absence is only evidence if it says where it looked."""
+    problems = []
+    for i, r in enumerate(rows, start=2):
+        who = g(r, "gap_id") or g(r, "subject") or f"row {i}"
+        if not g(r, "searched"):
+            problems.append(
+                f"{label}:{i} {who} records a gap without naming what was SEARCHED. An absence with no "
+                f"documents behind it cannot be checked or refuted, which makes it a shrug, not a finding")
+        if not g(r, "would_close_it"):
+            problems.append(
+                f"{label}:{i} {who} records a gap with no would_close_it. Without it the row is a "
+                f"permanent excuse rather than the next burst's task")
+        kind = g(r, "kind")
+        if kind and kind not in VALID_GAP_KIND:
+            problems.append(f"{label}:{i} {who} has kind {kind!r}, expected one of "
+                            f"{', '.join(sorted(VALID_GAP_KIND))}")
+        elif not kind:
+            problems.append(f"{label}:{i} {who} has no kind, so the map cannot say what sort of gap it is")
+        status = g(r, "status")
+        if status and status not in VALID_GAP_STATUS:
+            problems.append(f"{label}:{i} {who} has status {status!r}, expected 'open' or 'closed'")
+        # A contradiction is a claim ABOUT two sources. One source cannot contradict anything, and a
+        # single-source "contradiction" is the shape a vague suspicion takes when it wants to look rigorous.
+        if kind == "contradiction" and len(re.findall(r";", g(r, "searched"))) < 1:
+            problems.append(
+                f"{label}:{i} {who} is kind 'contradiction' but names fewer than two searched sources "
+                f"(separate them with ';'). One source cannot contradict anything")
     return problems
 
 
@@ -209,11 +265,19 @@ def run(root):
         companies = load(d / "companies.csv")
         rels = load(d / "relationships.csv")
         ts = load(d / "financials_timeseries.csv")
+        # load() returns [] for a missing file, so a map with no gaps.csv is silently fine. Nine of
+        # ten maps have not run a burst yet and have nothing to say about what they could not find.
+        problems += check_gaps(load(d / "gaps.csv"), f"{slug}/gaps.csv")
         problems += check_companies(companies, f"{slug}/companies.csv")
         problems += check_notes_prose(companies, f"{slug}/companies.csv")
         problems += check_relationships(rels, f"{slug}/relationships.csv")
         problems += check_timeseries(ts, f"{slug}/financials_timeseries.csv")
-        facts[slug] = {"edges": len(rels), "costed": sum(1 for c in companies if has_financials(c))}
+        facts[slug] = {
+            "edges": len(rels),
+            "costed": sum(1 for c in companies if has_financials(c)),
+            "gaps": sum(1 for x in load(d / "gaps.csv")
+                        if (g(x, "status") or "open") != "closed"),
+        }
     # Rule 7 covers _kit too: it is the template every future map is stamped from, so it is the
     # one file where a wrong instruction costs the most. FOUNDATION.md is in scope because a burst
     # agent is handed the foundation brief as context, so it teaches vocabulary the same way.
@@ -244,6 +308,18 @@ def selftest():
     good_ts = {
         "company": "Fixture Corp", "fiscal_year": "2025", "revenue_usd_b": "10.0",
         "source_url": "https://example.com/ar", "source_tier": "1",
+    }
+    # The real 2026-07-20 TSMC gap, kept as the fixture so the rule is tested against the thing it
+    # exists for rather than an invented row that happens to satisfy it.
+    good_gap = {
+        "gap_id": "gap-04-tsmc-customers", "kind": "undisclosed",
+        "subject": "TSMC packages-for Nvidia (CoWoS)",
+        "sought": "a filing naming a CoWoS advanced-packaging customer",
+        "searched": "TSMC FY2025 20-F, full text; Nvidia FY2026 10-K, full text",
+        "found_instead": '"our largest customer", "our ten largest customers" -- never a name',
+        "blocks": "the map's third chokepoint has no sourced edge",
+        "would_close_it": "any filing or first-party disclosure naming a CoWoS customer",
+        "status": "open", "last_checked": "2026-07-20",
     }
     cases = [
         # (name, fn, rows, expect_fire)
@@ -286,6 +362,32 @@ def selftest():
            "notes": "Flagged chokepoint=yes; CUDA lock-in makes switching costly. TRUE sole source."}], False),
         ("NEGATIVE: a row with no notes at all must NOT fire",
          check_notes_prose, [{"company": "Groq", "chokepoint": "no"}], False),
+        # Rule 8. The control is the real TSMC case; the negatives keep it from firing on everything,
+        # which matters because a rule that flags every gap would just get the gaps deleted.
+        ("control: a well formed gap (the real TSMC case) must NOT fire",
+         check_gaps, [{**good_gap}], False),
+        ("rule 8: a gap that does not say where it looked",
+         check_gaps, [{**good_gap, "searched": ""}], True),
+        ("rule 8: a gap with no would_close_it is a permanent excuse",
+         check_gaps, [{**good_gap, "would_close_it": ""}], True),
+        ("rule 8: an invented kind",
+         check_gaps, [{**good_gap, "kind": "missing"}], True),
+        ("rule 8: no kind at all",
+         check_gaps, [{**good_gap, "kind": ""}], True),
+        ("rule 8: an invented status",
+         check_gaps, [{**good_gap, "status": "maybe"}], True),
+        ("rule 8: a 'contradiction' resting on a single source",
+         check_gaps, [{**good_gap, "kind": "contradiction",
+                       "searched": "Nvidia FY2026 10-K, full text"}], True),
+        ("control: a real contradiction naming two sources must NOT fire",
+         check_gaps, [{**good_gap, "kind": "contradiction",
+                       "searched": "Nvidia FY2026 10-K; Microsoft FY2025 10-K"}], False),
+        ("control: every other valid kind must NOT fire",
+         check_gaps, [{**good_gap, "kind": "unreachable"},
+                      {**good_gap, "kind": "unevidenced-flag"},
+                      {**good_gap, "kind": "undisclosed"}], False),
+        ("control: a CLOSED gap is still a valid row",
+         check_gaps, [{**good_gap, "status": "closed"}], False),
     ]
     failures = []
     for name, fn, rows, expect_fire in cases:
@@ -356,13 +458,36 @@ def selftest():
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
 
+    # 🔴 IS THE RULE ACTUALLY WIRED IN? Every case above calls its check function DIRECTLY, so the
+    # whole suite stays green even if run() never calls it. Measured 2026-07-20: deleting the
+    # check_gaps(...) line from run() killed no test at all. A rule that works perfectly and is never
+    # invoked is indistinguishable, from the outside, from a repo with nothing to report -- which is
+    # this project's oldest failure shape wearing yet another hat. So the selftest now drives run()
+    # over a throwaway tree and asserts the finding surfaces end to end.
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        d = root / "projects" / "04-fixture" / "data"
+        d.mkdir(parents=True)
+        (d / "companies.csv").write_text("company,chokepoint\nFixture Corp,no\n")
+        (d / "relationships.csv").write_text("from_company,to_company,description\n")
+        bad = dict(good_gap, searched="", would_close_it="")
+        with open(d / "gaps.csv", "w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=list(good_gap)); w.writeheader(); w.writerow(bad)
+        (root / "README.md").write_text("| 04 | Fixture | Foundation only |\n")
+        wired = any("gaps.csv" in p for p in run(root)[0])
+        print(f"  {'ok  ' if wired else 'DEAD'}  WIRING: run() actually calls rule 8 on a real gaps.csv")
+        if not wired:
+            failures.append("check_gaps is never called by run(); the rule is dead code")
+
     print()
     if failures:
         print(f"SELFTEST FAILED, {len(failures)} check(s) do not do what they claim:")
         for f in failures:
             print(f"  - {f}")
         return 2
-    print(f"SELFTEST PASSED. {len(cases) + len(readme_cases) + len(runbook_cases)} cases: every rule fires on its own mutant "
+    # +1 for the end-to-end WIRING case, which is not in any list.
+    print(f"SELFTEST PASSED. {len(cases) + len(readme_cases) + len(runbook_cases) + 1} cases: every rule fires on its own mutant "
           f"and stays silent on clean and on merely-incomplete data.")
     return 0
 
@@ -374,7 +499,9 @@ def main():
     problems, facts = run(ROOT)
     total_edges = sum(f["edges"] for f in facts.values())
     total_costed = sum(f["costed"] for f in facts.values())
-    print(f"  {len(facts)} maps, {total_costed} costed companies, {total_edges} sourced edges")
+    total_gaps = sum(f.get("gaps", 0) for f in facts.values())
+    print(f"  {len(facts)} maps, {total_costed} costed companies, {total_edges} sourced edges, "
+          f"{total_gaps} recorded gaps")
     if problems:
         print(f"  {len(problems)} problem(s):")
         for p in problems:

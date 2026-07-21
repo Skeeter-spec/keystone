@@ -121,6 +121,13 @@
   .disc{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;margin-top:14px;}
   .empty{color:var(--muted);font-size:13px;padding:8px 2px;}
   .reflist{display:flex;flex-direction:column;gap:14px;}
+  .gapnote{border-left:3px solid var(--warn,#c98a2b);background:var(--surface-2);
+    padding:9px 12px;border-radius:0 8px 8px 0;margin:0 0 12px;font-size:13.5px;line-height:1.55;}
+  .gaplink{color:var(--muted);}
+  .gaprow{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--border);
+    font-size:14px;line-height:1.5;}
+  .gapk{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;}
+  @media (max-width:560px){ .gaprow{grid-template-columns:1fr;gap:2px;} }
   .refco{border-bottom:1px solid var(--border);padding-bottom:12px;}
   .refco h3{font-size:14.5px;margin-bottom:5px;}
   .refco a{font-size:12.5px;word-break:break-all;}
@@ -224,6 +231,21 @@
     <div id="chokelist"></div>
   </section>
 
+  <section id="tab-gaps" hidden>
+    <div class="panel">
+      <div class="eyebrow">Evidence</div>
+      <h2>What the filings won't say</h2>
+      <div class="sub">Every edge on this map is sourced. That is a rule about what the map may
+      <em>claim</em>, not a claim about what exists. These are the things we went looking for and could
+      not source, each one recorded with the documents actually read to establish it, and with what
+      would close it. An absence that names where it looked can be checked. One that does not is a shrug,
+      so the gate refuses to accept it.</div>
+    </div>
+    <div id="gaplist"></div>
+    <div class="empty" id="gapsempty" hidden>No gaps recorded yet. This map has not run a
+      research burst, so it has nothing to say about what it could not find.</div>
+  </section>
+
   <section id="tab-refs" hidden>
     <div class="sub" style="margin-bottom:14px;">Every figure in this map traces to a primary source. Links open the original filing.</div>
     <div class="panel"><div class="reflist" id="reflist"></div></div>
@@ -315,6 +337,8 @@ const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
 
 /* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
 const CHOKE_WHY = {"Boeing": "No third manufacturer builds and certifies 150+ seat jetliners at commercial scale, and airlines cannot route around Boeing for large narrowbody and widebody orders. The acquisition of Spirit AeroSystems completed in December 2025 concentrated the fuselage bottleneck inside Boeing itself.", "Airbus": "Airbus is the other half of the large jetliner duopoly with Boeing, and airlines have no third route around it for large aircraft orders. COMAC's C919 remains reliant on Western engines and avionics, failing to break the Boeing Airbus duopoly at scale as of 2026.", "GE Aerospace": "GE Aerospace co-owns CFM International 50/50 with Safran and is sole engine supplier for the Boeing 737 and a top option on the Airbus A320. Exactly three companies make large civil jet engines, and losing any one would ground programs with no substitute powerplant available on short notice.", "Rolls-Royce Holdings": "One of only three makers of large civil jet engines, and specific programs are sole-sourced to one of them (Rolls-Royce Trent variants on many 787 and A350 builds). Losing any one of the three would ground programs with no substitute powerplant available on short notice.", "RTX Corporation": "Pratt and Whitney is the third member of the jet engine oligopoly and the sole-source geared turbofan on the Airbus A220. RTX's Collins Aerospace subsidiary is also a top tier avionics and systems supplier, compounding RTX's leverage across the industry.", "VSMPO-Avisma": "VSMPO-Avisma historically supplied roughly a third of world aerospace titanium, with direct sourcing and JV ties to both Boeing and Airbus. Global titanium sponge and ingot melt capacity is limited and full Western substitution takes years, keeping this a live chokepoint despite partial sanctions on parent Rostec.", "Precision Castparts Corp": "One of only two firms qualified to supply large structural titanium and superalloy castings and forgings for airframes and engines. Part qualification for castings of this size and complexity takes years, so airlines and OEMs cannot simply switch suppliers if either firm faces quality or capacity problems.", "Howmet Aerospace": "One of only two firms qualified to supply large structural titanium and superalloy castings and forgings for airframes and engines. Part qualification for castings of this size and complexity takes years, so airlines and OEMs cannot simply switch suppliers if either firm faces quality or capacity problems."};
+const GAPS = [];
+const OPEN_GAPS = GAPS.filter(g=>(g.status||"open")!=="closed");
 
 /* source-tier labels for the verification badge */
 const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
@@ -328,13 +352,19 @@ let S = store.state;
 const $ = s=>document.querySelector(s);
 const isFilled = c=>c.revenue_usd_b!=='';
 const rolesOf = c=>c.roles.split(';').filter(Boolean);
+// Gap prose is long-form English written by a researcher, not a short CSV field: it carries
+// quotes, ampersands and the odd angle bracket. Everything here is baked in at build time from
+// this repo's own CSVs, so this is hygiene rather than an untrusted-input defence.
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c=>(
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtB(v){ if(v===''||v==null) return null; const n=parseFloat(v);
   if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(2)+'T';
   return '$'+n.toFixed(n<10?2:1)+'B'; }
 
 /* ---- tabs ---- */
 const TABS=[['overview','Overview'],['companies','Companies'],['fin','Financials'],['chain','Value chain'],
-  ['rel','Relationships'],['choke','Chokepoints'],['refs','References'],['notes','My notes']];
+  ['rel','Relationships'],['choke','Chokepoints'],['gaps',"What the filings won't say"],
+  ['refs','References'],['notes','My notes']];
 function buildTabs(){
   const nav=$('#tabs');
   TABS.forEach(([id,label],i)=>{
@@ -365,6 +395,9 @@ function renderOverview(){
     [RELATIONSHIPS.length,'relationships traced'],
     [chokes.length,'chokepoints flagged'],
     [filled.length+' / '+COMPANIES.length,'financials sourced'],
+    // The absence count sits on the FRONT PAGE beside the edge count on purpose. A viewer who only
+    // sees 40 confident edges forms an impression of completeness the data does not support.
+    [OPEN_GAPS.length,'gaps recorded'],
   ];
   $('#ovstats').innerHTML = stats.map(([n,k])=>
     `<div class="stat"><div class="n mono">${n}</div><div class="k">${k}</div></div>`).join('');
@@ -498,6 +531,48 @@ function renderRel(){
   }).join('');
 }
 
+/* ---- what the filings won't say ---- */
+const GAP_KIND={
+  'undisclosed':      ['Undisclosed','The authoritative document exists and declines to say'],
+  'unreachable':      ['Unreachable','A real source we could not read'],
+  'contradiction':    ['Reported, not disclosed','What everyone reports is in no filing we read'],
+  'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
+};
+function renderGaps(){
+  const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));
+  $('#gapsempty').hidden = rows.length>0;
+  $('#gaplist').innerHTML = rows.map(g=>{
+    const k=GAP_KIND[g.kind]||[g.kind,''];
+    const closed=(g.status||'open')==='closed';
+    return `<div class="panel"${closed?' style="opacity:.62"':''}>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${esc(g.subject||'')}</h2>
+        <span class="chip" title="${esc(k[1])}">${esc(k[0])}${closed?' &middot; closed':''}</span>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;"><b>We looked for:</b> ${esc(g.sought||'')}</div>
+      <div class="gaprow"><span class="gapk">Searched</span><span>${esc(g.searched||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Found instead</span><span>${esc(g.found_instead||'')}</span></div>
+      <div class="gaprow"><span class="gapk">What it blocks</span><span>${esc(g.blocks||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Would close it</span><span>${esc(g.would_close_it||'')}</span></div>
+      <div class="sub mono" style="margin-top:10px;font-size:12px;">last checked ${esc(g.last_checked||'')}</div>
+    </div>`;
+  }).join('');
+}
+/* A chokepoint flagged with no sourced edge behind it must admit that at the point of the claim,
+   not only in the gaps tab. Matching is on the gap's `subject` naming the company, which is the same
+   join-by-exact-name the rest of this page uses. */
+function gapsFor(company){
+  return OPEN_GAPS.filter(g=>(g.subject||'').indexOf(company)!==-1);
+}
+function gapBadge(company){
+  const gs=gapsFor(company);
+  if(!gs.length) return '';
+  const flag=gs.some(g=>g.kind==='unevidenced-flag');
+  return `<div class="gapnote">${flag
+    ? 'Flagged as a chokepoint with <b>no sourced edge behind it</b>.'
+    : 'This node has an evidence gap.'} ${esc(gs[0].blocks||'')}
+    <span class="gaplink">See <b>What the filings won&#39;t say</b>.</span></div>`;
+}
 /* ---- chokepoints ---- */
 function renderChoke(){
   const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
@@ -513,6 +588,7 @@ function renderChoke(){
         <h2>${c.company}${c.ticker?` <span class="tick mono">${c.ticker}</span>`:''}</h2>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="chip" style="display:inline-block;">Financials and edges land in the next research burst</div>
     </div>`;
     }
@@ -524,6 +600,7 @@ function renderChoke(){
         <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="bars">
         <div class="row"><span>Revenue</span><div class="track"><div class="seg" style="width:${rw}%;background:var(--pos)"></div></div></div>
         <div class="row"><span>Capex (builds)</span><div class="track"><div class="seg" style="width:${cw}%;background:var(--accent)"></div></div></div>
@@ -629,7 +706,7 @@ function renderFinancials(){
   body.innerHTML=`<div class="chartwrap">${finChart(s)}${finLegend()}</div>${ratios}${finTable(s)}`;
 }
 
-function renderAll(){ renderCards(); renderRel(); renderChoke(); renderRefs(); renderOverview(); renderFinancials(); }
+function renderAll(){ renderCards(); renderRel(); renderChoke(); renderGaps(); renderRefs(); renderOverview(); renderFinancials(); }
 
 /* ---- init ---- */
 buildTabs(); renderHeader(); roleOptions(); relTypeOptions(); renderAll(); renderNotes();

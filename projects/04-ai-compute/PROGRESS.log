@@ -123,3 +123,37 @@ caveat is written into map.json's chokepoint_why so it renders ON THE PAGE rathe
 NEXT: Schneider Electric and Foxconn financials (neither is a chokepoint); a politics lens (BIS export
 controls sit directly on this map's silicon chokepoints); timeseries. The CoWoS edge stays open until a
 document names a customer.
+
+2026-07-20 THE GAPS ARE DATA NOW. The burst above produced findings that had nowhere to live: its
+strongest results were ABSENCES, and they sat in this log while the MAP, which is the product, rendered
+40 confident edges. A dependency nobody discloses and a dependency that does not exist were drawn
+identically, as nothing. Same silent shape as the chokepoint vocabulary that rendered as zero.
+
+data/gaps.csv, 9 rows, one schema for all ten maps. Each names what was sought, THE DOCUMENTS ACTUALLY
+SEARCHED, what they said instead, what it blocks, and what would close it. The searched column is the
+whole point and the gate rejects a row without it: an absence that names where it looked can be checked
+by a reader; "could not find anything" is unfalsifiable and worth less than silence. would_close_it turns
+each one into the next burst's task instead of a permanent excuse.
+
+Renders on every map as "What the filings won't say", with the open count on the FRONT PAGE beside the
+edge count (a viewer who sees only 40 confident edges forms an impression of completeness the data does
+not support), and a badge on any chokepoint whose flag has an open gap. Verified in a browser: badges
+appear on Nvidia, TSMC and Siemens Energy and NOT on Samsung, Micron or SK hynix, whose HBM edges are
+sourced. Siemens Energy's caveat moved out of map.json prose into a row, which is where it belonged.
+
+🔴 THE GATE CAUGHT A REAL ONE MID-BUILD. tools/check_fresh.py re-renders each map and byte-compares, and
+its docstring claimed that sharing render() meant it could not drift from the builder. It shared the
+RENDER and not the LOADING: both files kept their own list of CSVs to read. The moment gaps.csv was added
+to build() alone, check_fresh re-rendered every map with zero gaps and called the freshly built 04
+artifact STALE. A DEFAULT ARGUMENT made it possible -- render(..., gaps=()) silently accepts a caller
+that forgot the new data. Fixed properly: shared/build_map.py now owns load_project(), both callers use
+it, and render() has no default. Next time the divergence is a TypeError, not a plausible page.
+
+🔴 AND A MUTANT SURVIVED, WHICH IS ITS OWN FINDING. Five of six rule-8 mutants died; the sixth --
+deleting the line that CALLS check_gaps from run() -- left the suite fully green, because every selftest
+case drives the check function directly. A rule that works perfectly and is never invoked reports exactly
+what a clean repo reports. check_data.py's selftest now drives run() over a throwaway tree and asserts
+the finding surfaces end to end. Worth applying to the other seven rules on the next pass.
+
+NEXT: seed gaps for 01 and 02 from their own bursts (02's Syrah zero-edge episode is one); Schneider and
+Foxconn financials; a politics lens.

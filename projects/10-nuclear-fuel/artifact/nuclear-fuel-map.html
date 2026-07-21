@@ -121,6 +121,13 @@
   .disc{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;margin-top:14px;}
   .empty{color:var(--muted);font-size:13px;padding:8px 2px;}
   .reflist{display:flex;flex-direction:column;gap:14px;}
+  .gapnote{border-left:3px solid var(--warn,#c98a2b);background:var(--surface-2);
+    padding:9px 12px;border-radius:0 8px 8px 0;margin:0 0 12px;font-size:13.5px;line-height:1.55;}
+  .gaplink{color:var(--muted);}
+  .gaprow{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--border);
+    font-size:14px;line-height:1.5;}
+  .gapk{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;}
+  @media (max-width:560px){ .gaprow{grid-template-columns:1fr;gap:2px;} }
   .refco{border-bottom:1px solid var(--border);padding-bottom:12px;}
   .refco h3{font-size:14.5px;margin-bottom:5px;}
   .refco a{font-size:12.5px;word-break:break-all;}
@@ -224,6 +231,21 @@
     <div id="chokelist"></div>
   </section>
 
+  <section id="tab-gaps" hidden>
+    <div class="panel">
+      <div class="eyebrow">Evidence</div>
+      <h2>What the filings won't say</h2>
+      <div class="sub">Every edge on this map is sourced. That is a rule about what the map may
+      <em>claim</em>, not a claim about what exists. These are the things we went looking for and could
+      not source, each one recorded with the documents actually read to establish it, and with what
+      would close it. An absence that names where it looked can be checked. One that does not is a shrug,
+      so the gate refuses to accept it.</div>
+    </div>
+    <div id="gaplist"></div>
+    <div class="empty" id="gapsempty" hidden>No gaps recorded yet. This map has not run a
+      research burst, so it has nothing to say about what it could not find.</div>
+  </section>
+
   <section id="tab-refs" hidden>
     <div class="sub" style="margin-bottom:14px;">Every figure in this map traces to a primary source. Links open the original filing.</div>
     <div class="panel"><div class="reflist" id="reflist"></div></div>
@@ -304,7 +326,7 @@
 /* ==== end durable-state.js ==== */
 
 /* ==== baked data (regenerated from the CSVs by build_artifact.py) ==== */
-const BUILD = {"date": "2026-07-17", "total": 24, "filled": 0};
+const BUILD = {"date": "2026-07-20", "total": 24, "filled": 0};
 const COMPANIES = [{"company": "National Atomic Company Kazatomprom", "ticker": "KAP", "exchange": "LSE", "hq_country": "Kazakhstan", "roles": "uranium-miner", "primary_segment": "Uranium mining (in-situ recovery) and trading", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "World's largest uranium producer (~20% of global mined supply); majority owned via Samruk-Kazyna sovereign fund; also dual listed on AIX (Astana). ISR mining keeps output relatively routable, so not judged a chokepoint despite scale.", "lens": "accounting", "source_tier": ""}, {"company": "Cameco Corporation", "ticker": "CCJ", "exchange": "NYSE", "hq_country": "Canada", "roles": "uranium-miner;converter", "primary_segment": "Uranium mining and UF6 conversion", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Major Western miner (McArthur River/Key Lake, Cigar Lake, Saskatchewan) and UF6 converter (Port Hope/Blind River, Ontario); also trades as CCO on TSX. Holds 49% of Westinghouse (with Brookfield, acquired 2023) and co-owns Global Laser Enrichment with Silex Systems.", "lens": "accounting", "source_tier": ""}, {"company": "Orano", "ticker": "", "exchange": "", "hq_country": "France", "roles": "converter;enricher;fuel-fabricator;reprocessor", "primary_segment": "Full fuel-cycle services: conversion, enrichment, recycling", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "French state holds roughly 90%; unlisted. One of only four global enrichers (Georges Besse II, Tricastin) and a top conversion operator (Malvesi/Comurhex, Philippe Coq); also operates La Hague, the world's largest commercial spent-fuel reprocessing plant.", "lens": "accounting", "source_tier": ""}, {"company": "Rosatom / TENEX", "ticker": "", "exchange": "", "hq_country": "Russia", "roles": "enricher;trader", "primary_segment": "Uranium enrichment services and enriched-uranium export trading", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Russian state atomic energy corporation; TENEX is its enrichment sales/export arm. Russia holds roughly 40-46% of global enrichment capacity, the single largest chokepoint in the cycle; partially restricted by the US Prohibiting Russian Uranium Imports Act (2024, waivers running to 2028).", "lens": "accounting", "source_tier": ""}, {"company": "TVEL Fuel Company", "ticker": "", "exchange": "", "hq_country": "Russia", "roles": "fuel-fabricator;converter", "primary_segment": "Nuclear fuel assembly fabrication, including VVER fuel", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Rosatom's fuel-fabrication division. Long the sole qualified supplier of VVER-440/1000 fuel assemblies for Soviet-design reactors across Eastern Europe; Westinghouse and Framatome only began qualifying alternative VVER fuel after 2022.", "lens": "accounting", "source_tier": ""}, {"company": "Uranium One (ARMZ)", "ticker": "", "exchange": "", "hq_country": "Russia", "roles": "uranium-miner", "primary_segment": "Uranium mining (Kazakh JV assets; historic US ISR)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Rosatom's mining arm (via ARMZ Uranium Holding); holds joint-venture stakes in Kazakh ISR mines alongside Kazatomprom. Mining judged more routable than enrichment or fuel fabrication.", "lens": "accounting", "source_tier": ""}, {"company": "Urenco Group", "ticker": "", "exchange": "", "hq_country": "United Kingdom", "roles": "enricher", "primary_segment": "Uranium enrichment services", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Private consortium owned by the UK government, the Dutch state, and German utilities RWE/E.ON (via Uranit); unlisted. One of the 'big four' enrichers, with centrifuge plants in the UK (Capenhurst), Germany (Gronau), Netherlands (Almelo) and US (Eunice, New Mexico), the only major non-Russian, non-Chinese enrichment base at scale.", "lens": "accounting", "source_tier": ""}, {"company": "China National Nuclear Corporation (CNNC)", "ticker": "", "exchange": "", "hq_country": "China", "roles": "uranium-miner;converter;enricher;fuel-fabricator;reprocessor;utility", "primary_segment": "Vertically integrated state nuclear fuel cycle and reactor operator", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "State-owned parent, unlisted (listed reactor subsidiary China National Nuclear Power trades as 601985 on the Shanghai Stock Exchange). Fourth member of the global enrichment oligopoly alongside Rosatom, Urenco and Orano, though most capacity serves domestic Chinese reactor build-out; fully vertically integrated from mining through reprocessing.", "lens": "accounting", "source_tier": ""}, {"company": "CGN Mining Company Limited", "ticker": "1164", "exchange": "HKEX", "hq_country": "China", "roles": "uranium-miner;utility", "primary_segment": "Uranium trading/mining JV interests; parent CGN operates reactors", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Parent China General Nuclear Power Corporation is China's largest reactor operator. CGN Mining, the HK-listed offshoot, holds minority equity stakes in Kazakh ISR uranium joint ventures (Semizbay-U, Irkol) to secure feedstock.", "lens": "accounting", "source_tier": ""}, {"company": "Westinghouse Electric Company", "ticker": "", "exchange": "", "hq_country": "United States", "roles": "fuel-fabricator;reactor-vendor", "primary_segment": "PWR/AP1000 reactor technology and fuel fabrication", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Private, owned by a Brookfield Renewable / Cameco consortium since 2023. Leading Western PWR fuel and AP1000 reactor vendor; now qualifying VVER-1000 fuel as a non-Russian alternative for Ukraine and Eastern Europe, chipping at TVEL's chokepoint.", "lens": "accounting", "source_tier": ""}, {"company": "Framatome", "ticker": "", "exchange": "", "hq_country": "France", "roles": "fuel-fabricator;reactor-vendor", "primary_segment": "PWR/EPR reactor technology and fuel fabrication", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Majority owned by EDF (~80.5%), with Mitsubishi Heavy Industries and Assystem minority stakes; unlisted. Builds EPR reactors and fabricates fuel at Romans-sur-Isere; competes with Westinghouse in Western PWR fuel, keeping that layer more routable than enrichment.", "lens": "accounting", "source_tier": ""}, {"company": "Centrus Energy Corp", "ticker": "LEU", "exchange": "NYSE American", "hq_country": "United States", "roles": "enricher", "primary_segment": "Uranium enrichment, including HALEU", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Only US-owned enricher with operating centrifuges (American Centrifuge Plant, Piketon, Ohio); sole current US domestic HALEU producer under DOE contract, central to the advanced-reactor fuel bottleneck.", "lens": "accounting", "source_tier": ""}, {"company": "BWX Technologies", "ticker": "BWXT", "exchange": "NYSE", "hq_country": "United States", "roles": "fuel-fabricator", "primary_segment": "Naval reactor fuel/components, medical isotopes, expanding commercial nuclear", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Sole fabricator of US Navy reactor fuel; growing commercial and microreactor fuel ambitions (including TRISO fuel work), but not yet a commercial-fuel chokepoint.", "lens": "accounting", "source_tier": ""}, {"company": "Uranium Energy Corp", "ticker": "UEC", "exchange": "NYSE American", "hq_country": "United States", "roles": "uranium-miner", "primary_segment": "US in-situ recovery uranium mining and physical uranium holding", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Largest US-focused uranium developer/producer (Texas, Wyoming ISR hubs); also stockpiles physical U3O8.", "lens": "accounting", "source_tier": ""}, {"company": "NexGen Energy", "ticker": "NXE", "exchange": "TSX", "hq_country": "Canada", "roles": "uranium-miner", "primary_segment": "Uranium development (Athabasca Basin, Rook I project)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Developing what could become one of the world's largest high-grade uranium mines (Rook I, Saskatchewan); pre-production as of 2026. Also trades on NYSE.", "lens": "accounting", "source_tier": ""}, {"company": "Paladin Energy", "ticker": "PDN", "exchange": "ASX", "hq_country": "Australia", "roles": "uranium-miner", "primary_segment": "Uranium mining (Langer Heinrich, Namibia)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Restarted the Langer Heinrich mine in Namibia in 2024 after a multi-year care-and-maintenance suspension. Also trades on TSX.", "lens": "accounting", "source_tier": ""}, {"company": "Denison Mines", "ticker": "DNN", "exchange": "TSX", "hq_country": "Canada", "roles": "uranium-miner", "primary_segment": "Uranium development (Wheeler River, Athabasca Basin)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Advancing the Phoenix in-situ recovery deposit at Wheeler River, one of the highest-grade undeveloped uranium projects globally. Also trades on NYSE American.", "lens": "accounting", "source_tier": ""}, {"company": "Energy Fuels Inc", "ticker": "UUUU", "exchange": "NYSE American", "hq_country": "United States", "roles": "uranium-miner;converter", "primary_segment": "US conventional uranium milling (White Mesa, Utah) and rare-earth processing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Operates the only fully licensed conventional uranium mill in the US; White Mesa also produces separated rare earths and is exploring HALEU feedstock and vanadium recovery. Also trades on TSX.", "lens": "accounting", "source_tier": ""}, {"company": "Global Laser Enrichment (GLE)", "ticker": "", "exchange": "", "hq_country": "United States", "roles": "enricher", "primary_segment": "Laser-based uranium enrichment (SILEX process); depleted-tails re-enrichment", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Joint venture owned by Cameco and Silex Systems; unlisted. Building a commercial facility at Paducah, Kentucky to first re-enrich depleted uranium tailings, with eventual ambitions in HALEU; not yet at commercial-chokepoint scale.", "lens": "accounting", "source_tier": ""}, {"company": "Silex Systems Limited", "ticker": "SLX", "exchange": "ASX", "hq_country": "Australia", "roles": "enricher", "primary_segment": "SILEX laser enrichment technology licensor", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Owns the SILEX laser-enrichment IP licensed into the Cameco/Silex Global Laser Enrichment JV; also pursuing separate laser-enrichment ventures for other isotopes/elements.", "lens": "accounting", "source_tier": ""}, {"company": "Constellation Energy Corporation", "ticker": "CEG", "exchange": "NASDAQ", "hq_country": "United States", "roles": "utility", "primary_segment": "Nuclear power generation (largest US nuclear fleet operator)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Spun off from Exelon in 2022; operates the largest US nuclear reactor fleet and is restarting Three Mile Island Unit 1 (Crane Clean Energy Center) under a Microsoft data-center power deal.", "lens": "accounting", "source_tier": ""}, {"company": "Electricite de France (EDF)", "ticker": "", "exchange": "", "hq_country": "France", "roles": "utility;reactor-vendor", "primary_segment": "Nuclear power generation and reactor construction", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Operates the world's largest single-operator reactor fleet (56 domestic units); 100% French state owned since the 2023 renationalization and delisting. Majority owner of Framatome.", "lens": "accounting", "source_tier": ""}, {"company": "Rio Tinto", "ticker": "RIO", "exchange": "LSE", "hq_country": "United Kingdom", "roles": "uranium-miner", "primary_segment": "Diversified mining; largely exited uranium", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Sold its 68.6% stake in Namibia's Rossing Uranium mine to a CNNC subsidiary in 2019. Included as a legacy/historic player rather than a current uranium-cycle node. Dual-listed on ASX and as an NYSE ADR.", "lens": "accounting", "source_tier": ""}, {"company": "Honeywell International (Metropolis Works)", "ticker": "HON", "exchange": "NASDAQ", "hq_country": "United States", "roles": "converter", "primary_segment": "UF6 conversion (Metropolis Works, Illinois)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Operates the only UF6 conversion facility in the United States; a single-site outage or shutdown would leave the entire US fuel cycle dependent on Orano, CNNC, or Rosatom-linked conversion capacity.", "lens": "accounting", "source_tier": ""}];
 const RELATIONSHIPS = [];
 const TIMESERIES = [];
@@ -315,6 +337,8 @@ const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
 
 /* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
 const CHOKE_WHY = {"Orano": "One of only four commercial enrichers globally and a major conversion operator at Malvesi and Comurhex. Also runs La Hague, the world's largest commercial spent fuel reprocessing plant.", "Rosatom / TENEX": "Russia controls 40 to 46 percent of global enrichment capacity, making it the single largest node in the cycle. Partially restricted by the US Prohibiting Russian Uranium Imports Act effective 2024.", "TVEL Fuel Company": "The sole qualified supplier of VVER fuel assemblies for Soviet design reactors across Eastern Europe. Westinghouse and Framatome only began qualifying alternatives after 2022.", "Urenco Group": "One of the big four global enrichers and the only major enrichment operator in the West at scale. Operates plants in the UK, Germany, Netherlands and US.", "China National Nuclear Corporation (CNNC)": "The fourth member of the global enrichment oligopoly controlling most of China's domestic enrichment capacity. Vertically integrated from mining through reprocessing.", "Centrus Energy Corp": "The only US enricher with operating centrifuges and the sole current US domestic HALEU producer. Volumes remain constrained relative to advanced reactor fuel demand.", "Honeywell International (Metropolis Works)": "The sole UF6 conversion facility in the United States. A single site outage would leave the entire US fuel cycle dependent on foreign conversion capacity."};
+const GAPS = [];
+const OPEN_GAPS = GAPS.filter(g=>(g.status||"open")!=="closed");
 
 /* source-tier labels for the verification badge */
 const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
@@ -328,13 +352,19 @@ let S = store.state;
 const $ = s=>document.querySelector(s);
 const isFilled = c=>c.revenue_usd_b!=='';
 const rolesOf = c=>c.roles.split(';').filter(Boolean);
+// Gap prose is long-form English written by a researcher, not a short CSV field: it carries
+// quotes, ampersands and the odd angle bracket. Everything here is baked in at build time from
+// this repo's own CSVs, so this is hygiene rather than an untrusted-input defence.
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c=>(
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtB(v){ if(v===''||v==null) return null; const n=parseFloat(v);
   if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(2)+'T';
   return '$'+n.toFixed(n<10?2:1)+'B'; }
 
 /* ---- tabs ---- */
 const TABS=[['overview','Overview'],['companies','Companies'],['fin','Financials'],['chain','Value chain'],
-  ['rel','Relationships'],['choke','Chokepoints'],['refs','References'],['notes','My notes']];
+  ['rel','Relationships'],['choke','Chokepoints'],['gaps',"What the filings won't say"],
+  ['refs','References'],['notes','My notes']];
 function buildTabs(){
   const nav=$('#tabs');
   TABS.forEach(([id,label],i)=>{
@@ -365,6 +395,9 @@ function renderOverview(){
     [RELATIONSHIPS.length,'relationships traced'],
     [chokes.length,'chokepoints flagged'],
     [filled.length+' / '+COMPANIES.length,'financials sourced'],
+    // The absence count sits on the FRONT PAGE beside the edge count on purpose. A viewer who only
+    // sees 40 confident edges forms an impression of completeness the data does not support.
+    [OPEN_GAPS.length,'gaps recorded'],
   ];
   $('#ovstats').innerHTML = stats.map(([n,k])=>
     `<div class="stat"><div class="n mono">${n}</div><div class="k">${k}</div></div>`).join('');
@@ -498,6 +531,48 @@ function renderRel(){
   }).join('');
 }
 
+/* ---- what the filings won't say ---- */
+const GAP_KIND={
+  'undisclosed':      ['Undisclosed','The authoritative document exists and declines to say'],
+  'unreachable':      ['Unreachable','A real source we could not read'],
+  'contradiction':    ['Reported, not disclosed','What everyone reports is in no filing we read'],
+  'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
+};
+function renderGaps(){
+  const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));
+  $('#gapsempty').hidden = rows.length>0;
+  $('#gaplist').innerHTML = rows.map(g=>{
+    const k=GAP_KIND[g.kind]||[g.kind,''];
+    const closed=(g.status||'open')==='closed';
+    return `<div class="panel"${closed?' style="opacity:.62"':''}>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${esc(g.subject||'')}</h2>
+        <span class="chip" title="${esc(k[1])}">${esc(k[0])}${closed?' &middot; closed':''}</span>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;"><b>We looked for:</b> ${esc(g.sought||'')}</div>
+      <div class="gaprow"><span class="gapk">Searched</span><span>${esc(g.searched||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Found instead</span><span>${esc(g.found_instead||'')}</span></div>
+      <div class="gaprow"><span class="gapk">What it blocks</span><span>${esc(g.blocks||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Would close it</span><span>${esc(g.would_close_it||'')}</span></div>
+      <div class="sub mono" style="margin-top:10px;font-size:12px;">last checked ${esc(g.last_checked||'')}</div>
+    </div>`;
+  }).join('');
+}
+/* A chokepoint flagged with no sourced edge behind it must admit that at the point of the claim,
+   not only in the gaps tab. Matching is on the gap's `subject` naming the company, which is the same
+   join-by-exact-name the rest of this page uses. */
+function gapsFor(company){
+  return OPEN_GAPS.filter(g=>(g.subject||'').indexOf(company)!==-1);
+}
+function gapBadge(company){
+  const gs=gapsFor(company);
+  if(!gs.length) return '';
+  const flag=gs.some(g=>g.kind==='unevidenced-flag');
+  return `<div class="gapnote">${flag
+    ? 'Flagged as a chokepoint with <b>no sourced edge behind it</b>.'
+    : 'This node has an evidence gap.'} ${esc(gs[0].blocks||'')}
+    <span class="gaplink">See <b>What the filings won&#39;t say</b>.</span></div>`;
+}
 /* ---- chokepoints ---- */
 function renderChoke(){
   const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
@@ -513,6 +588,7 @@ function renderChoke(){
         <h2>${c.company}${c.ticker?` <span class="tick mono">${c.ticker}</span>`:''}</h2>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="chip" style="display:inline-block;">Financials and edges land in the next research burst</div>
     </div>`;
     }
@@ -524,6 +600,7 @@ function renderChoke(){
         <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="bars">
         <div class="row"><span>Revenue</span><div class="track"><div class="seg" style="width:${rw}%;background:var(--pos)"></div></div></div>
         <div class="row"><span>Capex (builds)</span><div class="track"><div class="seg" style="width:${cw}%;background:var(--accent)"></div></div></div>
@@ -629,7 +706,7 @@ function renderFinancials(){
   body.innerHTML=`<div class="chartwrap">${finChart(s)}${finLegend()}</div>${ratios}${finTable(s)}`;
 }
 
-function renderAll(){ renderCards(); renderRel(); renderChoke(); renderRefs(); renderOverview(); renderFinancials(); }
+function renderAll(){ renderCards(); renderRel(); renderChoke(); renderGaps(); renderRefs(); renderOverview(); renderFinancials(); }
 
 /* ---- init ---- */
 buildTabs(); renderHeader(); roleOptions(); relTypeOptions(); renderAll(); renderNotes();

@@ -121,6 +121,13 @@
   .disc{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;margin-top:14px;}
   .empty{color:var(--muted);font-size:13px;padding:8px 2px;}
   .reflist{display:flex;flex-direction:column;gap:14px;}
+  .gapnote{border-left:3px solid var(--warn,#c98a2b);background:var(--surface-2);
+    padding:9px 12px;border-radius:0 8px 8px 0;margin:0 0 12px;font-size:13.5px;line-height:1.55;}
+  .gaplink{color:var(--muted);}
+  .gaprow{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--border);
+    font-size:14px;line-height:1.5;}
+  .gapk{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;}
+  @media (max-width:560px){ .gaprow{grid-template-columns:1fr;gap:2px;} }
   .refco{border-bottom:1px solid var(--border);padding-bottom:12px;}
   .refco h3{font-size:14.5px;margin-bottom:5px;}
   .refco a{font-size:12.5px;word-break:break-all;}
@@ -224,6 +231,21 @@
     <div id="chokelist"></div>
   </section>
 
+  <section id="tab-gaps" hidden>
+    <div class="panel">
+      <div class="eyebrow">Evidence</div>
+      <h2>What the filings won't say</h2>
+      <div class="sub">Every edge on this map is sourced. That is a rule about what the map may
+      <em>claim</em>, not a claim about what exists. These are the things we went looking for and could
+      not source, each one recorded with the documents actually read to establish it, and with what
+      would close it. An absence that names where it looked can be checked. One that does not is a shrug,
+      so the gate refuses to accept it.</div>
+    </div>
+    <div id="gaplist"></div>
+    <div class="empty" id="gapsempty" hidden>No gaps recorded yet. This map has not run a
+      research burst, so it has nothing to say about what it could not find.</div>
+  </section>
+
   <section id="tab-refs" hidden>
     <div class="sub" style="margin-bottom:14px;">Every figure in this map traces to a primary source. Links open the original filing.</div>
     <div class="panel"><div class="reflist" id="reflist"></div></div>
@@ -314,7 +336,9 @@ const LAYERS = [{"role": "accelerator-designer", "label": "Accelerator designers
 const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
 
 /* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
-const CHOKE_WHY = {"Nvidia": "The dominant AI accelerator designer with CUDA software ecosystem that creates high switching costs even where rival silicon exists, reinforced by its own networking stack (NVLink and Mellanox InfiniBand) so clusters can be end to end Nvidia.", "SK hynix": "Leading supplier of high bandwidth memory to Nvidia; HBM output is a capacity constrained bottleneck across the industry with no fourth viable supplier.", "Samsung Electronics": "One of only three companies on earth that can manufacture HBM at the volumes and yields modern accelerators require; also a foundry and packaging alternative.", "Micron Technology": "The third member of the HBM oligopoly; HBM demand has repeatedly exceeded supply through 2025-2026 and there is no fourth supplier.", "TSMC": "The sole leading edge foundry capable of manufacturing Nvidia, AMD, Google and Amazon AI silicon at the necessary volumes, and its CoWoS advanced 2.5D/3D packaging capacity has repeatedly bottlenecked AI chip shipments.", "Siemens Energy": "One of a handful of manufacturers of large scale power transformers for grid interconnection; global transformer lead times have stretched to years, gating grid connection for new data center capacity. FLAG KEPT BUT UNEVIDENCED HERE: the 2026-07-20 relationships burst read Siemens Energy's own annual report, Schneider Electric's FY2025 results and Eaton's 10-K, and not one of them names a single data center operator as a counterparty. So this is the only chokepoint on the map with zero sourced edges. It stays flagged because the argument is about supplier concentration and multi year lead times rather than any one disclosed contract, and an absence of disclosure is not an absence of dependency. Treat it as the weakest evidenced claim on this map."};
+const CHOKE_WHY = {"Nvidia": "The dominant AI accelerator designer with CUDA software ecosystem that creates high switching costs even where rival silicon exists, reinforced by its own networking stack (NVLink and Mellanox InfiniBand) so clusters can be end to end Nvidia.", "SK hynix": "Leading supplier of high bandwidth memory to Nvidia; HBM output is a capacity constrained bottleneck across the industry with no fourth viable supplier.", "Samsung Electronics": "One of only three companies on earth that can manufacture HBM at the volumes and yields modern accelerators require; also a foundry and packaging alternative.", "Micron Technology": "The third member of the HBM oligopoly; HBM demand has repeatedly exceeded supply through 2025-2026 and there is no fourth supplier.", "TSMC": "The sole leading edge foundry capable of manufacturing Nvidia, AMD, Google and Amazon AI silicon at the necessary volumes, and its CoWoS advanced 2.5D/3D packaging capacity has repeatedly bottlenecked AI chip shipments.", "Siemens Energy": "One of a handful of manufacturers of large scale power transformers for grid interconnection; global transformer lead times have stretched to years, gating grid connection for new data center capacity."};
+const GAPS = [{"gap_id": "gap-04-hyperscalers-name-no-supplier", "kind": "contradiction", "subject": "Amazon (AWS), Microsoft, Alphabet (Google Cloud), Meta Platforms -> Nvidia", "sought": "any hyperscaler filing naming Nvidia as a supplier or a concentration risk", "searched": "Microsoft FY2025 10-K, full text; Meta Platforms FY2025 10-K, full text; Alphabet FY2025 10-K, full text; Amazon FY2025 10-K, full text", "found_instead": "ZERO mentions of Nvidia in any of the four. Not a supplier list, not a risk factor, not a note.", "blocks": "the single most reported dependency in the industry has no edge on this map. The four largest buyers of AI silicon are drawn with no link to the company they buy it from", "would_close_it": "a hyperscaler 10-K, 8-K or purchase-commitment note naming a silicon supplier; or a supply agreement filed as an exhibit", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-tsmc-names-no-customer", "kind": "undisclosed", "subject": "TSMC packages-for / fabricates-for its named customers (CoWoS)", "sought": "a filing tying TSMC's CoWoS advanced packaging to a named customer", "searched": "TSMC FY2025 20-F, full text; Nvidia FY2026 10-K, full text", "found_instead": "20-F says only \"our largest customer\" and \"our ten largest customers\", never a name. Nvidia mentions \"CoWoS\" and \"TSMC\" in the same paragraph but never in one sentence linking them.", "blocks": "the map's advanced-packaging chokepoint, ranked third in FOUNDATION.md, cannot carry a sourced packages-for edge. The fabricates-for edges that DO exist are sourced from the customers' side, not TSMC's", "would_close_it": "any filing or first-party disclosure naming a CoWoS customer; TSMC's own customer concentration table if it ever names names", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-nvidia-customers-unnamed", "kind": "undisclosed", "subject": "Nvidia -> its two largest direct customers", "sought": "the identity of the customers behind Nvidia's revenue concentration", "searched": "Nvidia FY2026 10-K, Concentration of Revenue note and Risk Factors, full text", "found_instead": "FY2026: \"one direct customer represented 22% of total revenue\" and \"another direct customer represented 14%\". No names, and unlike its peers Nvidia does not even use Customer A / Customer B labels.", "blocks": "36% of the revenue of the map's largest chokepoint routes to counterparties this map cannot draw. Two workers read this note independently and agreed exactly", "would_close_it": "Nvidia naming a customer in a filing, or a customer disclosing the purchase from its own side", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-astera-customer-letters", "kind": "undisclosed", "subject": "Astera Labs -> its end customers", "sought": "which companies make up Astera Labs' concentrated revenue", "searched": "Astera Labs FY2025 10-K, customer concentration disclosures, full text", "found_instead": "Customer A through Customer G labels only; top three end customers are roughly 86% of FY2025 revenue, all anonymous.", "blocks": "the connectivity-silicon layer connects to the rest of the map only through a press release, not a filing", "would_close_it": "Astera Labs naming a customer, or a hyperscaler naming Astera as a supplier", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-smci-customer-anonymous", "kind": "undisclosed", "subject": "Super Micro Computer -> its largest customer", "sought": "the identity of Super Micro's 20%-of-sales customer", "searched": "Super Micro Computer FY2025 10-K, customer concentration disclosure, full text", "found_instead": "\"Customer G\"; one single customer accounted for 20% of net sales, never named.", "blocks": "the server OEM layer cannot be linked to the buyers it depends on", "would_close_it": "Super Micro naming the customer, or that customer disclosing the purchase", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-oracle-rpo-no-counterparty", "kind": "undisclosed", "subject": "Oracle -> the counterparties behind its cloud backlog", "sought": "who Oracle's contracted cloud capacity is committed to", "searched": "Oracle FY2026 10-K, remaining performance obligations disclosure, full text", "found_instead": "$638B of remaining performance obligations, up from $138B, attributed only to \"certain significant cloud contracts\". No counterparty named. Zero mentions of Nvidia or OpenAI anywhere in the filing.", "blocks": "Oracle sits on the map as a hyperscaler with no compute edges at all, despite disclosing one of the largest contracted backlogs in the industry", "would_close_it": "Oracle naming a counterparty, or a model lab disclosing an Oracle commitment from its side", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-alphabet-equity-no-holding", "kind": "undisclosed", "subject": "Alphabet (Google Cloud) invests-in Anthropic", "sought": "confirmation of Alphabet's stake in a named model lab", "searched": "Alphabet FY2025 10-K, non-marketable equity securities disclosure, full text", "found_instead": "$64.1B of aggregate non-marketable equity securities with no individual holding broken out or named.", "blocks": "a widely reported investment relationship cannot be drawn, while the comparable Amazon/Anthropic and Microsoft/OpenAI edges COULD be sourced from their own filings", "would_close_it": "Alphabet breaking out a holding, or Anthropic disclosing its investors in a filing", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-grid-vendors-name-no-datacenter", "kind": "unevidenced-flag", "subject": "Siemens Energy, Schneider Electric, Eaton Corporation -> data center operators", "sought": "a filing naming a data center customer for grid and power equipment", "searched": "Siemens Energy Annual Report 2025 (266pp), full text; Schneider Electric FY2025 results release; Eaton Corporation FY2025 10-K, full text", "found_instead": "not one names a single data center operator as a counterparty. Vertiv is the lone exception in this tier: its 10-K Our Customers section names Microsoft, AWS, Google Cloud, CoreWeave and Nebius outright.", "blocks": "Siemens Energy is flagged as a chokepoint on ZERO edges, the only one on the map with no sourced relationship behind it. The transformer lead-time argument rests on market structure, not on any disclosed contract", "would_close_it": "a grid vendor naming a data center customer, or a hyperscaler disclosing an equipment supplier; failing that, an order-backlog breakdown by end market from a primary source", "status": "open", "last_checked": "2026-07-20"}, {"gap_id": "gap-04-marvell-aws-unreadable", "kind": "unreachable", "subject": "Marvell Technology supplies-components-to Amazon (AWS)", "sought": "a readable first-party source for the Marvell/AWS collaboration", "searched": "Marvell FY2026 10-K, full text (names no hyperscaler customer); marvell.com newsroom release, fetched 2026-07-20", "found_instead": "the 10-K says only generic customers. The newsroom URL returns an Akamai Access Denied to every user agent tried, including a browser one.", "blocks": "a real relationship was dropped from the burst rather than merged unverified, so Marvell sits on the map with no edges", "would_close_it": "an SEC filing naming the counterparty, an AWS-side disclosure, or the same release on a host that serves it", "status": "open", "last_checked": "2026-07-20"}];
+const OPEN_GAPS = GAPS.filter(g=>(g.status||"open")!=="closed");
 
 /* source-tier labels for the verification badge */
 const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
@@ -328,13 +352,19 @@ let S = store.state;
 const $ = s=>document.querySelector(s);
 const isFilled = c=>c.revenue_usd_b!=='';
 const rolesOf = c=>c.roles.split(';').filter(Boolean);
+// Gap prose is long-form English written by a researcher, not a short CSV field: it carries
+// quotes, ampersands and the odd angle bracket. Everything here is baked in at build time from
+// this repo's own CSVs, so this is hygiene rather than an untrusted-input defence.
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c=>(
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtB(v){ if(v===''||v==null) return null; const n=parseFloat(v);
   if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(2)+'T';
   return '$'+n.toFixed(n<10?2:1)+'B'; }
 
 /* ---- tabs ---- */
 const TABS=[['overview','Overview'],['companies','Companies'],['fin','Financials'],['chain','Value chain'],
-  ['rel','Relationships'],['choke','Chokepoints'],['refs','References'],['notes','My notes']];
+  ['rel','Relationships'],['choke','Chokepoints'],['gaps',"What the filings won't say"],
+  ['refs','References'],['notes','My notes']];
 function buildTabs(){
   const nav=$('#tabs');
   TABS.forEach(([id,label],i)=>{
@@ -365,6 +395,9 @@ function renderOverview(){
     [RELATIONSHIPS.length,'relationships traced'],
     [chokes.length,'chokepoints flagged'],
     [filled.length+' / '+COMPANIES.length,'financials sourced'],
+    // The absence count sits on the FRONT PAGE beside the edge count on purpose. A viewer who only
+    // sees 40 confident edges forms an impression of completeness the data does not support.
+    [OPEN_GAPS.length,'gaps recorded'],
   ];
   $('#ovstats').innerHTML = stats.map(([n,k])=>
     `<div class="stat"><div class="n mono">${n}</div><div class="k">${k}</div></div>`).join('');
@@ -498,6 +531,48 @@ function renderRel(){
   }).join('');
 }
 
+/* ---- what the filings won't say ---- */
+const GAP_KIND={
+  'undisclosed':      ['Undisclosed','The authoritative document exists and declines to say'],
+  'unreachable':      ['Unreachable','A real source we could not read'],
+  'contradiction':    ['Reported, not disclosed','What everyone reports is in no filing we read'],
+  'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
+};
+function renderGaps(){
+  const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));
+  $('#gapsempty').hidden = rows.length>0;
+  $('#gaplist').innerHTML = rows.map(g=>{
+    const k=GAP_KIND[g.kind]||[g.kind,''];
+    const closed=(g.status||'open')==='closed';
+    return `<div class="panel"${closed?' style="opacity:.62"':''}>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${esc(g.subject||'')}</h2>
+        <span class="chip" title="${esc(k[1])}">${esc(k[0])}${closed?' &middot; closed':''}</span>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;"><b>We looked for:</b> ${esc(g.sought||'')}</div>
+      <div class="gaprow"><span class="gapk">Searched</span><span>${esc(g.searched||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Found instead</span><span>${esc(g.found_instead||'')}</span></div>
+      <div class="gaprow"><span class="gapk">What it blocks</span><span>${esc(g.blocks||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Would close it</span><span>${esc(g.would_close_it||'')}</span></div>
+      <div class="sub mono" style="margin-top:10px;font-size:12px;">last checked ${esc(g.last_checked||'')}</div>
+    </div>`;
+  }).join('');
+}
+/* A chokepoint flagged with no sourced edge behind it must admit that at the point of the claim,
+   not only in the gaps tab. Matching is on the gap's `subject` naming the company, which is the same
+   join-by-exact-name the rest of this page uses. */
+function gapsFor(company){
+  return OPEN_GAPS.filter(g=>(g.subject||'').indexOf(company)!==-1);
+}
+function gapBadge(company){
+  const gs=gapsFor(company);
+  if(!gs.length) return '';
+  const flag=gs.some(g=>g.kind==='unevidenced-flag');
+  return `<div class="gapnote">${flag
+    ? 'Flagged as a chokepoint with <b>no sourced edge behind it</b>.'
+    : 'This node has an evidence gap.'} ${esc(gs[0].blocks||'')}
+    <span class="gaplink">See <b>What the filings won&#39;t say</b>.</span></div>`;
+}
 /* ---- chokepoints ---- */
 function renderChoke(){
   const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
@@ -513,6 +588,7 @@ function renderChoke(){
         <h2>${c.company}${c.ticker?` <span class="tick mono">${c.ticker}</span>`:''}</h2>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="chip" style="display:inline-block;">Financials and edges land in the next research burst</div>
     </div>`;
     }
@@ -524,6 +600,7 @@ function renderChoke(){
         <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="bars">
         <div class="row"><span>Revenue</span><div class="track"><div class="seg" style="width:${rw}%;background:var(--pos)"></div></div></div>
         <div class="row"><span>Capex (builds)</span><div class="track"><div class="seg" style="width:${cw}%;background:var(--accent)"></div></div></div>
@@ -629,7 +706,7 @@ function renderFinancials(){
   body.innerHTML=`<div class="chartwrap">${finChart(s)}${finLegend()}</div>${ratios}${finTable(s)}`;
 }
 
-function renderAll(){ renderCards(); renderRel(); renderChoke(); renderRefs(); renderOverview(); renderFinancials(); }
+function renderAll(){ renderCards(); renderRel(); renderChoke(); renderGaps(); renderRefs(); renderOverview(); renderFinancials(); }
 
 /* ---- init ---- */
 buildTabs(); renderHeader(); roleOptions(); relTypeOptions(); renderAll(); renderNotes();

@@ -42,10 +42,11 @@ def check_one(proj):
     date = declared_date(on_disk)
     if date is None:
         return f"{art.name}: no baked BUILD date found; cannot verify freshness"
-    companies = build_map.load_csv(proj / "data" / "companies.csv")
-    rels = build_map.load_csv(proj / "data" / "relationships.csv")
-    ts = build_map.load_csv(proj / "data" / "financials_timeseries.csv")
-    fresh = build_map.render(cfg, companies, rels, ts, date)
+    # load_project(), not a second hand-kept list of CSVs. This file used to keep its own and it
+    # drifted the day gaps.csv was added. render() now has no default for gaps either, so a caller
+    # that forgets new data fails loudly instead of rendering a quietly different page.
+    companies, rels, ts, gaps = build_map.load_project(proj)
+    fresh = build_map.render(cfg, companies, rels, ts, date, gaps)
     if fresh != on_disk:
         return f"{art.name}: STALE -- the CSVs no longer render to the committed artifact (rebuild it)"
     return None

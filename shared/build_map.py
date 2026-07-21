@@ -65,7 +65,27 @@ def check_choke_why(companies, choke_why):
     return unknown, unexplained
 
 
-def render(cfg, companies, rels, ts, date):
+
+def load_project(proj):
+    """Every CSV a render needs, in ONE place, because two places drift.
+
+    tools/check_fresh.py re-renders a map and byte-compares it against the committed artifact, and its
+    docstring claimed that sharing render() meant it could not drift from the builder. It shared the
+    RENDER and not the LOADING: each file kept its own list of CSVs to read. Measured 2026-07-20, the
+    moment gaps.csv was added to build() only, check_fresh re-rendered every map with zero gaps and
+    reported the freshly built 04 artifact as STALE. The gate caught it, but the next such column might
+    be one whose absence renders as something plausible rather than as a diff.
+
+    A default argument on render() is what made it possible: render(cfg, ..., gaps=()) accepts a caller
+    that has forgotten the new data and silently produces a different page. One loader, both callers.
+    """
+    return (load_csv(proj / "data" / "companies.csv"),
+            load_csv(proj / "data" / "relationships.csv"),
+            load_csv(proj / "data" / "financials_timeseries.csv"),
+            load_csv(proj / "data" / "gaps.csv"))
+
+
+def render(cfg, companies, rels, ts, date, gaps):
     """The pure CSV+config -> HTML step, with no disk write. build() writes its result;
     tools/check_fresh.py re-renders and diffs, so a committed artifact that drifted from its
     CSV (edited, never rebuilt) cannot pass the gate. One render path, so the check cannot rot
@@ -87,6 +107,10 @@ def render(cfg, companies, rels, ts, date):
         "__COMPANIES__": json.dumps(companies, ensure_ascii=False),
         "__RELATIONSHIPS__": json.dumps(rels, ensure_ascii=False),
         "__TIMESERIES__": json.dumps(ts, ensure_ascii=False),
+        # What no filing will say. Defaults to empty so the nine maps that have not run a burst
+        # render exactly as before -- a map with nothing to report about its absences is not an
+        # error, it is a map that has not looked yet.
+        "__GAPS__": json.dumps(list(gaps), ensure_ascii=False),
     }
     for k, v in repl.items():
         html = html.replace(k, v)
@@ -103,9 +127,7 @@ def build(project, date, strict=True):
         print(f"  ABORT: map.json is missing {missing}")
         return 2
 
-    companies = load_csv(proj / "data" / "companies.csv")
-    rels = load_csv(proj / "data" / "relationships.csv")
-    ts = load_csv(proj / "data" / "financials_timeseries.csv")
+    companies, rels, ts, gaps = load_project(proj)
 
     orphans, unused = check_coverage(companies, cfg["layers"])
     if orphans:
@@ -129,7 +151,7 @@ def build(project, date, strict=True):
     if unexplained:
         print(f"  note: chokepoints with no chokepoint_why line: {unexplained}")
 
-    html = render(cfg, companies, rels, ts, date)
+    html = render(cfg, companies, rels, ts, date, gaps)
     filled = sum(1 for c in companies if c.get("revenue_usd_b"))
 
     out_dir = proj / "artifact"
@@ -142,8 +164,10 @@ def build(project, date, strict=True):
         shown = out.resolve().relative_to(ROOT.resolve())
     except ValueError:
         shown = out
+    open_gaps = sum(1 for x in gaps if (x.get("status") or "open").strip() != "closed")
     print(f"  Built {shown}: {len(companies)} companies, {filled} costed, "
-          f"{len(rels)} relationships, {len(ts)} timeseries rows, dated {date}")
+          f"{len(rels)} relationships, {len(ts)} timeseries rows, "
+          f"{open_gaps} open gaps, dated {date}")
     return 0
 
 

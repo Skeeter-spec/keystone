@@ -121,6 +121,13 @@
   .disc{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;margin-top:14px;}
   .empty{color:var(--muted);font-size:13px;padding:8px 2px;}
   .reflist{display:flex;flex-direction:column;gap:14px;}
+  .gapnote{border-left:3px solid var(--warn,#c98a2b);background:var(--surface-2);
+    padding:9px 12px;border-radius:0 8px 8px 0;margin:0 0 12px;font-size:13.5px;line-height:1.55;}
+  .gaplink{color:var(--muted);}
+  .gaprow{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--border);
+    font-size:14px;line-height:1.5;}
+  .gapk{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;}
+  @media (max-width:560px){ .gaprow{grid-template-columns:1fr;gap:2px;} }
   .refco{border-bottom:1px solid var(--border);padding-bottom:12px;}
   .refco h3{font-size:14.5px;margin-bottom:5px;}
   .refco a{font-size:12.5px;word-break:break-all;}
@@ -224,6 +231,21 @@
     <div id="chokelist"></div>
   </section>
 
+  <section id="tab-gaps" hidden>
+    <div class="panel">
+      <div class="eyebrow">Evidence</div>
+      <h2>What the filings won't say</h2>
+      <div class="sub">Every edge on this map is sourced. That is a rule about what the map may
+      <em>claim</em>, not a claim about what exists. These are the things we went looking for and could
+      not source, each one recorded with the documents actually read to establish it, and with what
+      would close it. An absence that names where it looked can be checked. One that does not is a shrug,
+      so the gate refuses to accept it.</div>
+    </div>
+    <div id="gaplist"></div>
+    <div class="empty" id="gapsempty" hidden>No gaps recorded yet. This map has not run a
+      research burst, so it has nothing to say about what it could not find.</div>
+  </section>
+
   <section id="tab-refs" hidden>
     <div class="sub" style="margin-bottom:14px;">Every figure in this map traces to a primary source. Links open the original filing.</div>
     <div class="panel"><div class="reflist" id="reflist"></div></div>
@@ -304,7 +326,7 @@
 /* ==== end durable-state.js ==== */
 
 /* ==== baked data (regenerated from the CSVs by build_artifact.py) ==== */
-const BUILD = {"date": "2026-07-17", "total": 26, "filled": 0};
+const BUILD = {"date": "2026-07-20", "total": 26, "filled": 0};
 const COMPANIES = [{"company": "Visa Inc.", "ticker": "V", "exchange": "NYSE", "hq_country": "United States", "roles": "card-network", "primary_segment": "Global card payment network operating VisaNet", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "One of two networks that clear the large majority of the world's card transactions; issuers and acquirers globally have no viable substitute for reach and interoperability.", "lens": "accounting", "source_tier": ""}, {"company": "Mastercard Incorporated", "ticker": "MA", "exchange": "NYSE", "hq_country": "United States", "roles": "card-network", "primary_segment": "Global card payment network", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Second half of the global card-network duopoly with Visa; together the two route the overwhelming majority of cross-border card volume.", "lens": "accounting", "source_tier": ""}, {"company": "American Express Company", "ticker": "AXP", "exchange": "NYSE", "hq_country": "United States", "roles": "card-network;issuer;acquirer", "primary_segment": "Closed-loop charge/credit card network, card issuer, and merchant acquirer", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Closed-loop (issues its own cards and acquires its own merchants) but a distant third by volume behind Visa/Mastercard; both merchants and cardholders can route around it.", "lens": "accounting", "source_tier": ""}, {"company": "Discover Global Network (Capital One Financial Corp.)", "ticker": "COF", "exchange": "NYSE", "hq_country": "United States", "roles": "card-network;issuer", "primary_segment": "Card network and card issuer; Discover Financial Services was acquired by Capital One (deal completed 2025-05-18)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Discover Financial Services no longer trades independently. Capital One retained and continues to operate the Discover Global Network as a fourth, minority-share global card rail; not a chokepoint.", "lens": "accounting", "source_tier": ""}, {"company": "UnionPay", "ticker": "", "exchange": "", "hq_country": "China", "roles": "card-network;domestic-switch", "primary_segment": "State-linked domestic and international bank card network and switch", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Mandated switch for RMB-denominated card transactions in mainland China and, by transaction value, the world's largest card network; no domestic alternative is permitted. Not listed on a public exchange; equity stakes trade only on a Chinese property/equity exchange.", "lens": "accounting", "source_tier": ""}, {"company": "Fiserv, Inc.", "ticker": "FI", "exchange": "NYSE", "hq_country": "United States", "roles": "processor;issuer-processor;acquirer", "primary_segment": "Core banking, issuer processing, and merchant acquiring (Clover)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Large but one of several competing processors (FIS, Global Payments, Fidelity, TSYS); banks and merchants can and do switch vendors.", "lens": "accounting", "source_tier": ""}, {"company": "FIS (Fidelity National Information Services, Inc.)", "ticker": "FIS", "exchange": "NYSE", "hq_country": "United States", "roles": "processor;core-banking", "primary_segment": "Core banking software and payment processing sold to banks", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Competes directly with Fiserv and Jack Henry for core banking contracts; substitutable, if costly to switch.", "lens": "accounting", "source_tier": ""}, {"company": "Global Payments Inc.", "ticker": "GPN", "exchange": "NYSE", "hq_country": "United States", "roles": "acquirer;processor", "primary_segment": "Merchant acquiring and payment processing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "One of many merchant acquirers; competitive market with low structural lock-in at the network level.", "lens": "accounting", "source_tier": ""}, {"company": "PayPal Holdings, Inc.", "ticker": "PYPL", "exchange": "NASDAQ", "hq_country": "United States", "roles": "alt-rail;gateway;acquirer", "primary_segment": "Online wallet, checkout gateway, and peer-to-peer payments", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Dominant online-checkout brand but merchants typically offer competing wallets and card checkout alongside it.", "lens": "accounting", "source_tier": ""}, {"company": "Block, Inc.", "ticker": "XYZ", "exchange": "NYSE", "hq_country": "United States", "roles": "acquirer;issuer-processor;alt-rail", "primary_segment": "Square merchant acquiring/POS hardware and Cash App peer-to-peer payments", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Ticker changed from SQ to XYZ effective 2025-01-21 alongside the Square-to-Block corporate rebrand. Competitive small-merchant acquiring segment.", "lens": "accounting", "source_tier": ""}, {"company": "Adyen N.V.", "ticker": "ADYEN", "exchange": "Euronext Amsterdam", "hq_country": "Netherlands", "roles": "acquirer;gateway;processor", "primary_segment": "Single-platform global payment processing and acquiring", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Enterprise merchants commonly multi-home with Stripe, Worldpay, or in-house acquiring; not structurally irreplaceable.", "lens": "accounting", "source_tier": ""}, {"company": "Stripe, Inc.", "ticker": "", "exchange": "", "hq_country": "United States", "roles": "gateway;processor;acquirer", "primary_segment": "Developer-first online payment infrastructure and billing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Large private fintech (last private tender valuations in the ~$90-110B range); still private with no public ticker. Merchants can and do multi-home with Adyen, Braintree, or Checkout.com.", "lens": "accounting", "source_tier": ""}, {"company": "ACI Worldwide, Inc.", "ticker": "ACIW", "exchange": "NASDAQ", "hq_country": "United States", "roles": "processor;interbank-messaging", "primary_segment": "Real-time payments and bank/biller payment software", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Software vendor to banks and networks; competes with FIS, Volante, and in-house builds.", "lens": "accounting", "source_tier": ""}, {"company": "Worldline SA", "ticker": "WLN", "exchange": "Euronext Paris", "hq_country": "France", "roles": "acquirer;processor", "primary_segment": "European merchant acquiring and payment processing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Major European acquirer but faces Adyen, Nexi, and bank-owned acquirers as substitutes.", "lens": "accounting", "source_tier": ""}, {"company": "Nexi S.p.A.", "ticker": "NEXI", "exchange": "Euronext Milan", "hq_country": "Italy", "roles": "acquirer;processor;issuer-processor", "primary_segment": "Italian/European merchant acquiring and card issuing processing", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Regional consolidator (merged with Nets and SIA) but still one of several pan-European players.", "lens": "accounting", "source_tier": ""}, {"company": "Nuvei Corporation", "ticker": "", "exchange": "", "hq_country": "Canada", "roles": "gateway;processor;acquirer", "primary_segment": "Global payment gateway and acquiring platform", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Taken private by Advent International (with founder Philip Fayer, Novacap, and CDPQ) in a deal that completed 2024-11-15, ~US$6.3B enterprise value; no longer public, no ticker.", "lens": "accounting", "source_tier": ""}, {"company": "Marqeta, Inc.", "ticker": "MQ", "exchange": "NASDAQ", "hq_country": "United States", "roles": "issuer-processor", "primary_segment": "Card-issuing and processing API platform for fintechs", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Issuer-processing infrastructure (Cash App, Block, DoorDash cards) but competes with Galileo, i2c, and Fiserv issuer-processing lines. Completed a 1-for-4 reverse stock split effective 2026-06-30.", "lens": "accounting", "source_tier": ""}, {"company": "J.P. Morgan Payments (JPMorgan Chase & Co.)", "ticker": "JPM", "exchange": "NYSE", "hq_country": "United States", "roles": "acquirer;settlement", "primary_segment": "Merchant acquiring, treasury services, and wholesale payments arm of the largest US bank", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "One of several large bank-owned acquirers/correspondent banks (also Bank of America, Citi, Wells Fargo); competitive segment despite JPM's overall balance-sheet scale.", "lens": "accounting", "source_tier": ""}, {"company": "Wise plc", "ticker": "WSE", "exchange": "NASDAQ (primary; secondary listing LSE:WISE)", "hq_country": "United Kingdom", "roles": "alt-rail;cross-border", "primary_segment": "Cross-border money-transfer network for consumers and businesses", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Moved its primary listing from London to Nasdaq on 2026-05-11 (ticker WSE), keeping a secondary LSE listing. Competes with banks' own wire/FX desks and other remittance apps.", "lens": "accounting", "source_tier": ""}, {"company": "SWIFT (Society for Worldwide Interbank Financial Telecommunication)", "ticker": "", "exchange": "", "hq_country": "Belgium", "roles": "interbank-messaging", "primary_segment": "Member-owned cooperative operating the dominant global cross-border bank messaging network", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Essentially the sole global standard for interbank payment messaging. Disconnecting a country's banks from SWIFT (used against Russian and Iranian banks) functions as a de facto financial blockade, evidence that no substitute exists at scale. Member cooperative, no ticker.", "lens": "accounting", "source_tier": ""}, {"company": "The Clearing House Payments Company L.L.C. (CHIPS, RTP)", "ticker": "", "exchange": "", "hq_country": "United States", "roles": "settlement;interbank-messaging", "primary_segment": "Bank-owned operator of CHIPS (large-value USD clearing) and the RTP real-time payments network", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Handles the bulk of large-value USD interbank clearing by dollar value, but Fedwire (central-bank operated) is a functioning alternative for final settlement, so it is not treated as a sole chokepoint here.", "lens": "accounting", "source_tier": ""}, {"company": "Federal Reserve System (Fedwire Funds Service)", "ticker": "", "exchange": "", "hq_country": "United States", "roles": "settlement", "primary_segment": "Central bank real-time gross settlement system; creates the final settlement asset for USD", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "The literal end of the line for USD settlement: every other USD rail ultimately settles through central-bank reserve accounts, which only the Fed can create. No private alternative exists.", "lens": "accounting", "source_tier": ""}, {"company": "Early Warning Services, LLC (Zelle)", "ticker": "", "exchange": "", "hq_country": "United States", "roles": "alt-rail;interbank-messaging", "primary_segment": "Bank-owned consortium operating the Zelle peer-to-peer payment network", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Convenient bank-to-bank P2P rail, but consumers can and do route around it via Venmo, Cash App, or cards.", "lens": "accounting", "source_tier": ""}, {"company": "Circle Internet Group, Inc.", "ticker": "CRCL", "exchange": "NYSE", "hq_country": "United States", "roles": "alt-rail;stablecoin-issuer", "primary_segment": "Issuer of the USDC US-dollar stablecoin", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Completed its IPO on 2025-06-05 (NYSE: CRCL). Leading regulated US-dollar stablecoin issuer but competes with Tether and a growing field of bank and fintech stablecoins.", "lens": "accounting", "source_tier": ""}, {"company": "Tether Holdings Limited", "ticker": "", "exchange": "", "hq_country": "British Virgin Islands", "roles": "alt-rail;stablecoin-issuer", "primary_segment": "Issuer of the USDT US-dollar stablecoin, the largest stablecoin by circulation", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Dominant by market share and privately held (operations centered in El Salvador since a 2025-01 relicensing), but faces rising regulated competition from Circle/USDC and bank-issued stablecoins; not structurally irreplaceable.", "lens": "accounting", "source_tier": ""}, {"company": "NPCI (National Payments Corporation of India) / UPI", "ticker": "", "exchange": "", "hq_country": "India", "roles": "domestic-switch;alt-rail;interbank-messaging", "primary_segment": "Nonprofit, RBI/bank-owned operator of India's UPI real-time payment switch", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Sole operator of UPI, the domestic switch that essentially all Indian retail digital payments route through; a government-backed monopoly with no permitted alternative rail domestically.", "lens": "accounting", "source_tier": ""}];
 const RELATIONSHIPS = [];
 const TIMESERIES = [];
@@ -315,6 +337,8 @@ const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
 
 /* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
 const CHOKE_WHY = {"Visa Inc.": "One of two networks that clear the large majority of the world's card transactions. Any bank, merchant, or country that wants global card acceptance has no viable substitute.", "Mastercard Incorporated": "The second half of the global card network duopoly with Visa. Together the two route the overwhelming majority of cross-border card volume with no structural substitute.", "UnionPay": "China's mandatory domestic card switch for RMB-denominated transactions, and by transaction value the world's largest card network. No domestic competing network is permitted to operate at scale in China.", "SWIFT (Society for Worldwide Interbank Financial Telecommunication)": "The de facto sole global standard for interbank payment messaging. Disconnecting a country's banks from SWIFT (used against Russian and Iranian banks) functions as a de facto financial blockade, evidence no substitute exists at scale.", "Federal Reserve System (Fedwire Funds Service)": "The literal end of the line for US dollar settlement. Every private USD rail ultimately settles through central-bank reserve accounts, which only the Fed can create, with no private alternative by design.", "NPCI (National Payments Corporation of India) / UPI": "Sole operator of India's UPI real-time payment switch, the domestic rail that essentially all Indian retail digital payments route through, a government-backed monopoly with no permitted alternative."};
+const GAPS = [];
+const OPEN_GAPS = GAPS.filter(g=>(g.status||"open")!=="closed");
 
 /* source-tier labels for the verification badge */
 const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
@@ -328,13 +352,19 @@ let S = store.state;
 const $ = s=>document.querySelector(s);
 const isFilled = c=>c.revenue_usd_b!=='';
 const rolesOf = c=>c.roles.split(';').filter(Boolean);
+// Gap prose is long-form English written by a researcher, not a short CSV field: it carries
+// quotes, ampersands and the odd angle bracket. Everything here is baked in at build time from
+// this repo's own CSVs, so this is hygiene rather than an untrusted-input defence.
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c=>(
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtB(v){ if(v===''||v==null) return null; const n=parseFloat(v);
   if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(2)+'T';
   return '$'+n.toFixed(n<10?2:1)+'B'; }
 
 /* ---- tabs ---- */
 const TABS=[['overview','Overview'],['companies','Companies'],['fin','Financials'],['chain','Value chain'],
-  ['rel','Relationships'],['choke','Chokepoints'],['refs','References'],['notes','My notes']];
+  ['rel','Relationships'],['choke','Chokepoints'],['gaps',"What the filings won't say"],
+  ['refs','References'],['notes','My notes']];
 function buildTabs(){
   const nav=$('#tabs');
   TABS.forEach(([id,label],i)=>{
@@ -365,6 +395,9 @@ function renderOverview(){
     [RELATIONSHIPS.length,'relationships traced'],
     [chokes.length,'chokepoints flagged'],
     [filled.length+' / '+COMPANIES.length,'financials sourced'],
+    // The absence count sits on the FRONT PAGE beside the edge count on purpose. A viewer who only
+    // sees 40 confident edges forms an impression of completeness the data does not support.
+    [OPEN_GAPS.length,'gaps recorded'],
   ];
   $('#ovstats').innerHTML = stats.map(([n,k])=>
     `<div class="stat"><div class="n mono">${n}</div><div class="k">${k}</div></div>`).join('');
@@ -498,6 +531,48 @@ function renderRel(){
   }).join('');
 }
 
+/* ---- what the filings won't say ---- */
+const GAP_KIND={
+  'undisclosed':      ['Undisclosed','The authoritative document exists and declines to say'],
+  'unreachable':      ['Unreachable','A real source we could not read'],
+  'contradiction':    ['Reported, not disclosed','What everyone reports is in no filing we read'],
+  'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
+};
+function renderGaps(){
+  const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));
+  $('#gapsempty').hidden = rows.length>0;
+  $('#gaplist').innerHTML = rows.map(g=>{
+    const k=GAP_KIND[g.kind]||[g.kind,''];
+    const closed=(g.status||'open')==='closed';
+    return `<div class="panel"${closed?' style="opacity:.62"':''}>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${esc(g.subject||'')}</h2>
+        <span class="chip" title="${esc(k[1])}">${esc(k[0])}${closed?' &middot; closed':''}</span>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;"><b>We looked for:</b> ${esc(g.sought||'')}</div>
+      <div class="gaprow"><span class="gapk">Searched</span><span>${esc(g.searched||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Found instead</span><span>${esc(g.found_instead||'')}</span></div>
+      <div class="gaprow"><span class="gapk">What it blocks</span><span>${esc(g.blocks||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Would close it</span><span>${esc(g.would_close_it||'')}</span></div>
+      <div class="sub mono" style="margin-top:10px;font-size:12px;">last checked ${esc(g.last_checked||'')}</div>
+    </div>`;
+  }).join('');
+}
+/* A chokepoint flagged with no sourced edge behind it must admit that at the point of the claim,
+   not only in the gaps tab. Matching is on the gap's `subject` naming the company, which is the same
+   join-by-exact-name the rest of this page uses. */
+function gapsFor(company){
+  return OPEN_GAPS.filter(g=>(g.subject||'').indexOf(company)!==-1);
+}
+function gapBadge(company){
+  const gs=gapsFor(company);
+  if(!gs.length) return '';
+  const flag=gs.some(g=>g.kind==='unevidenced-flag');
+  return `<div class="gapnote">${flag
+    ? 'Flagged as a chokepoint with <b>no sourced edge behind it</b>.'
+    : 'This node has an evidence gap.'} ${esc(gs[0].blocks||'')}
+    <span class="gaplink">See <b>What the filings won&#39;t say</b>.</span></div>`;
+}
 /* ---- chokepoints ---- */
 function renderChoke(){
   const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
@@ -513,6 +588,7 @@ function renderChoke(){
         <h2>${c.company}${c.ticker?` <span class="tick mono">${c.ticker}</span>`:''}</h2>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="chip" style="display:inline-block;">Financials and edges land in the next research burst</div>
     </div>`;
     }
@@ -524,6 +600,7 @@ function renderChoke(){
         <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="bars">
         <div class="row"><span>Revenue</span><div class="track"><div class="seg" style="width:${rw}%;background:var(--pos)"></div></div></div>
         <div class="row"><span>Capex (builds)</span><div class="track"><div class="seg" style="width:${cw}%;background:var(--accent)"></div></div></div>
@@ -629,7 +706,7 @@ function renderFinancials(){
   body.innerHTML=`<div class="chartwrap">${finChart(s)}${finLegend()}</div>${ratios}${finTable(s)}`;
 }
 
-function renderAll(){ renderCards(); renderRel(); renderChoke(); renderRefs(); renderOverview(); renderFinancials(); }
+function renderAll(){ renderCards(); renderRel(); renderChoke(); renderGaps(); renderRefs(); renderOverview(); renderFinancials(); }
 
 /* ---- init ---- */
 buildTabs(); renderHeader(); roleOptions(); relTypeOptions(); renderAll(); renderNotes();

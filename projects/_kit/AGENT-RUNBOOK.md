@@ -36,3 +36,33 @@ language, structured or PDF). Extraction is cheap once the route is known; findi
 It also carries the traps: cninfo serves Shenzhen not Shanghai, consolidated vs parent-company statements
 share row labels, net income means attributable-to-parent, and an identifier that resolves is not the
 entity you meant.
+
+## Record what you could NOT source (data/gaps.csv)
+
+**A burst that finds nothing on a target has produced a result, not a blank.** On 04 the strongest
+findings were absences: no hyperscaler names Nvidia anywhere in its own 10-K, and TSMC's 20-F will only
+ever say "our largest customer". A map that records only what it could source draws those identically to
+a relationship that does not exist, which is the opposite of what the reader should conclude.
+
+So when you go looking for an edge or a figure and the document declines to say, write a row in
+`data/gaps.csv` instead of dropping it:
+
+```
+gap_id,kind,subject,sought,searched,found_instead,blocks,would_close_it,status,last_checked
+```
+
+- `kind` is exactly one of `undisclosed` (the document exists and will not say), `unreachable` (a real
+  source you could not read), `contradiction` (sources disagree, or the reported world contradicts the
+  disclosed one), `unevidenced-flag` (this map claims something with no sourced edge behind it).
+  Anything else fails the gate.
+- 🔴 **`searched` is what makes it evidence rather than a shrug, and the gate REJECTS a row without it.**
+  Name the documents you actually opened: "TSMC FY2025 20-F, full text; Nvidia FY2026 10-K, full text".
+  "Could not find anything" is unfalsifiable and worth less than silence.
+- **`would_close_it`** must name the document or disclosure that would settle it, so the gap becomes the
+  next burst's task rather than a permanent excuse.
+- `found_instead` should quote the fudge where there is one. "Customer A through Customer G" and
+  "our ten largest customers" are the actual findings.
+- A `contradiction` must name at least two sources in `searched`, separated by `;`. One source cannot
+  contradict anything.
+
+These render on the map under **What the filings won't say**, with the open count on the front page.

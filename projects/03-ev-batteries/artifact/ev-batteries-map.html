@@ -121,6 +121,13 @@
   .disc{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;margin-top:14px;}
   .empty{color:var(--muted);font-size:13px;padding:8px 2px;}
   .reflist{display:flex;flex-direction:column;gap:14px;}
+  .gapnote{border-left:3px solid var(--warn,#c98a2b);background:var(--surface-2);
+    padding:9px 12px;border-radius:0 8px 8px 0;margin:0 0 12px;font-size:13.5px;line-height:1.55;}
+  .gaplink{color:var(--muted);}
+  .gaprow{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--border);
+    font-size:14px;line-height:1.5;}
+  .gapk{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;}
+  @media (max-width:560px){ .gaprow{grid-template-columns:1fr;gap:2px;} }
   .refco{border-bottom:1px solid var(--border);padding-bottom:12px;}
   .refco h3{font-size:14.5px;margin-bottom:5px;}
   .refco a{font-size:12.5px;word-break:break-all;}
@@ -224,6 +231,21 @@
     <div id="chokelist"></div>
   </section>
 
+  <section id="tab-gaps" hidden>
+    <div class="panel">
+      <div class="eyebrow">Evidence</div>
+      <h2>What the filings won't say</h2>
+      <div class="sub">Every edge on this map is sourced. That is a rule about what the map may
+      <em>claim</em>, not a claim about what exists. These are the things we went looking for and could
+      not source, each one recorded with the documents actually read to establish it, and with what
+      would close it. An absence that names where it looked can be checked. One that does not is a shrug,
+      so the gate refuses to accept it.</div>
+    </div>
+    <div id="gaplist"></div>
+    <div class="empty" id="gapsempty" hidden>No gaps recorded yet. This map has not run a
+      research burst, so it has nothing to say about what it could not find.</div>
+  </section>
+
   <section id="tab-refs" hidden>
     <div class="sub" style="margin-bottom:14px;">Every figure in this map traces to a primary source. Links open the original filing.</div>
     <div class="panel"><div class="reflist" id="reflist"></div></div>
@@ -304,7 +326,7 @@
 /* ==== end durable-state.js ==== */
 
 /* ==== baked data (regenerated from the CSVs by build_artifact.py) ==== */
-const BUILD = {"date": "2026-07-17", "total": 30, "filled": 0};
+const BUILD = {"date": "2026-07-20", "total": 30, "filled": 0};
 const COMPANIES = [{"company": "CATL", "ticker": "300750.SZ", "exchange": "Shenzhen SE", "hq_country": "China", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "World's largest EV battery cell maker; over a third of global market share; also dual-listed 3750.HK since 2025.", "lens": "accounting", "source_tier": ""}, {"company": "BYD", "ticker": "1211.HK", "exchange": "HKEX", "hq_country": "China", "roles": "cell-maker;automaker", "primary_segment": "blade LFP cells and EVs (vertically integrated)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Second largest cell maker and a major automaker; the only major player fully vertically integrated from cells to vehicles; also lists A-shares 002594.SZ.", "lens": "accounting", "source_tier": ""}, {"company": "LG Energy Solution", "ticker": "373220.KS", "exchange": "Korea Exchange", "hq_country": "South Korea", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Spun off from LG Chem in 2020; major cell supplier to GM, Tesla, Hyundai.", "lens": "accounting", "source_tier": ""}, {"company": "Panasonic Holdings", "ticker": "6752.T", "exchange": "Tokyo SE", "hq_country": "Japan", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells (cylindrical, incl. 4680)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Longtime primary cell supplier to Tesla via the Nevada Gigafactory; battery unit is Panasonic Energy.", "lens": "accounting", "source_tier": ""}, {"company": "Samsung SDI", "ticker": "006400.KS", "exchange": "Korea Exchange", "hq_country": "South Korea", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Supplies BMW, Stellantis, Rivian, and others.", "lens": "accounting", "source_tier": ""}, {"company": "SK On", "ticker": "", "exchange": "", "hq_country": "South Korea", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Battery subsidiary of SK Innovation (096770.KS); not separately listed; major Ford and Hyundai supplier.", "lens": "accounting", "source_tier": ""}, {"company": "EVE Energy", "ticker": "300014.SZ", "exchange": "Shenzhen SE (ChiNext)", "hq_country": "China", "roles": "cell-maker", "primary_segment": "lithium-ion EV and energy-storage battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Fast-growing Chinese cell maker expanding overseas capacity in Hungary and Malaysia.", "lens": "accounting", "source_tier": ""}, {"company": "CALB", "ticker": "3931.HK", "exchange": "HKEX", "hq_country": "China", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "China Aviation Lithium Battery; a top-5 global cell maker by shipment volume.", "lens": "accounting", "source_tier": ""}, {"company": "Gotion High-Tech", "ticker": "002074.SZ", "exchange": "Shenzhen SE", "hq_country": "China", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Volkswagen is a strategic investor and anchor customer.", "lens": "accounting", "source_tier": ""}, {"company": "Envision AESC", "ticker": "", "exchange": "", "hq_country": "China", "roles": "cell-maker", "primary_segment": "lithium-ion EV battery cells", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Privately held battery unit of Envision Group (Shanghai); traces to the original NEC/Nissan AESC joint venture in Japan; supplies Nissan, Renault, Mercedes-Benz, BMW.", "lens": "accounting", "source_tier": ""}, {"company": "POSCO Future M", "ticker": "003670.KS", "exchange": "Korea Exchange", "hq_country": "South Korea", "roles": "cathode-maker;anode-maker;refiner", "primary_segment": "cathode active material, anode material, and lithium refining", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "POSCO Group's battery materials arm; supplies LG Energy Solution and Samsung SDI.", "lens": "accounting", "source_tier": ""}, {"company": "Ronbay Technology", "ticker": "688005.SS", "exchange": "Shanghai STAR Market", "hq_country": "China", "roles": "cathode-maker", "primary_segment": "high-nickel cathode active material", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "One of China's largest NCM/NCA cathode active material makers.", "lens": "accounting", "source_tier": ""}, {"company": "Ningbo Shanshan", "ticker": "600884.SS", "exchange": "Shanghai SE", "hq_country": "China", "roles": "anode-maker;cathode-maker", "primary_segment": "graphite anode and cathode materials", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Diversified Chinese battery materials group spanning both anode and cathode.", "lens": "accounting", "source_tier": ""}, {"company": "BTR New Energy Materials", "ticker": "835185.BJ", "exchange": "Beijing SE", "hq_country": "China", "roles": "anode-maker", "primary_segment": "graphite and silicon-based anode material", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "World's largest graphite anode producer; anode graphitization capacity is heavily concentrated in China.", "lens": "accounting", "source_tier": ""}, {"company": "Umicore", "ticker": "UMI.BR", "exchange": "Euronext Brussels", "hq_country": "Belgium", "roles": "refiner;cathode-maker;recycler", "primary_segment": "cathode precursor/CAM production and battery recycling", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "One of the few non-Chinese, non-Korean cathode and precursor producers at scale; also a major recycler.", "lens": "accounting", "source_tier": ""}, {"company": "Asahi Kasei", "ticker": "3407.T", "exchange": "Tokyo SE", "hq_country": "Japan", "roles": "separator-maker", "primary_segment": "wet-process battery separator film (Hipore/Celgard)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Owns Celgard; one of a handful of firms whose separator technology and licensing underpins most of the industry.", "lens": "accounting", "source_tier": ""}, {"company": "Yunnan Energy New Material (SEMCORP)", "ticker": "002812.SZ", "exchange": "Shenzhen SE", "hq_country": "China", "roles": "separator-maker", "primary_segment": "wet-process lithium battery separator", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Largest separator maker globally by shipment volume; China holds the large majority of global separator capacity.", "lens": "accounting", "source_tier": ""}, {"company": "Shenzhen Senior Technology Material", "ticker": "300568.SZ", "exchange": "Shenzhen SE (ChiNext)", "hq_country": "China", "roles": "separator-maker", "primary_segment": "battery separator film", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Added alongside Yunnan Energy/SEMCORP to show separator supply is concentrated in a small handful of Chinese and Japanese firms.", "lens": "accounting", "source_tier": ""}, {"company": "Guangzhou Tinci Materials Technology", "ticker": "002709.SZ", "exchange": "Shenzhen SE", "hq_country": "China", "roles": "electrolyte-maker", "primary_segment": "lithium battery electrolyte and electrolyte salts (LiPF6)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Largest electrolyte maker globally; also produces the LiPF6 salt most electrolyte formulations depend on.", "lens": "accounting", "source_tier": ""}, {"company": "Ganfeng Lithium", "ticker": "002460.SZ", "exchange": "Shenzhen SE", "hq_country": "China", "roles": "miner;refiner;cathode-maker", "primary_segment": "lithium mining, refining, and battery materials", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Vertically integrated from lithium brine/spodumene through lithium metal and materials; also dual-listed 1772.HK.", "lens": "accounting", "source_tier": ""}, {"company": "Albemarle", "ticker": "ALB", "exchange": "NYSE", "hq_country": "United States", "roles": "miner;refiner", "primary_segment": "lithium mining and refining (hydroxide/carbonate)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Largest listed Western lithium producer; operations in Chile, Australia, and the US.", "lens": "accounting", "source_tier": ""}, {"company": "Sociedad Quimica y Minera de Chile (SQM)", "ticker": "SQM", "exchange": "NYSE (ADR)", "hq_country": "Chile", "roles": "miner;refiner", "primary_segment": "lithium brine mining and refining", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Operates the Salar de Atacama, one of the world's richest lithium brine deposits.", "lens": "accounting", "source_tier": ""}, {"company": "Glencore", "ticker": "GLEN.L", "exchange": "London SE", "hq_country": "Switzerland", "roles": "miner", "primary_segment": "cobalt mining and trading", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "One of the largest cobalt traders/producers; global cobalt supply is heavily concentrated in the DRC where Glencore is a top operator.", "lens": "accounting", "source_tier": ""}, {"company": "CMOC Group", "ticker": "603993.SS", "exchange": "Shanghai SE", "hq_country": "China", "roles": "miner", "primary_segment": "cobalt and copper mining (DRC)", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "yes", "notes": "Chinese-controlled miner that overtook Glencore as the world's top cobalt producer via its DRC operations (Tenke Fungurume, Kisanfu).", "lens": "accounting", "source_tier": ""}, {"company": "Tesla", "ticker": "TSLA", "exchange": "NASDAQ", "hq_country": "United States", "roles": "automaker;cell-maker", "primary_segment": "battery electric vehicles; in-house 4680 cell production", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Largest EV maker by revenue; the only automaker in this set also manufacturing its own cells at scale (Nevada, Texas).", "lens": "accounting", "source_tier": ""}, {"company": "Volkswagen Group", "ticker": "VOW3.DE", "exchange": "Frankfurt SE (Xetra)", "hq_country": "Germany", "roles": "automaker", "primary_segment": "battery electric vehicles across group brands", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Building its own cell venture (PowerCo) while also sourcing from CATL, LG Energy Solution, Samsung SDI, and Gotion.", "lens": "accounting", "source_tier": ""}, {"company": "General Motors", "ticker": "GM", "exchange": "NYSE", "hq_country": "United States", "roles": "automaker", "primary_segment": "battery electric vehicles", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Ultium joint-venture cell plants with LG Energy Solution.", "lens": "accounting", "source_tier": ""}, {"company": "Toyota", "ticker": "7203.T", "exchange": "Tokyo SE", "hq_country": "Japan", "roles": "automaker", "primary_segment": "battery electric and hybrid vehicles", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Large hybrid battery volume plus a growing BEV push; partners with Panasonic (Prime Planet Energy) and CATL.", "lens": "accounting", "source_tier": ""}, {"company": "Redwood Materials", "ticker": "", "exchange": "", "hq_country": "United States", "roles": "recycler", "primary_segment": "lithium-ion battery recycling and materials recovery", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Privately held; founded by a former Tesla co-founder; recovers lithium, nickel, cobalt, copper, and graphite for reuse in cathode and anode material.", "lens": "accounting", "source_tier": ""}, {"company": "Li-Cycle Holdings", "ticker": "LICY", "exchange": "NYSE", "hq_country": "Canada", "roles": "recycler", "primary_segment": "lithium-ion battery recycling", "revenue_usd_b": "", "net_income_usd_b": "", "market_cap_usd_b": "", "rd_spend_usd_b": "", "capex_usd_b": "", "fiscal_year": "", "filing_source": "", "last_updated": "2026-07-14", "chokepoint": "no", "notes": "Publicly listed North American recycler; has faced financial strain on its Rochester Hub project.", "lens": "accounting", "source_tier": ""}];
 const RELATIONSHIPS = [];
 const TIMESERIES = [];
@@ -315,6 +337,8 @@ const ROLE_LABEL = Object.fromEntries(LAYERS.map(l=>[l.role,l.label]));
 
 /* why each flagged company is a chokepoint (the rest of the industry has few alternatives) */
 const CHOKE_WHY = {"CATL": "The world's largest EV cell maker, over a third of global output on its own, and most non-Chinese automakers rely on it for at least one platform. The single hardest node to route around in this chain.", "BYD": "The second largest cell maker and the only one that is also a top tier automaker, so it does not depend on the rest of the chain the way other cell makers do. Vertically integrated from cells to vehicles, which makes it a chokepoint on the supply and the demand side at once.", "BTR New Energy Materials": "The world's largest graphite anode producer. Anode purification and graphitization is almost entirely a Chinese industrial capability today, and China's late 2023 graphite export permit requirement showed how exposed the rest of the chain is to it.", "Asahi Kasei": "Owns Celgard and Hipore, and is the main non-Chinese alternative in separator film. One of a handful of firms whose separator technology underpins the industry.", "Yunnan Energy New Material (SEMCORP)": "The largest separator maker globally by shipment volume, in a country that holds the large majority of separator capacity. Separator film is low margin, capital intensive precision coating, so entry is slow and a quality or export problem here stalls cell output industry wide.", "Guangzhou Tinci Materials Technology": "The largest electrolyte maker globally, and a major source of the LiPF6 salt nearly every electrolyte formulation uses. LiPF6 production is itself concentrated among a small number of Chinese chemical makers.", "Glencore": "One of the largest cobalt producers and traders, and a top operator in the DRC, where global cobalt supply is heavily concentrated. Its position makes DRC political and infrastructure risk a chain wide risk.", "CMOC Group": "The Chinese controlled miner that overtook Glencore as the world's top cobalt producer through its DRC operations at Tenke Fungurume and Kisanfu. The other half of the cobalt concentration story."};
+const GAPS = [];
+const OPEN_GAPS = GAPS.filter(g=>(g.status||"open")!=="closed");
 
 /* source-tier labels for the verification badge */
 const TIER_LABEL = {'1':'Tier 1 &middot; primary filing','2':'Tier 2 &middot; official statistic','3':'Tier 3 &middot; tracker','4':'Tier 4 &middot; news'};
@@ -328,13 +352,19 @@ let S = store.state;
 const $ = s=>document.querySelector(s);
 const isFilled = c=>c.revenue_usd_b!=='';
 const rolesOf = c=>c.roles.split(';').filter(Boolean);
+// Gap prose is long-form English written by a researcher, not a short CSV field: it carries
+// quotes, ampersands and the odd angle bracket. Everything here is baked in at build time from
+// this repo's own CSVs, so this is hygiene rather than an untrusted-input defence.
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c=>(
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtB(v){ if(v===''||v==null) return null; const n=parseFloat(v);
   if(Math.abs(n)>=1000) return '$'+(n/1000).toFixed(2)+'T';
   return '$'+n.toFixed(n<10?2:1)+'B'; }
 
 /* ---- tabs ---- */
 const TABS=[['overview','Overview'],['companies','Companies'],['fin','Financials'],['chain','Value chain'],
-  ['rel','Relationships'],['choke','Chokepoints'],['refs','References'],['notes','My notes']];
+  ['rel','Relationships'],['choke','Chokepoints'],['gaps',"What the filings won't say"],
+  ['refs','References'],['notes','My notes']];
 function buildTabs(){
   const nav=$('#tabs');
   TABS.forEach(([id,label],i)=>{
@@ -365,6 +395,9 @@ function renderOverview(){
     [RELATIONSHIPS.length,'relationships traced'],
     [chokes.length,'chokepoints flagged'],
     [filled.length+' / '+COMPANIES.length,'financials sourced'],
+    // The absence count sits on the FRONT PAGE beside the edge count on purpose. A viewer who only
+    // sees 40 confident edges forms an impression of completeness the data does not support.
+    [OPEN_GAPS.length,'gaps recorded'],
   ];
   $('#ovstats').innerHTML = stats.map(([n,k])=>
     `<div class="stat"><div class="n mono">${n}</div><div class="k">${k}</div></div>`).join('');
@@ -498,6 +531,48 @@ function renderRel(){
   }).join('');
 }
 
+/* ---- what the filings won't say ---- */
+const GAP_KIND={
+  'undisclosed':      ['Undisclosed','The authoritative document exists and declines to say'],
+  'unreachable':      ['Unreachable','A real source we could not read'],
+  'contradiction':    ['Reported, not disclosed','What everyone reports is in no filing we read'],
+  'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
+};
+function renderGaps(){
+  const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));
+  $('#gapsempty').hidden = rows.length>0;
+  $('#gaplist').innerHTML = rows.map(g=>{
+    const k=GAP_KIND[g.kind]||[g.kind,''];
+    const closed=(g.status||'open')==='closed';
+    return `<div class="panel"${closed?' style="opacity:.62"':''}>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2>${esc(g.subject||'')}</h2>
+        <span class="chip" title="${esc(k[1])}">${esc(k[0])}${closed?' &middot; closed':''}</span>
+      </div>
+      <div class="sub" style="margin:6px 0 12px;"><b>We looked for:</b> ${esc(g.sought||'')}</div>
+      <div class="gaprow"><span class="gapk">Searched</span><span>${esc(g.searched||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Found instead</span><span>${esc(g.found_instead||'')}</span></div>
+      <div class="gaprow"><span class="gapk">What it blocks</span><span>${esc(g.blocks||'')}</span></div>
+      <div class="gaprow"><span class="gapk">Would close it</span><span>${esc(g.would_close_it||'')}</span></div>
+      <div class="sub mono" style="margin-top:10px;font-size:12px;">last checked ${esc(g.last_checked||'')}</div>
+    </div>`;
+  }).join('');
+}
+/* A chokepoint flagged with no sourced edge behind it must admit that at the point of the claim,
+   not only in the gaps tab. Matching is on the gap's `subject` naming the company, which is the same
+   join-by-exact-name the rest of this page uses. */
+function gapsFor(company){
+  return OPEN_GAPS.filter(g=>(g.subject||'').indexOf(company)!==-1);
+}
+function gapBadge(company){
+  const gs=gapsFor(company);
+  if(!gs.length) return '';
+  const flag=gs.some(g=>g.kind==='unevidenced-flag');
+  return `<div class="gapnote">${flag
+    ? 'Flagged as a chokepoint with <b>no sourced edge behind it</b>.'
+    : 'This node has an evidence gap.'} ${esc(gs[0].blocks||'')}
+    <span class="gaplink">See <b>What the filings won&#39;t say</b>.</span></div>`;
+}
 /* ---- chokepoints ---- */
 function renderChoke(){
   const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
@@ -513,6 +588,7 @@ function renderChoke(){
         <h2>${c.company}${c.ticker?` <span class="tick mono">${c.ticker}</span>`:''}</h2>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="chip" style="display:inline-block;">Financials and edges land in the next research burst</div>
     </div>`;
     }
@@ -524,6 +600,7 @@ function renderChoke(){
         <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
+      ${gapBadge(c.company)}
       <div class="bars">
         <div class="row"><span>Revenue</span><div class="track"><div class="seg" style="width:${rw}%;background:var(--pos)"></div></div></div>
         <div class="row"><span>Capex (builds)</span><div class="track"><div class="seg" style="width:${cw}%;background:var(--accent)"></div></div></div>
@@ -629,7 +706,7 @@ function renderFinancials(){
   body.innerHTML=`<div class="chartwrap">${finChart(s)}${finLegend()}</div>${ratios}${finTable(s)}`;
 }
 
-function renderAll(){ renderCards(); renderRel(); renderChoke(); renderRefs(); renderOverview(); renderFinancials(); }
+function renderAll(){ renderCards(); renderRel(); renderChoke(); renderGaps(); renderRefs(); renderOverview(); renderFinancials(); }
 
 /* ---- init ---- */
 buildTabs(); renderHeader(); roleOptions(); relTypeOptions(); renderAll(); renderNotes();
