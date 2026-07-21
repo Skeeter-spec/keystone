@@ -59,6 +59,17 @@ The rules, each tied to the promise or the mechanism it protects:
                  text" can be checked by anyone. It must also say what would close it, which turns a
                  dead end into the next burst's task instead of a permanent excuse.
 
+  9. cross-map    The same company at the same fiscal year carries the SAME figures in every map.
+
+                 Specified in the approved 2026-07-20 plan and NOT BUILT until 2026-07-21, which is its
+                 own small lesson: an approved plan item can silently never land, and nothing noticed.
+
+                 The exposure is created by tools/reuse_costed.py and grows with it. 04 inherits 12 rows
+                 from 01. When 05 inherits from 01, 02 and 04, a figure corrected in one map and left
+                 stale in another becomes invisible: both rows are sourced, both pass rule 1, and the
+                 atlas quietly disagrees with itself. Aliases are honoured, because "Micron" and
+                 "Micron Technology" are one company and a contradiction between them is still one.
+
 Exit 0 = clean. Exit 1 = a real problem. Exit 2 = the checker itself is broken.
 """
 import csv, glob, pathlib, re, sys
@@ -190,6 +201,37 @@ def check_gaps(rows, label):
     return problems
 
 
+def check_cross_map(by_map, aliases=None):
+    """Rule 9. Two maps must not report different figures for one company-year.
+
+    by_map: {slug: [rows]}. aliases: {name: {same-entity names}} from shared/company_aliases.csv.
+    Pure, so the selftest drives it directly.
+    """
+    aliases = aliases or {}
+    problems = []
+    canon, seen = {}, {}
+    for slug, rows in sorted(by_map.items()):
+        for r in rows:
+            name, fy = g(r, "company"), g(r, "fiscal_year")
+            rev = g(r, "revenue_usd_b")
+            if not (name and fy and rev):
+                continue
+            # collapse aliases onto whichever spelling was seen first, so the comparison is per ENTITY
+            key = canon.get(name)
+            if key is None:
+                key = next((canon[a] for a in aliases.get(name, ()) if a in canon), name)
+                canon[name] = key
+            prior = seen.get((key, fy))
+            if prior and prior[1] != rev:
+                problems.append(
+                    f"{slug}/companies.csv {name} FY {fy} reports revenue {rev}, but "
+                    f"{prior[0]} reports {prior[1]} for the same company-year. Both are sourced and both "
+                    f"pass rule 1; the atlas disagrees with itself")
+            elif not prior:
+                seen[(key, fy)] = (f"{slug}/companies.csv ({name})", rev)
+    return problems
+
+
 def check_readme(readme_text, facts):
     """Rule 6. facts: {project_dir: {'edges': n, 'costed': n}}"""
     problems = []
@@ -272,7 +314,7 @@ def load(path):
 
 
 def run(root):
-    problems, facts = [], {}
+    problems, facts, rows_by_map = [], {}, {}
     for data_dir in sorted(glob.glob(str(root / "projects" / "*" / "data"))):
         d = pathlib.Path(data_dir)
         slug = d.parent.name
@@ -284,6 +326,7 @@ def run(root):
         # load() returns [] for a missing file, so a map with no gaps.csv is silently fine. Nine of
         # ten maps have not run a burst yet and have nothing to say about what they could not find.
         problems += check_gaps(load(d / "gaps.csv"), f"{slug}/gaps.csv")
+        rows_by_map[slug] = companies
         problems += check_companies(companies, f"{slug}/companies.csv")
         problems += check_notes_prose(companies, f"{slug}/companies.csv")
         problems += check_relationships(rels, f"{slug}/relationships.csv")
@@ -294,6 +337,20 @@ def run(root):
             "gaps": sum(1 for x in load(d / "gaps.csv")
                         if (g(x, "status") or "open") != "closed"),
         }
+    # Rule 9 needs every map at once, so it cannot live in the per-map loop above.
+    alias_map = {}
+    ap = root / "shared" / "company_aliases.csv"
+    if ap.exists():
+        with open(ap, newline="") as fh:
+            for a in csv.DictReader(fh):
+                if (a.get("approved") or "").strip().lower() != "yes":
+                    continue
+                x, y = (a.get("name_a") or "").strip(), (a.get("name_b") or "").strip()
+                if x and y:
+                    alias_map.setdefault(x, set()).add(y)
+                    alias_map.setdefault(y, set()).add(x)
+    problems += check_cross_map(rows_by_map, alias_map)
+
     # Rule 7 covers _kit too: it is the template every future map is stamped from, so it is the
     # one file where a wrong instruction costs the most. FOUNDATION.md is in scope because a burst
     # agent is handed the foundation brief as context, so it teaches vocabulary the same way.
@@ -416,6 +473,39 @@ def selftest():
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
 
+    # Rule 9 needs several maps at once, so it gets its own fixture block.
+    ALIASES = {"Micron": {"Micron Technology"}, "Micron Technology": {"Micron"}}
+    def m(slug, name, fy, rev):
+        return {"company": name, "fiscal_year": fy, "revenue_usd_b": rev}
+    cross_cases = [
+        ("control: same company-year, same figure in two maps",
+         {"01-a": [m("01", "Nvidia", "FY2026", "215.94")],
+          "04-b": [m("04", "Nvidia", "FY2026", "215.94")]}, False),
+        ("rule 9: same company-year, DIFFERENT figures",
+         {"01-a": [m("01", "Nvidia", "FY2026", "215.94")],
+          "04-b": [m("04", "Nvidia", "FY2026", "199.00")]}, True),
+        ("🔴 rule 9: a contradiction ACROSS AN ALIAS is still a contradiction",
+         {"01-a": [m("01", "Micron", "FY2025", "37.38")],
+          "04-b": [m("04", "Micron Technology", "FY2025", "40.00")]}, True),
+        ("control: an alias pair AGREEING must NOT fire",
+         {"01-a": [m("01", "Micron", "FY2025", "37.38")],
+          "04-b": [m("04", "Micron Technology", "FY2025", "37.38")]}, False),
+        ("control: DIFFERENT fiscal years may legitimately differ",
+         {"01-a": [m("01", "Intel", "FY2025", "52.85")],
+          "04-b": [m("04", "Intel", "FY2024", "54.23")]}, False),
+        ("control: an uncosted row in one map is not a contradiction",
+         {"01-a": [m("01", "Groq", "FY2025", "1.0")],
+          "04-b": [m("04", "Groq", "FY2025", "")]}, False),
+        ("control: a company in only ONE map never fires",
+         {"01-a": [m("01", "ASML", "FY2025", "30.0")]}, False),
+    ]
+    for name, by_map, expect_fire in cross_cases:
+        fired = bool(check_cross_map(by_map, ALIASES))
+        ok = fired == expect_fire
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}")
+
     # Rule 6 needs a README fixture rather than rows.
     readme_cases = [
         ("control: honest table passes",
@@ -493,11 +583,28 @@ def selftest():
         bad = dict(good_gap, searched="", would_close_it="")
         with open(d / "gaps.csv", "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=list(good_gap)); w.writeheader(); w.writerow(bad)
-        (root / "README.md").write_text("| 04 | Fixture | Foundation only |\n")
-        wired = any("gaps.csv" in p for p in run(root)[0])
-        print(f"  {'ok  ' if wired else 'DEAD'}  WIRING: run() actually calls rule 8 on a real gaps.csv")
-        if not wired:
-            failures.append("check_gaps is never called by run(); the rule is dead code")
+        # A SECOND map, so the cross-map rule has something to compare against. One fixture proves
+        # every run()-level rule is REACHABLE, because fixing this per-rule is what failed: rule 8 got
+        # a wiring case on 2026-07-20, rule 9 shipped hours later without one, and its call-site
+        # mutant survived a fully green suite. The wiring test has to grow with the rules or it only
+        # ever defends the one rule that taught the lesson.
+        d2 = root / "projects" / "01-fixture" / "data"
+        d2.mkdir(parents=True)
+        costed = ["company,fiscal_year,revenue_usd_b,filing_source,source_tier,chokepoint",
+                  "Fixture Corp,FY2025,10.0,https://example.com/a,1,no"]
+        (d2 / "companies.csv").write_text("\n".join(costed) + "\n")
+        (d2 / "relationships.csv").write_text("from_company,to_company,description\n")
+        (d / "companies.csv").write_text(
+            "\n".join(costed).replace("10.0", "99.0") + "\n")   # same company-year, different figure
+        (root / "README.md").write_text(
+            "| 01 | Fixture | Foundation only |\n| 04 | Fixture | Foundation only |\n")
+        found = run(root)[0]
+        for rule, needle in (("rule 8 (gaps)", "gaps.csv"),
+                             ("rule 9 (cross-map)", "disagrees with itself")):
+            wired = any(needle in p for p in found)
+            print(f"  {'ok  ' if wired else 'DEAD'}  WIRING: run() actually reaches {rule}")
+            if not wired:
+                failures.append(f"{rule} is never called by run(); the rule is dead code")
 
     print()
     if failures:
@@ -506,7 +613,7 @@ def selftest():
             print(f"  - {f}")
         return 2
     # +1 for the end-to-end WIRING case, which is not in any list.
-    print(f"SELFTEST PASSED. {len(cases) + len(readme_cases) + len(runbook_cases) + 1} cases: every rule fires on its own mutant "
+    print(f"SELFTEST PASSED. {len(cases) + len(readme_cases) + len(runbook_cases) + len(cross_cases) + 2} cases: every rule fires on its own mutant "
           f"and stays silent on clean and on merely-incomplete data.")
     return 0
 

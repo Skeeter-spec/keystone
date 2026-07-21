@@ -33,13 +33,25 @@ tool becomes wallpaper. With it, working the list down is visible progress.
 
 Exit 0 always when the data is readable: findings here are advice, not failure. Exit 2 = broken.
 """
-import argparse, csv, collections, glob, pathlib, re, sys
+import argparse, collections, csv, glob, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).parent.parent
 FIN = ("revenue_usd_b", "net_income_usd_b", "market_cap_usd_b", "rd_spend_usd_b", "capex_usd_b")
 TRACKERS = ("stockanalysis", "companiesmarketcap", "tracker")
 # A map that presents findings. "Foundation only" and "Costed" make no claim about relationships.
 CLAIMS_EDGES = ("Mapped", "Edges started")
+# 🔴 THE SCOPE IS DERIVED, NOT TYPED. run() loads exactly these files and the footer prints exactly
+# these files, from one constant, so the two cannot drift. A hand-written "we checked X, Y, Z" is a
+# copy, and copies rot -- which is the rule this repo already lives by everywhere else.
+#
+# WHY A FOOTER AT ALL. Measured 2026-07-21: this tool printed "No advisory findings: nothing is
+# presented as more settled than its evidence supports" -- a REPO-WIDE claim -- from a checker that
+# opens three of five data files and has never fetched a URL. I read my own clean output as
+# completeness and reported it that way. The instrument was fine; the SCOPE of its clean result was
+# narrower than the sentence announcing it, and nothing said so. A clean result that does not name
+# what it did not look at is a false claim you will believe.
+READS = ("companies.csv", "relationships.csv", "gaps.csv")
+NOT_READ = ("financials_timeseries.csv", "sources.csv")
 COMPETES_SHARE_LIMIT = 0.34   # the README calls dependencies the payoff; 02 shipped at 47%
 STALE_YEARS = 3               # relative to that map's OWN newest evidence, never to today's clock
 
@@ -91,7 +103,7 @@ def already_recorded(gaps, subject):
     return False
 
 
-def review(slug, status, companies, rels, gaps):
+def review(slug, status, companies, rels, gaps, verified=None):
     """Pure. Returns [(priority, rule, subject, message)]. Lower priority sorts first."""
     out = []
     deg = degrees(rels)
@@ -148,6 +160,21 @@ def review(slug, status, companies, rels, gaps):
                     f"{len(mixed)} of {len(costed)} costed rows are labelled source_tier 1 while their "
                     f"market cap came from a tracker. The notes say so; the tier column does not"))
 
+    # R7 -- has anyone ever OPENED this map's citations? The gate is offline by design, so a map can
+    # be green forever over unfetched sources. Measured 2026-07-21: 82 costed rows across the repo
+    # carried citations nothing had ever fetched, for a week, and one of them turned out to be a
+    # different company's annual report. Status-scoped like the rest: a foundation map has nothing
+    # to verify. verify_sources.py leaves the receipt this reads.
+    if claims_edges(status) and costed:
+        if verified is None:
+            out.append((1, "R7 citations-never-verified", slug,
+                        f"{len(costed)} costed rows and NO record that any cited document was ever "
+                        f"opened. Run tools/verify_sources.py"))
+        elif verified.get("ok", 0) < verified.get("checked", 0):
+            out.append((2, "R7 citations-partly-verified", slug,
+                        f"last run checked {verified.get('checked')} rows and {verified.get('ok')} "
+                        f"passed ({verified.get('verified_utc', '?')}). The rest are unproven"))
+
     # R6 -- informational. An isolated node is not wrong, but on a map whose product is the edges it is
     # worth seeing the count.
     if claims_edges(status):
@@ -168,10 +195,10 @@ def run(root):
         if slug == "_kit":
             continue
         status = status_of(text, slug.split("-")[0])
-        findings.append((slug, status, review(slug, status,
-                                              load(d / "companies.csv"),
-                                              load(d / "relationships.csv"),
-                                              load(d / "gaps.csv"))))
+        loaded = [load(d / f) for f in READS]
+        vp = d / "_verified.json"
+        verified = json.loads(vp.read_text()) if vp.exists() else None
+        findings.append((slug, status, review(slug, status, *loaded, verified=verified)))
     return findings
 
 
@@ -205,7 +232,13 @@ def report(findings):
         print("     STANDING      the shape of the data. These do not go away by writing a gap row,")
         print("                   and treating them as a to-do list is how a list like this gets ignored.")
     else:
-        print("  No advisory findings: nothing is presented as more settled than its evidence supports.")
+        print("  No advisory findings in what this tool reads.")
+    print()
+    print("  SCOPE of the result above -- it is not a clean bill of health for the repo:")
+    print(f"    read:       {', '.join(READS)}")
+    print(f"    NOT read:   {', '.join(NOT_READ)}")
+    print( "    NOT done:   no URL is fetched. Whether a cited document resolves, and whether it names")
+    print( "                the company, is tools/verify_sources.py and tools/verify_edges.py.")
     return 0
 
 
@@ -266,6 +299,17 @@ def selftest():
                                    [{**other, "revenue_usd_b": "1", "market_cap_usd_b": "2",
                                      "source_tier": "1", "notes": "shares from the filing cover page"}],
                                    [edge], [gap])),
+        # R7. The real 2026-07-21 state: costed rows whose citations nothing had ever fetched.
+        ("R7 fires: a Mapped map with costed rows and no verification receipt",
+         lambda: "R7" in rules("m", "Mapped.", [dict(other, revenue_usd_b="1")], [edge], [gap])),
+        ("R7 SILENT once a receipt shows every row passed",
+         lambda: not any(r.startswith("R7") for _, r, _, _ in
+                         review("m", "Mapped.", [dict(other, revenue_usd_b="1")], [edge], [gap],
+                                verified={"checked": 1, "ok": 1}))),
+        ("🔴 R7 SILENT on a foundation map -- it has nothing to verify",
+         lambda: "R7" not in rules("m", "Foundation only", [dict(other, revenue_usd_b="1")], [], [])),
+        ("R7 SILENT on a Mapped map with NO costed rows",
+         lambda: "R7" not in rules("m", "Mapped.", [other], [edge], [gap])),
         ("a clean Mapped map produces NOTHING",
          lambda: not rules("m", "Mapped.", [{**other, "company": "A"}],
                            [{**edge, "from_company": "A", "to_company": "A"}], [gap])),

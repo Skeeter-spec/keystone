@@ -76,6 +76,15 @@ if [ "$fail" -ne 0 ]; then
 fi
 echo "GATE PASSED."
 echo ""
+# The gate's own scope, stated on every green run. "GATE PASSED" is a claim about what the gate reads,
+# and on 2026-07-21 a clean checker run was read as repo-wide completeness by the person who wrote it.
+# A clean result that does not name what it did not look at is a false claim you will believe.
+echo "SCOPE: GATE PASSED means the OFFLINE checks above passed. It does NOT mean:"
+echo "  that any cited document was opened. No URL is fetched here, by design (a gate that needs"
+echo "  wifi gives different answers on different wifi). Citations are tools/verify_sources.py"
+echo "  (figures) and tools/verify_edges.py (edges). Neither runs in this gate."
+echo "  that nothing is over-claimed. That is tools/review.py, which never fails anything."
+echo ""
 echo "Not checked here, because it needs a browser and a human eye:"
 echo "  that the rendered page LOOKS right (layout, colours, no visual overflow)."
 echo "  Data drift IS now caught headless by [3/3]; the Browser pane hangs on local file:// anyway."

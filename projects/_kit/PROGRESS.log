@@ -1,1 +1,29 @@
 2026-07-16 ROOT CAUSE FIX: this kit's AGENT-RUNBOOK said "set chokepoint TRUE", and shared/new-map.sh copies this kit into every new map, so all 9 stamped maps inherited an instruction that contradicts the artifact template's chokepoint==='yes' test. The research agents were not sloppy; they did what the runbook told them. Fixed the wording here and in all 9 copies, and added rule 7 to tools/check_data.py so a runbook can never again instruct the vocabulary that breaks the renderer. Note 01's runbook always said chokepoint=yes correctly: the kit was written fresh on 2026-07-14 and drifted from the map it was modeled on. Verified by mutation: restoring the old kit wording turns the gate red and names this file.
+
+2026-07-21 THREE CHECKS THAT ONLY EXIST BECAUSE A CLEAN RESULT LIED. Reflection pass, applied repo-wide.
+
+RULE 9, cross-map contradictions: the same company at the same fiscal year must carry the same figures in
+every map. Specified in the approved 2026-07-20 plan and NEVER BUILT until today -- an approved plan item
+silently did not land and nothing noticed. The exposure is created by tools/reuse_costed.py and grows with
+it: 04 inherits 12 rows from 01, and when 05 inherits from three maps a figure corrected in one and stale
+in another is invisible, because BOTH rows are sourced and both pass rule 1. Aliases honoured, so a
+contradiction between "Micron" and "Micron Technology" still counts.
+
+R7, citation recency: verify_sources.py now leaves data/_verified.json and review.py reads it. Measured
+before wiring: R7 fired on all three Mapped maps -- 82 costed rows whose citations nothing had ever
+fetched, which is exactly the state that hid a row costed from the wrong company. After verifying, 02 and
+04 went silent and 01 correctly reports PARTLY verified (38/41; the three failures are already gaps).
+
+🔴 SCOPE FOOTERS, and this is the one that matters. review.py printed "No advisory findings: nothing is
+presented as more settled than its evidence supports" -- a REPO-WIDE claim -- from a checker that opens
+three of five data files and has never fetched a URL. I read my own clean output as completeness and
+reported it that way; only Keaton asking "are we leaving work behind?" surfaced it. Both review.py and
+gate.sh now state what they did NOT examine, on every run. The scope list is DERIVED from the same
+constant run() loads, so the two cannot drift -- a hand-typed "we checked X, Y, Z" is a copy, and copies
+rot. A clean result that does not name what it did not look at is a false claim you will believe.
+
+⚠ AND THE WIRING TEST HAD TO GROW. Rule 8 got an end-to-end case on 2026-07-20 after its call-site mutant
+survived a green suite. Rule 9 shipped hours later WITHOUT one, and its call-site mutant survived too --
+the same failure, because the fix had been made per-rule instead of general. One fixture now proves every
+run()-level rule is REACHABLE. Separately: a mutation that silently never applies is indistinguishable
+from one that survives, so every mutant here asserts the file actually changed before drawing a verdict.

@@ -39,7 +39,7 @@ next to verify_edges.py.
 
 Exit 0 = every costed row's citation checked out. Exit 1 = at least one did not. Exit 2 = broken.
 """
-import argparse, csv, glob, pathlib, sys
+import argparse, csv, datetime, glob, json, pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import verify_edges as V  # noqa: E402 -- the shared, already-hardened fetch/parse/match machinery
@@ -112,6 +112,21 @@ def verify(project, cache):
     return results
 
 
+def write_receipt(proj, results):
+    """Leave a dated receipt so 'has anyone opened these documents?' is answerable by a command.
+
+    Measured 2026-07-21: 82 costed rows carried citations nothing had EVER fetched, and the only
+    reason anyone found out was that someone thought to ask. A gate can be green forever over
+    unopened sources, because the gate is offline by design. So the fact of verification becomes
+    DATA, and tools/review.py rule R7 reads it.
+    """
+    ok = sum(1 for _, v, _ in results if v == "OK")
+    (pathlib.Path(proj) / "data" / "_verified.json").write_text(json.dumps({
+        "tool": "verify_sources.py", "checked": len(results), "ok": ok,
+        "verified_utc": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }, indent=2) + "\n")
+
+
 def main(argv):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("project", nargs="?")
@@ -129,6 +144,7 @@ def main(argv):
         results = verify(proj, cache)
         if not results:
             continue
+        write_receipt(proj, results)
         fails = [x for x in results if x[1] != "OK"]
         total += len(results)
         bad += len(fails)
