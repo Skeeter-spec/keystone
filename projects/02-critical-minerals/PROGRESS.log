@@ -77,3 +77,47 @@ reports (RMB->USD) to finish 02's chokepoints and move it toward "Mapped".
 
 NEXT: the 3 A-only chokepoints above; then 02's still-empty non-chokepoint majors (Lynas, BHP, Rio, Glencore,
 Umicore, Pilbara, Iluka, plus the automakers/battery cos); then 02 timeseries + politics lens.
+
+2026-07-20 CHOKEPOINTS COMPLETE (3 A-share-only issuers, tier 1). Costed the last 3 of 02's 5 chokepoints
+from their FY2025 SSE-filed audited annual reports: China Northern Rare Earth (600111), Zhejiang Huayou
+Cobalt (603799), Yunnan Chihong Zinc & Germanium (600497). 02 is now 5/5 chokepoints costed, 10/33
+companies costed; repo 48 -> 51.
+
+Statements are in RMB yuan (the units line 單位：元 币种：人民币 was READ OFF THE PAGE, not assumed);
+converted at USD/CNY 6.7574 (2026-07-20).
+- 600111: revenue 42,563,083,233.34; net profit attrib. parent 2,251,272,073.68; R&D 318,090,827.61;
+  capex 1,305,683,230.63.
+- 603799: revenue 81,018,674,069.68; attrib. 6,110,378,757.84; R&D 1,682,172,318.86; capex 10,757,625,082.43.
+- 600497: revenue 24,059,461,625.68; attrib. 1,035,324,120.59; R&D 155,833,975.72; capex 1,237,424,702.63.
+(capex = 购建固定资产、无形资产和其他长期资产支付的现金, the standard PRC cash-flow capex line.)
+
+METHOD, and the trap it avoids: every figure was read off a RENDERED crop of the consolidated statement,
+never off the PDF text layer. The crops are anchored to 合并利润表 / 合并现金流量表 because each report ALSO
+carries a 母公司利润表 (parent-company-only) statement with the SAME row labels and DIFFERENT numbers. An
+unanchored label search grabs the parent-only figures and NOTHING COMPLAINS -- the first crop pass did
+exactly that (pulled 600111 p110 and 603799/600497 p93) and was thrown away.
+
+Internal cross-check, each inside its own filing:
+- 603799 and 600497: 归属于母公司股东的净利润 + 少数股东损益 = 净利润, exactly
+  (6,110,378,757.84 + 1,409,877,189.38 = 7,520,255,947.22; 1,035,324,120.59 + -20,253,320.63 = 1,015,070,799.96).
+- 600111: attributable profit / basic EPS 0.6227 = 3.62bn shares, matching its share count.
+600497's minority interest is NEGATIVE, so the parent's share (1.035bn) EXCEEDS consolidated net profit
+(1.015bn) -- the same trap as Vale and Ganfeng. Taking the consolidated line would have understated it.
+
+PROVENANCE: these are the SSE-filed audited annual reports retrieved via the eastmoney/dfcfw CDN MIRROR.
+cninfo serves Shenzhen, not Shanghai (it returned 0 for all three codes), and the SSE query API returned an
+empty result set. The mirror is recorded in sources.csv and in each row note; the document is the audited
+filing and the internal cross-checks above are the corroboration.
+
+Market cap omitted for all three (period-end share count not read), consistent with Ganfeng/JL MAG/SQM.
+
+README: 02's row said "No financials yet", which was false once the financials landed; corrected to state
+the actual counts, and the open-work line no longer asks for chokepoint financials. The status LABEL was
+left at "Edges started" deliberately: by tools/check_data.py rule 6 the three labels are Mapped / Edges
+started / Foundation only and 02 now technically satisfies "edges AND financials", but 10 of 33 costed with
+zero timeseries is well short of what "Mapped" means on 01 (41/41 costed). Promoting the label is Keaton's
+call, not a side effect of a data burst.
+
+NEXT: 02's chokepoints are DONE. Remaining for 02: the still-empty non-chokepoint companies (Lynas, BHP,
+Rio Tinto, Glencore, Umicore, Pilbara, Iluka, Tianqi, CMOC, Nornickel, plus the automakers/battery buyers),
+then timeseries and the politics lens.
