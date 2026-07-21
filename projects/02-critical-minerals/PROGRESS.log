@@ -16,3 +16,35 @@
   🔴 AND IT INDICTED MY OWN CHECKER. tools/verify_edges.py used a bare substring match, so it had the identical bug: named("Vale S.A.", "cobalt is prevalent") returned TRUE, because "prevalent" contains "vale". I had already reported "14/14 verified" using that matcher. Fixed to word-bounded matching (\b kills both Abbotsford and prevalent), added the 6 downstream nodes to the KEY map, and kept BOTH real cases as permanent selftest fixtures. RE-VERIFIED all 14 previously merged edges under the stricter matcher: 14/14 still pass. So the green was CORRECT but UNEARNED; the conclusion held and the method did not. Reporting that distinction is the point.
   HONEST OMISSIONS the worker made and I am keeping: Ford/LG/Samsung SDI have only NON-BINDING MoUs "to evaluate AAM supply ... and progress towards binding offtake agreements" in FY2023/FY2024, and vanish entirely from FY2025, suggesting they never converted. No vocabulary term fits "agreement to evaluate", and writing offtake-with would have been an overclaim.
   ⚠ TWO FRAGILITIES A READER MUST NOT MISS: (1) the POSCO row is tier 1 but confidence=medium and sourced to FY2024, because FY2025 does not mention POSCO at all and FY2023 said the offtake required POSCO's notification by 31 Dec 2025 to commence. It may have lapsed. The worker refused to date the row to a document that does not support it. (2) The Tesla offtake is UNDER AN ACTIVE DEFAULT NOTICE: FY2025 discloses Tesla alleged Syrah defaulted on conforming AAM samples, cure deadline 1 June 2026, after which Tesla may terminate. The edge stands but is more fragile than a plain offtake row conveys.
+
+2026-07-20 FINANCIALS BURST (5 EDGAR filers, tier 1). Filled inline financials in data/companies.csv for
+MP Materials (FY2025 10-K), Energy Fuels/UUUU (FY2025 10-K), Albemarle (FY2025 10-K), SQM (FY2024 20-F,
+USD reporter), Vale (FY2025 20-F, USD reporter). Costed companies 41->46 repo-wide; 02 now 5/33 costed,
+still 0 timeseries. Source = SEC XBRL company-facts (data.sec.gov), parsed locally, each figure re-derived
+from the filing's own structured tags rather than a human read.
+
+Concept decisions worth recording -- each was a real fork where the naive pick was WRONG:
+- Net income = attributable to PARENT, not consolidated. ALB alone tagged three: NetIncomeLoss -0.511
+  (attrib), ProfitLoss -0.465 (incl NCI), NetIncomeLossAvailableToCommonStockholdersBasic -0.677 (after
+  preferred divs) -- used NetIncomeLoss. For the IFRS filers ProfitLossAttributableToOwnersOfParent !=
+  ProfitLoss: SQM 0.685 vs 0.692; VALE 2.352 vs 1.983 (NCI took a loss, so the parent share is LARGER
+  than consolidated). Used attributable for both.
+- Capex = cash-flow capex first (PaymentsToAcquirePPE / PurchaseOfPPEClassifiedAsInvesting); PP&E-additions
+  only as fallback. SQM 0.972 (cash flow) NOT 0.985 (additions, which a max-value pick had grabbed). VALE
+  has no cash-flow capex tag -> IFRS PP&E additions 5.469, flagged in the row note.
+- A first pass pulled Vale's net income/capex/shares from a STALE 2012 us-gaap filing because the picker
+  tried us-gaap before ifrs-full and returned first-namespace-wins. Fixed to latest-period-wins, then to
+  explicit priority-per-concept. Caught by printing every candidate at the reporting year before writing.
+
+Left empty ON PURPOSE (incomplete, not incorrect): SQM market cap + R&D (shares absent from XBRL facts;
+R&D not separately reported), MP/UUUU R&D (not separately reported). Market cap where filled = tier-1
+shares outstanding x 2026-07-20 close (Yahoo, a tier-3 dated snapshot, noted in the row); row source_tier
+stays 1 for the audited core. Stooq price endpoint was dead this session; Yahoo chart endpoint worked.
+
+Gate green: 46 costed, 02 artifact rebuilt (5 costed), selftest fires. NOT browser-verified (pane hangs on file://).
+
+NEXT: the 5 Chinese chokepoints (China Northern Rare Earth 600111, JL MAG 300748, Ganfeng 002460,
+Zhejiang Huayou 603799, Yunnan Chihong 600497) are still 0 financials -- audited reports in Chinese on
+cninfo.com.cn, deferred this session. Filling THEM is what actually moves 02 toward "Mapped" (a map is not
+mapped until its chokepoints are costed). Also open: AU/UK/EU majors (Lynas, BHP, Rio, Glencore, Umicore,
+Pilbara, Iluka) whose tier-1 reports are not on EDGAR.
