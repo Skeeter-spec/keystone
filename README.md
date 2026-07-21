@@ -66,10 +66,33 @@ and a map's own log once told a reader to build a renderer that already existed.
 append only, so the newest entry wins. Read it bottom up.** The table below is the one exception, and
 only because `tools/gate.sh` fails if it stops matching the data.
 
-The open work, in rough order of leverage: fill financials and relationship edges for the maps that are
-still foundation only (03 to 10), cost 02's remaining non-chokepoint companies, and add the politics lens to 01.
-All ten maps now render: each has a `map.json`, so a foundation map draws its value chain the moment its
-data lands.
+### The order to work a map in, and why it is this order
+
+Deepening a foundation map into a Mapped one is the loop that repeats seven more times (03, 05 to 10).
+Measured on 04 in one session, the sequence that costs least is **not** the obvious one:
+
+1. **`python3 tools/reuse_costed.py <from-map> <to-map>` FIRST, before any research.** The cheapest map
+   is the one that overlaps a finished map. 04 got 12 of its 24 costed rows this way, for zero fetches,
+   including five of its six chokepoints.
+2. **`python3 tools/verify_sources.py <map>` on what it just inherited.** Reuse propagates weaknesses as
+   faithfully as it propagates figures: those same 12 rows carried 01's tracker-sourced market caps with
+   them. Verify the inheritance before building anything on top of it.
+3. **Then the research bursts:** financials by route (`shared/SOURCING-ROUTES.md`), then relationships.
+   Ask workers for **dependencies**; `competes-with` is cheap and they over-produce it.
+4. **Both verifiers, then `merge_edges.py`, then rebuild, then `gate.sh` and `review.py`.**
+5. **File `gaps.csv` rows in the same commit as the burst.** Expect the famous relationship to be
+   undisclosed: no hyperscaler names Nvidia in its own 10-K, and TSMC's 20-F names no customer at all.
+
+**Research is no longer the expensive half; the integrity pass is.** Three workers produced 40 verified
+edges in about 25 minutes, and the larger share of that session went on verifying and on fixing the
+checkers themselves. Budget accordingly.
+
+**One source nobody has mined:** the documents already sitting in `filing_source` have never been read
+for *relationships*, only for figures. Nvidia's Q4 FY2026 release, already cited by 01, names Groq,
+CoreWeave, Microsoft and Anthropic, and Groq currently has zero edges on 04.
+
+Per-map status lives in `PROGRESS.log` and the table below, never here. This section is the *order*, which
+is the one thing that is not derivable from the data.
 
 ## Projects
 

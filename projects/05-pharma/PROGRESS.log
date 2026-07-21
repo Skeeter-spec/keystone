@@ -1,3 +1,11 @@
 2026-07-14 FOUNDATION: taxonomy + 28 seed companies + chokepoint hypotheses + sources.
 
 2026-07-17 RENDERS NOW: added map.json (8 value-chain layers, 6 chokepoint_why lines) so shared/build_map.py can draw this map. Built artifact/pharma-map.html: 28 companies land in a layer, zero orphans, every chokepoint carries an explanation. Authored mechanically from FOUNDATION.md + companies.csv (a Haiku worker); the layer roles were extracted from companies.csv, not invented, and the build's orphan + chokepoint_why checks were the gate. STILL foundation only: 0 costed companies, 0 sourced relationship edges. NEXT is a financials or relationships burst.
+
+2026-07-21 NEXT MAP UP, and the order is not the obvious one. 05 is the cheapest remaining foundation:
+mostly large US and EU filers, and its four chokepoint hypotheses now carry pre-registered tests in
+FOUNDATION.md ("WOULD SETTLE IT"), so a burst opens with a shopping list instead of a search.
+🔴 RUN IN THIS ORDER, per the README's "The order to work a map in": tools/reuse_costed.py from 01, 02
+and 04 FIRST (before any research), then tools/verify_sources.py on whatever it inherits -- reuse carries
+weaknesses as faithfully as figures -- and only then the financials and relationships bursts. File
+gaps.csv rows in the same commit as the burst, not afterwards.

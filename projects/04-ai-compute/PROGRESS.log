@@ -157,3 +157,13 @@ the finding surfaces end to end. Worth applying to the other seven rules on the 
 
 NEXT: seed gaps for 01 and 02 from their own bursts (02's Syrah zero-edge episode is one); Schneider and
 Foxconn financials; a politics lens.
+
+2026-07-21 ✅ SUPERSEDES the NEXT above, which is DONE: gaps were seeded for 01 and 02, and 04's own 9
+gap rows shipped. This log is append only, so read it bottom up and ignore the older NEXT.
+NEXT for 04, in order: Schneider Electric and Foxconn financials (neither is a chokepoint, so they rank
+below any other map's first burst); then a politics lens (BIS export controls sit directly on this map's
+silicon chokepoints); then timeseries. The CoWoS packaging edge stays open until a filing names a
+customer, and Marvell has no edges because its only source is machine-unreadable -- both are gap rows.
+🔑 UNMINED HERE AND EVERYWHERE: the documents already in filing_source have never been read for
+RELATIONSHIPS. Nvidia's Q4 FY2026 release (01's own citation) names Groq, CoreWeave, Microsoft and
+Anthropic; Groq has zero edges on this map. Read the citations you already own before fetching new ones.
