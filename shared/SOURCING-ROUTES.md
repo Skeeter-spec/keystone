@@ -22,7 +22,9 @@ one at a time re-pays the discovery cost once per company.
 | **Mainland China, dual-listed** | `hkexnews.hk` | English audited PDF | one search + one PDF |
 | **Shanghai A-shares** (600xxx/603xxx) | filed at SSE; retrievable via the eastmoney `pdf.dfcfw.com` **mirror** | Chinese PDF | most expensive: locate, render, read by eye |
 | **Shenzhen A-shares** (000xxx/002xxx/300xxx) | `cninfo.com.cn` | Chinese PDF | untested here |
+| **Germany / Xetra** (and EU issuers generally) | the company's own IR asset host, e.g. `assets.siemens-energy.com` | English audited PDF | cheap: one search, one PDF, English throughout |
 | Market prices / FX | Yahoo `v8/finance/chart/<symbol>` | JSON | works |
+| **EUR to USD conversion** | ECB `data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A?startPeriod=&endPeriod=&format=csvdata` | CSV | free, no key, official. Average the dailies over the issuer's OWN fiscal year |
 
 ## Traps, each one measured here
 
@@ -38,6 +40,13 @@ one at a time re-pays the discovery cost once per company.
 - **`pdf.dfcfw.com` is a MIRROR.** The document is the SSE-filed audited report, but you did not read it
   at the publisher. Say "mirror" in `sources.csv` and in the row note, and corroborate with an in-filing
   cross-check rather than pretending the host is authoritative.
+- 🔴 **A COLUMN LABELLED "FY 2025" CAN BE THE QUARTER.** Measured on Siemens Energy's Q4 FY25 earnings
+  release, 2026-07-20. Its statements carry four columns under two spanning headers, `Q4` over the first
+  two and `Fiscal year` over the last two, so the columns read **FY 2025 | FY 2024 | 2025 | 2024** and the
+  one that says "FY 2025" is **Q4**. Revenue there is €10,428M; the actual full year is €39,077M, 3.7x
+  larger. Nothing about the wrong number looks wrong. Any European issuer's quarterly release can do this,
+  and it is the second reason (after column interleaving) to READ THE RENDERED PAGE rather than the text
+  layer: the spanning header is a visual fact that flattens away.
 
 ## Reading a filing you cannot get as XBRL
 

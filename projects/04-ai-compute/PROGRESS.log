@@ -54,3 +54,29 @@ both, which is the rule shared/SOURCING-ROUTES.md states.
 
 NEXT: Siemens Energy (the sixth chokepoint, Xetra, a jurisdiction this repo has no route for yet), then
 Schneider Electric and Foxconn, then the relationships burst that would make 04 Mapped.
+
+2026-07-20 FINANCIALS (part 3), SIEMENS ENERGY AND A NEW JURISDICTION: ALL SIX CHOKEPOINTS ARE NOW COSTED
+(24 of 30 companies). Siemens Energy was the only chokepoint not reachable through 01's data or SEC XBRL,
+and Germany was a jurisdiction this repo had no route for. It turned out to be one of the CHEAP ones:
+the company publishes English audited statements on its own IR asset host, one search and one PDF, no
+translation. That route and the ECB rate API are now in shared/SOURCING-ROUTES.md so the cost is paid once.
+
+🔴 THE TRAP THAT ALMOST TOOK THE WRONG NUMBER, NOW WRITTEN INTO SOURCING-ROUTES. The statements carry four
+columns under two SPANNING headers -- "Q4" over the first two, "Fiscal year" over the last two -- so the
+columns read FY 2025 | FY 2024 | 2025 | 2024, and the column that SAYS "FY 2025" is the QUARTER. Revenue
+in that column is EUR 10,428M. The actual full year is EUR 39,077M, 3.7x larger, and nothing about the
+wrong figure looks wrong. The spanning header is a purely VISUAL fact that flattens away in the text
+layer, which is the second independent reason this repo renders pages instead of parsing them.
+
+Both of SOURCING-ROUTES' in-filing cross-checks were run and both passed: attributable 1,414 + minority
+271 = 1,685 exactly, and 1,414 / EPS 1.63 = 867.5M shares, which is the right order for Siemens Energy.
+Worth noting the press release itself pairs "net income of EUR 1,685m" with "EPS of EUR 1.63" in one
+sentence, and those two do not go together: 1,685 / 1.63 implies 1,034M shares. The EPS belongs to the
+ATTRIBUTABLE figure. A reader who took the company's own summary sentence at face value would have
+overstated the bottom line by 19%.
+
+Market cap left EMPTY: the release states no period-end share count, and an EPS denominator is a weighted
+average, not a period-end count. Deriving one would be an approximation dressed as a filing figure.
+
+NEXT: the relationships burst, which is what would make 04 Mapped. Schneider Electric (Euronext) and
+Foxconn (TWSE) remain uncosted and are NOT chokepoints, so they rank below edges.
