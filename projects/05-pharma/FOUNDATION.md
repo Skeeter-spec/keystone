@@ -37,3 +37,22 @@ Deliberately not flagged as chokepoints: individual originators (Pfizer, Roche, 
 ## Layer taxonomy used in roles
 
 `originator`, `generics-maker`, `api-maker`, `cdmo`, `distributor`, `pbm`, `payer`, `pharmacy` (semicolon-separated where a company spans more than one).
+
+## What would settle these
+
+**Pre-registered 2026-07-20, before the burst, on purpose.** Each hypothesis above names the document
+that would confirm or kill it. Stating the test in advance means a later burst cannot quietly redefine
+what success looked like, and it starts with a shopping list instead of a search.
+
+These are *not* `gaps.csv` rows. A gap records that we looked and the document declined to say; nothing
+below has been looked for yet, and conflating "not yet tested" with "tested and undisclosed" would
+destroy the one distinction the gaps model exists to protect. Rows get written when a burst runs and
+comes back empty.
+
+1. **API concentration in India and China.** WOULD SETTLE IT: FDA import alerts and facility inspection classifications name the specific plants; the FDA Drug Shortages database with cause codes shows whether that concentration actually bites.
+
+2. **Sterile-injectable and biologics CDMOs.** WOULD SETTLE IT: Lonza's and WuXi Biologics' own annual reports for capacity share, plus the BIOSECURE Act text and status on Congress.gov, which is the live test of how substitutable WuXi is.
+
+3. **The big-three US distributors.** WOULD SETTLE IT: McKesson's, Cencora's and Cardinal Health's 10-Ks state their combined share of US drug distribution in their own Business sections.
+
+4. **The PBM oligopoly.** WOULD SETTLE IT: FTC reports on PBM market structure, corroborated by CMS Drug Spending Dashboards. The FTC work is the closest thing to an adversarial reading of this claim.

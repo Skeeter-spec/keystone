@@ -97,3 +97,24 @@ there, not here.** This paragraph used to say 14 chokepoints, which had rotted: 
 cut them to 5, grouped under the ranked categories above (phosphate reserves, Belarus and Russia potash,
 gas-linked nitrogen, the seed/agrochem Big Four, and the ABCD grain traders). Every flag still needs a
 RELATIONSHIPS-burst citation before it should be treated as confirmed rather than a starting hunch.
+
+## What would settle these
+
+**Pre-registered 2026-07-20, before the burst, on purpose.** Each hypothesis above names the document
+that would confirm or kill it. Stating the test in advance means a later burst cannot quietly redefine
+what success looked like, and it starts with a shopping list instead of a search.
+
+These are *not* `gaps.csv` rows. A gap records that we looked and the document declined to say; nothing
+below has been looked for yet, and conflating "not yet tested" with "tested and undisclosed" would
+destroy the one distinction the gaps model exists to protect. Rows get written when a burst runs and
+comes back empty.
+
+1. **Morocco phosphate reserves.** WOULD SETTLE IT: USGS Mineral Commodity Summaries (phosphate rock), which publishes reserves by country. This is the single cleanest test on this map: the claim is a reserve share and USGS publishes reserve shares.
+
+2. **Belarus and Russia potash.** WOULD SETTLE IT: USGS (potash) for production, and UN Comtrade for bilateral flows by HS code. Comtrade also shows whether sanctioned volume actually stopped or simply re-routed.
+
+3. **Nitrogen tied to natural gas.** WOULD SETTLE IT: IFA statistics for nitrogen capacity, against the World Bank Pink Sheet for gas and urea prices. If the two series decouple, the mechanism claimed here is wrong.
+
+4. **The seed and agrochemical Big Four.** WOULD SETTLE IT: the four companies' own annual reports, plus the merger decisions of the competition authorities that approved Bayer/Monsanto and Dow/DuPont, which quantify the share the regulators found.
+
+5. **The ABCD grain traders.** WOULD SETTLE IT: ADM's and Bunge's 10-Ks. Note in advance that Cargill and Louis Dreyfus are private and COFCO is state-owned: half this hypothesis may be untestable from filings, which would itself be the finding.

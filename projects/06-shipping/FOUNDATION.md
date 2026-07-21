@@ -64,3 +64,32 @@ All 23 starter names were located and included, plus a small logistics layer (Ku
 - China Shipbuilding Industry Co (601989.SS) merged into China CSSC Holdings (600150.SS) in August 2025; the roster uses the surviving listed entity.
 - The liner alliance lineup changed in 2025: Maersk and Hapag-Lloyd left the old 2M/THE Alliance structure to form the Gemini Cooperation; Ocean Alliance (CMA CGM/COSCO/Evergreen/OOCL) and Premier Alliance (ONE/Yang Ming/HMM) are the other two. MSC remains outside all three, operating at alliance scale alone.
 - DP World and PSA International are both state/sovereign-fund owned and not separately listed (Dubai World; Temasek).
+
+## What would settle these
+
+**Pre-registered 2026-07-20, before the burst, on purpose.** Each hypothesis above names the document
+that would confirm or kill it. Stating the test in advance means a later burst cannot quietly redefine
+what success looked like, and it starts with a shopping list instead of a search.
+
+These are *not* `gaps.csv` rows. A gap records that we looked and the document declined to say; nothing
+below has been looked for yet, and conflating "not yet tested" with "tested and undisclosed" would
+destroy the one distinction the gaps model exists to protect. Rows get written when a burst runs and
+comes back empty.
+
+1. **Suez Canal.** WOULD SETTLE IT: the Suez Canal Authority's own monthly traffic and revenue statistics, against UNCTAD's Review of Maritime Transport for what share of world trade that represents.
+
+2. **Panama Canal.** WOULD SETTLE IT: the Panama Canal Authority's monthly transit numbers and draft-restriction advisories. The 2023-24 drought restrictions are the natural experiment: transits fell and the world routed around it or did not.
+
+3. **Strait of Hormuz.** WOULD SETTLE IT: the US EIA's world oil transit chokepoints series for barrels per day, plus UNCTAD RMT. There is no canal authority here, so the volume estimate is the only test.
+
+4. **Bab-el-Mandeb.** WOULD SETTLE IT: the same EIA transit series, and Suez Canal Authority traffic, since a collapse here shows up as a Suez collapse. The 2024 Red Sea diversions are the natural experiment.
+
+5. **Strait of Malacca.** WOULD SETTLE IT: EIA transit estimates and UNCTAD RMT. The specific test is whether the claimed alternatives (Lombok, Sunda) carry meaningful volume or are theoretical.
+
+6. **Bosphorus.** WOULD SETTLE IT: Turkish straits transit statistics. This one has a single sovereign authority, so its own numbers are the primary source.
+
+7. **Shipbuilding concentration.** WOULD SETTLE IT: Clarksons Research public orderbook notes, which give share by yard and country. The test is whether the orderbook is as concentrated as the capacity.
+
+8. **P&I insurance.** WOULD SETTLE IT: the International Group of P&I Clubs' own published annual review and pooling agreement, which state the share of world tonnage covered.
+
+9. **Liner alliances.** WOULD SETTLE IT: the carriers' own alliance announcements plus UNCTAD's liner shipping connectivity index. The 2025 Gemini reshuffle is the test of how fixed these blocs really are.

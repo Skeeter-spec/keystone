@@ -99,3 +99,24 @@ competitive and fast-changing stablecoin field, and regulated entrants are arriv
   https://www.cls-group.com/about/cls-by-numbers/
 - World Bank Global Findex database (financial inclusion / payment access, free):
   https://www.worldbank.org/en/publication/globalfindex
+
+## What would settle these
+
+**Pre-registered 2026-07-20, before the burst, on purpose.** Each hypothesis above names the document
+that would confirm or kill it. Stating the test in advance means a later burst cannot quietly redefine
+what success looked like, and it starts with a shopping list instead of a search.
+
+These are *not* `gaps.csv` rows. A gap records that we looked and the document declined to say; nothing
+below has been looked for yet, and conflating "not yet tested" with "tested and undisclosed" would
+destroy the one distinction the gaps model exists to protect. Rows get written when a burst runs and
+comes back empty.
+
+1. **Visa and Mastercard duopoly.** WOULD SETTLE IT: both companies' 10-Ks for purchase volume, against Nilson Report public rankings for the share not captured by either.
+
+2. **SWIFT.** WOULD SETTLE IT: SWIFT's own published monthly traffic statistics, plus the BIS CPMI Red Book. The live test is whether CIPS and SPFS volumes are growing fast enough to matter.
+
+3. **UnionPay.** WOULD SETTLE IT: the BIS CPMI Red Book China chapter and the PBoC's payment system reports, which publish domestic card switch volumes.
+
+4. **NPCI and UPI.** WOULD SETTLE IT: NPCI's own public UPI transaction statistics, published monthly and free. The test is whether any competing rail has non-trivial share.
+
+5. **Federal Reserve and Fedwire.** WOULD SETTLE IT: the Federal Reserve Payments Study and published Fedwire funds transfer statistics. This is close to definitionally true, so the real question is whether it belongs as a chokepoint at all.

@@ -42,8 +42,13 @@ gap_id,kind,subject,sought,searched,found_instead,blocks,would_close_it,status,l
 
 - `kind` is exactly one of `undisclosed` (the document exists and will not say), `unreachable` (a real
   source you could not read), `contradiction` (sources disagree, or the reported world contradicts the
-  disclosed one), `unevidenced-flag` (this map claims something with no sourced edge behind it).
-  Anything else fails the gate.
+  disclosed one), `unevidenced-flag` (this map claims something with no sourced edge behind it),
+  `stale-evidence` (a SOURCED claim whose evidence predates a material change, so an existing edge
+  becomes suspect), `out-of-scope` (the counterparty IS disclosed but is not on this map's roster, so
+  the edge cannot be drawn). Anything else fails the gate.
+- 🔴 **`out-of-scope` is the one that is usually YOUR MAP's bug, not the world's.** If a company returns
+  no edges, check its counterparties against companies.csv before concluding anything: 02's Syrah looked
+  unconnected purely because Ford, LG Energy Solution and POSCO were not on the roster.
 - 🔴 **`searched` is what makes it evidence rather than a shrug, and the gate REJECTS a row without it.**
   Name the documents you actually opened: "TSMC FY2025 20-F, full text; Nvidia FY2026 10-K, full text".
   "Could not find anything" is unfalsifiable and worth less than silence.

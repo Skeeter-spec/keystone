@@ -537,6 +537,8 @@ const GAP_KIND={
   'unreachable':      ['Unreachable','A real source we could not read'],
   'contradiction':    ['Reported, not disclosed','What everyone reports is in no filing we read'],
   'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
+  'stale-evidence':   ['Evidence overtaken','A sourced claim whose evidence predates a material change'],
+  'out-of-scope':     ['Off this map','The counterparty is disclosed, but is not on this map'],
 };
 function renderGaps(){
   const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));

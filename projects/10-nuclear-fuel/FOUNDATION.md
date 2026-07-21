@@ -99,3 +99,24 @@ them there rather than trusting a number typed here
 (Orano, Rosatom / TENEX, TVEL Fuel Company, Urenco Group, CNNC, Centrus Energy Corp, and Honeywell
 International's Metropolis Works conversion plant); every flag above still needs a RELATIONSHIPS-burst
 citation before it should be treated as confirmed rather than a starting hunch.
+
+## What would settle these
+
+**Pre-registered 2026-07-20, before the burst, on purpose.** Each hypothesis above names the document
+that would confirm or kill it. Stating the test in advance means a later burst cannot quietly redefine
+what success looked like, and it starts with a shopping list instead of a search.
+
+These are *not* `gaps.csv` rows. A gap records that we looked and the document declined to say; nothing
+below has been looked for yet, and conflating "not yet tested" with "tested and undisclosed" would
+destroy the one distinction the gaps model exists to protect. Rows get written when a burst runs and
+comes back empty.
+
+1. **The enrichment oligopoly.** WOULD SETTLE IT: the World Nuclear Association's enrichment capacity tables by company and country, corroborated by the Euratom Supply Agency's annual report, which publishes EU enrichment purchases by origin. Two independent bodies counting the same SWU.
+
+2. **Conversion capacity.** WOULD SETTLE IT: WNA's conversion capacity pages. The claim is that conversion is thinner than enrichment, so the test is simply whether the two capacity tables say that.
+
+3. **HALEU near-monopoly.** WOULD SETTLE IT: US DOE and NNSA HALEU availability program documents, plus Centrus Energy's 10-K, which states its own HALEU output. If Centrus is producing at scale the monopoly claim weakens.
+
+4. **Fuel fabrication.** WOULD SETTLE IT: WNA fuel fabrication pages plus Westinghouse and Framatome disclosures. This hypothesis is explicitly design-specific, so the test is per reactor type, not in aggregate.
+
+5. **Uranium mining as the counter-example.** WOULD SETTLE IT: the IAEA and NEA Red Book plus the EIA uranium marketing annual report. This one is pre-registered to be DISCONFIRMED: if mining turns out to be concentrated, the map's ranking is wrong.

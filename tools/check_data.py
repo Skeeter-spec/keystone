@@ -76,6 +76,16 @@ VALID_GAP_KIND = {
     "unreachable",       # a real source we could not read (Marvell behind Akamai)
     "contradiction",     # two sources disagree, or the reported world contradicts the disclosed one
     "unevidenced-flag",  # a claim this map makes with no sourced edge behind it (Siemens Energy)
+    # Added 2026-07-20 with the retroactive pass over 01 and 02, because both were needed to record
+    # findings those maps' own logs had already written down in prose and could not express as data.
+    "stale-evidence",    # a SOURCED claim overtaken by events. Uniquely, this makes an EXISTING edge
+                         # suspect rather than flagging a missing one: 02's Glencore -> Umicore cobalt
+                         # edge rests on a 2019-05-29 release, and Glencore idled the Mutanda mine
+                         # shortly after it was published.
+    "out-of-scope",      # the counterparty IS disclosed, but is not on this map's roster, so the edge
+                         # cannot be drawn. 02's Syrah returned zero edges for exactly this reason, and
+                         # the repo's own lesson is that a worker returning nothing may be reporting a
+                         # scope bug in the company list rather than an absence in the world.
 }
 VALID_GAP_STATUS = {"open", "closed"}
 
@@ -385,7 +395,9 @@ def selftest():
         ("control: every other valid kind must NOT fire",
          check_gaps, [{**good_gap, "kind": "unreachable"},
                       {**good_gap, "kind": "unevidenced-flag"},
-                      {**good_gap, "kind": "undisclosed"}], False),
+                      {**good_gap, "kind": "undisclosed"},
+                      {**good_gap, "kind": "stale-evidence"},
+                      {**good_gap, "kind": "out-of-scope"}], False),
         ("control: a CLOSED gap is still a valid row",
          check_gaps, [{**good_gap, "status": "closed"}], False),
     ]

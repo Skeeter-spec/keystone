@@ -60,3 +60,24 @@ All 24 starter names were located and included, plus Timet (Precision Castparts'
 - Airbus SE is incorporated in the Netherlands (a Dutch SE) but headquartered and operationally run from Toulouse, France; trades on Euronext Paris under ticker AIR.
 - VSMPO-Avisma trades on the Moscow Exchange under ticker VSMO; it has so far avoided direct entity-level sanctions even though parent Rostec and its CEO are sanctioned, and continued exporting several hundred million dollars of titanium to Western buyers through 2023 — a genuinely live and unresolved chokepoint rather than a fully closed one.
 - Precision Castparts and Timet are both private subsidiaries under Berkshire Hathaway (via the 2016 Precision Castparts acquisition); neither will produce public financials for the FINANCIALS burst, which is expected and handled the same way the shipping map handled unlisted/state infrastructure nodes.
+
+## What would settle these
+
+**Pre-registered 2026-07-20, before the burst, on purpose.** Each hypothesis above names the document
+that would confirm or kill it. Stating the test in advance means a later burst cannot quietly redefine
+what success looked like, and it starts with a shopping list instead of a search.
+
+These are *not* `gaps.csv` rows. A gap records that we looked and the document declined to say; nothing
+below has been looked for yet, and conflating "not yet tested" with "tested and undisclosed" would
+destroy the one distinction the gaps model exists to protect. Rows get written when a burst runs and
+comes back empty.
+
+1. **Boeing and Airbus duopoly.** WOULD SETTLE IT: both makers' monthly orders and deliveries data, which are free and granular. The test is whether COMAC's C919 deliveries reach a share that makes duopoly the wrong word.
+
+2. **Jet-engine oligopoly.** WOULD SETTLE IT: GE Aerospace's, Safran's, RTX's and Rolls-Royce's annual report segment disclosures, plus Boeing and Airbus engine-option data showing which airframes have a sole engine choice.
+
+3. **Aerospace-grade titanium.** WOULD SETTLE IT: VSMPO-Avisma's MOEX disclosure, the US and EU sanctions listings, and ATI's and Howmet's 10-Ks. The test is whether Western qualification of non-Russian titanium has actually happened since 2022.
+
+4. **Single-source castings and forgings.** WOULD SETTLE IT: Berkshire Hathaway's 10-K, which owns Precision Castparts. Expect it NOT to break PCC out separately, in which case the absence of segment disclosure is the finding.
+
+5. **Spirit AeroSystems.** WOULD SETTLE IT: Boeing's 10-K following the completed acquisition, and the FTC divestiture order, which names precisely which sites went to Airbus.

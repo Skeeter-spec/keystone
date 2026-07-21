@@ -25,3 +25,16 @@ NEXT BURST: Move to step 4 (relationship work) per the runbook now that all 8 ch
 2026-07-17 NEXT (01 specifically, unchanged): Phase C politics lens (policies.csv: export controls, entity-list designations, subsidies), OR backfill financials_timeseries for the 33 non-chokepoint companies. Both are additive to a map that is already complete and published.
 
 2026-07-17 SHARED RENDERER HARDENED + ALL TEN MAPS NOW RENDER: shared/build_map.py gained a chokepoint_why check. The docstring had promised its keys were "the EXACT companies.csv name" and NOTHING enforced it: a typo'd or stale key makes the template look up an explanation that is not there and render that chokepoint BARE, the page still looking fine, same silent shape as the orphan and chokepoint-vocab bugs before it. Now an unknown key ABORTS (exit 1); a chokepoint with no key is merely a note (incomplete, not incorrect, which this repo tolerates). 5 new selftest cases including a NEGATIVE (a correct key must not be flagged just because a sibling key is wrong) and end-to-end mutation on real 03 data. Selftest now 9 cases. With that gate in place, maps 03..10 each got a map.json and now render: the README's top open-work item ("give maps 03 to 10 a map.json so they can render") is DONE. All ten maps rebuilt, exit 0 each, gate green, storage_keys verified unique across all ten so no two can clobber each other's watchlist. 02 remains the only non-01 map browser-verified end to end; 03..10 verified headless (data baked in, zero unresolved template tokens, counts match CSVs) because the Browser pane hung on a local file:// twice. NEXT (whole repo): financials or relationship bursts for 03..10, which are still foundation only (0 costed, 0 edges).
+
+2026-07-20 REVIEWED UNDER THE GAPS LENS, RETROACTIVELY. 4 gap rows, all transcribed from this log rather
+than researched: Arm's market cap spans $320-383B across trackers and SK hynix's $877B-$1.07T, both
+recorded as point values at source_tier 1; Samsung carries two competing public capex figures; and three
+Arm licensing edges rest on evidence from 2021 and 2023, older than anything else on this map.
+
+📏 A STRUCTURAL ONE THIS MAP CANNOT FIX BY WRITING A ROW: 39 of its 41 costed rows are labelled
+source_tier 1 while their MARKET CAP came from a tracker. The row notes say so in prose; the tier column
+cannot, because source_tier is a ROW-level field describing a row whose figures have different
+provenance. 04 reduced the exposure by deriving market cap from a filed share count times a dated close,
+but 12 of 04's rows inherit this from the 01 figures they reuse. tools/review.py reports it as a standing
+signal rather than a gap. The real fix is a schema decision (a market_cap_tier, or moving market cap out
+of the tier-1 claim) and it belongs in its own pass, not smuggled into this one.

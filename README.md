@@ -50,8 +50,15 @@ page beside the edge count, and a marker on any chokepoint whose flag has no sou
 
 ```
 ./tools/gate.sh                       does the repo still match what it claims? run this first
+./tools/review.py                     where does a map claim more than it can show?
 tail -3 projects/*/PROGRESS.log       what each map actually did last, and what it needs next
 ```
+
+`gate.sh` fails on data that is wrong. `review.py` never fails anything: it asks the softer question of
+whether something is presented as more settled than its evidence supports, and every answer is a
+judgement call for a person. **Run it after every research burst, and before promoting any status
+label**, because promotion is exactly when a map starts claiming more than it holds. It found 02 calling
+itself Mapped with three of its five chokepoints carrying no sourced edge at all.
 
 Deliberately a pointer, not a summary. Every status written in prose is a copy of something the data
 already knows, and copies rot: this README once called 01 "in progress" two phases after it shipped,

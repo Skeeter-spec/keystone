@@ -110,3 +110,28 @@ capture next.
 - RELATIONSHIPS: start from automaker 10-Ks/annual reports (Tesla, GM, VW, Toyota) and
   cell-maker annual reports (CATL, LGES, Samsung SDI) — their supplier/customer
   concentration and risk-factor sections name the edges directly.
+
+## What would settle these
+
+**Pre-registered 2026-07-20, before the burst, on purpose.** Each hypothesis above names the document
+that would confirm or kill it. Stating the test in advance means a later burst cannot quietly redefine
+what success looked like, and it starts with a shopping list instead of a search.
+
+These are *not* `gaps.csv` rows. A gap records that we looked and the document declined to say; nothing
+below has been looked for yet, and conflating "not yet tested" with "tested and undisclosed" would
+destroy the one distinction the gaps model exists to protect. Rows get written when a burst runs and
+comes back empty.
+
+1. **CATL cell share.** WOULD SETTLE IT: SNE Research's monthly global EV battery installation releases give share by maker; CATL's own Shenzhen annual report carries capacity and customer concentration. Two independent sides of the same number.
+
+2. **BYD.** WOULD SETTLE IT: the same SNE Research share table, plus BYD's HKEX annual report segment split, which is what separates cells sold to others from cells consumed by its own vehicles.
+
+3. **China's separator cluster.** WOULD SETTLE IT: SEMCORP's and Shenzhen Senior's own Shenzhen annual reports for nameplate capacity, against UN Comtrade separator-film flows for how much of the world actually depends on it.
+
+4. **BTR anode.** WOULD SETTLE IT: USGS Mineral Commodity Summaries (graphite) for production by country, plus BTR's Beijing SE annual report. If USGS shows graphite anode capacity outside China at scale, the flag weakens.
+
+5. **Guangzhou Tinci electrolyte.** WOULD SETTLE IT: Tinci's Shenzhen annual report capacity and share disclosure. A single-company claim needs that company's own filing.
+
+6. **Glencore and CMOC cobalt.** WOULD SETTLE IT: USGS Mineral Commodity Summaries (cobalt) for DRC share and producer split, corroborated by both companies' annual reports.
+
+7. **Cathode and precursor concentration.** WOULD SETTLE IT: SNE Research and Adamas Intelligence public share releases, plus Ronbay's and Ningbo Shanshan's filings. Watch for the Korean makers, whose presence would kill the concentration claim.

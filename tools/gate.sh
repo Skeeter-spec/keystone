@@ -60,6 +60,16 @@ echo "[4/4] every built artifact still renders from its current CSVs"
 python3 tools/check_fresh.py || { fail=1; echo "  a committed artifact drifted from its data; rebuild it with shared/build_map.py"; }
 
 echo ""
+# The gate answers "is this wrong?". It deliberately does NOT answer "is this over-claimed?", because
+# that is a judgement call and a gate that fails on judgement calls gets bypassed. Point at the tool
+# that does ask, with its count, so the question stays visible without ever blocking a commit.
+adv=$(python3 tools/review.py 2>/dev/null | sed -n 's/.*: \([0-9]*\) must resolve.*/\1/p')
+if [ -n "$adv" ] && [ "$adv" != "0" ]; then
+  echo "ADVISORY: tools/review.py has $adv finding(s) where a map claims more than it can show."
+  echo "  Not a gate failure. Run ./tools/review.py"
+  echo ""
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "GATE FAILED. Do not ship."
   exit 1
