@@ -2,3 +2,26 @@
 2026-07-16 FIX: chokepoint column normalized from TRUE/FALSE to yes/no. Not cosmetic. The artifact template tests c.chokepoint==='yes', so every chokepoint in this map would have rendered as NOT a chokepoint the moment the map was built, showing "0 chokepoints flagged" with no error raised. Six of the nine foundations had this drift (different research agents wrote different vocabularies); the four others were already yes/no. Counts preserved exactly. Now enforced by tools/gate.sh.
 
 2026-07-17 RENDERS NOW: added map.json (12 value-chain layers, 6 chokepoint_why lines) so shared/build_map.py can draw this map. Built artifact/ai-compute-map.html: 30 companies land in a layer, zero orphans, every chokepoint carries an explanation. Authored mechanically from FOUNDATION.md + companies.csv (a Haiku worker); the layer roles were extracted from companies.csv, not invented, and the build's orphan + chokepoint_why checks were the gate. STILL foundation only: 0 costed companies, 0 sourced relationship edges. NEXT is a financials or relationships burst.
+
+2026-07-20 FINANCIALS (part 1), BY REUSE NOT BY RESEARCH: 12 of 30 companies costed at tier 1 without a
+single fetch. 04's own FOUNDATION.md always said its overlap with 01-semiconductor was deliberate --
+"literally the same company viewed through a different lens" -- and 01 had already costed twelve of these
+from primary filings, including FIVE OF THE SIX CHOKEPOINTS (Nvidia, TSMC, SK hynix, Samsung, Micron).
+The atlas had been treating that as a coincidence instead of an asset.
+
+New tools/reuse_costed.py does the copy, because retyping is where wrong numbers come from. It carries the
+provenance (fiscal_year, filing_source, source_tier, last_updated) AND the source row's figure caveats
+verbatim -- TSMC's filed NT$31.11 rate, Samsung's attributable-to-parent line, Intel's capex being gross
+additions -- so a qualified number does not arrive bare. It refuses to overwrite any non-empty cell.
+
+WHY IT HAS NO FUZZY MATCHING. While planning this, a throwaway substring matcher run over the real CSVs
+matched Samsung SDI -> Samsung Electronics and would have written Samsung's $234.62B onto SDI's row. Two
+different listed companies; that is check_identity.py's NEO -> NEOGENOMICS failure in a new costume. So
+identity is exact-string or an approved row in the new shared/company_aliases.csv, nothing else. The
+selftest carries that exact pair as its sharpest NEGATIVE, and six mutants were run against it -- one of
+which "went red" by crashing rather than asserting, which is its own kind of broken control, now fixed.
+
+STILL foundation-adjacent, not Mapped: 0 relationship edges, and Siemens Energy (the sixth chokepoint) is
+not costed. NEXT: the SEC-filer batch (Marvell, Arista, Astera Labs, Super Micro, Dell, HPE, Vertiv, Eaton,
+Oracle, CoreWeave, Nebius via tools/xbrl_extract.py), then Siemens Energy on a new Xetra route, then the
+relationships burst. Cerebras, Groq, OpenAI and Anthropic stay blank on purpose: private, no audited filing.

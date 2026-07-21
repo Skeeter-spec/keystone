@@ -37,12 +37,12 @@ those bursts should pull from.
    grain and oilseed physically moves through, along with the market information advantage that comes with
    it. China's state-owned `COFCO International` (built via the Noble Agri and Nidera acquisitions) has
    grown into a fifth top-tier trader and is increasingly described as "ABCD+C," but is not yet as
-   structurally entrenched as the original four; it is tracked here as `chokepoint = FALSE` pending
+   structurally entrenched as the original four; it is tracked here as `chokepoint = no` pending
    evidence of comparable market share.
 
 Companies not on this list — Mosaic, ICL Group, K+S, PhosAgro, EuroChem, OCI N.V., Uralchem, Compass
 Minerals, FMC, Wilmar International, Olam Agri — are real, sizeable players but each has substitutes or
-is small enough relative to its category that flagging it `chokepoint = TRUE` would overstate how
+is small enough relative to its category that flagging it `chokepoint = yes` would overstate how
 irreplaceable any single one of them is. A large farm-belt or fertilizer company is not automatically a
 chokepoint; the flag is reserved for nodes the rest of the chain genuinely cannot route around.
 
@@ -91,8 +91,9 @@ chokepoint; the flag is reserved for nodes the rest of the chain genuinely canno
 
 ## Companies seeded
 
-26 companies across feedstock/mining, N/P/K fertilizer production, seed and agrochemicals, and grain
-trading/processing. See `data/companies.csv`. 14 rows are flagged `chokepoint = TRUE` at this hypothesis
-stage, grouped under the 5 ranked categories above (phosphate reserves, Belarus+Russia potash, gas-linked
-nitrogen, the seed/agrochem Big Four, and the ABCD grain traders); every flag still needs a
+Companies across feedstock/mining, N/P/K fertilizer production, seed and agrochemicals, and grain
+trading/processing. **`data/companies.csv` holds the roster and the `chokepoint = yes` flags; count them
+there, not here.** This paragraph used to say 14 chokepoints, which had rotted: the 2026-07-14 tightening
+cut them to 5, grouped under the ranked categories above (phosphate reserves, Belarus and Russia potash,
+gas-linked nitrogen, the seed/agrochem Big Four, and the ABCD grain traders). Every flag still needs a
 RELATIONSHIPS-burst citation before it should be treated as confirmed rather than a starting hunch.

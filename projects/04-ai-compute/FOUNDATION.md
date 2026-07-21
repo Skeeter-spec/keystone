@@ -4,7 +4,7 @@ Part of the Keystone atlas, sitting above 01-semiconductor. This map covers the 
 
 ## Chokepoints, ranked
 
-Six nodes are flagged chokepoint=TRUE in data/companies.csv: the ones the stack genuinely cannot route around. Ranked by how hard substitution would be. Several plausible candidates (hyperscalers, Broadcom, Vertiv, Eaton) are deliberately held as *themes* below rather than flagged, to keep the bar for "chokepoint" consistent across the Keystone maps.
+The nodes flagged `chokepoint = yes` in data/companies.csv are the ones the stack genuinely cannot route around (count them there, not here). Ranked by how hard substitution would be. Several plausible candidates (hyperscalers, Broadcom, Vertiv, Eaton) are deliberately held as *themes* below rather than flagged, to keep the bar for "chokepoint" consistent across the Keystone maps.
 
 1. **Nvidia** (accelerators + CUDA + NVLink/InfiniBand). The clearest chokepoint in the whole stack: dominant AI accelerator share, and the CUDA software ecosystem plus a decade of tooling lock-in means even customers who could get AMD or custom-ASIC silicon face high switching costs. Reinforced by its own networking stack (Mellanox/InfiniBand, NVLink) so a cluster can be Nvidia end to end.
 2. **HBM trio (SK hynix, Samsung, Micron)** — flagged as three nodes. Only three companies on earth can make high-bandwidth memory at the volumes and yields modern accelerators require; there is no fourth supplier. HBM has been the binding supply constraint on AI chip output through 2024-2026 (Nvidia and AMD have both cited HBM allocation, not wafer starts, as the gating factor at times). No accelerator ships without it, so the whole trio is treated as a genuine supply chokepoint.
@@ -50,5 +50,5 @@ The chokepoints in this map are overwhelmingly in silicon and physical infrastru
 
 ## Notes on methodology
 - Foundation phase only: financial columns (revenue, net income, market cap, R&D, capex, fiscal_year, filing_source, source_tier) are intentionally left blank in data/companies.csv. Fill during a FINANCIALS burst per AGENT-RUNBOOK.md, chokepoints first.
-- chokepoint = TRUE is a working hypothesis, not a final judgment; it should be revisited once relationships.csv edges are populated and customer-concentration disclosures are read.
+- `chokepoint = yes` is a working hypothesis, not a final judgment; it should be revisited once relationships.csv edges are populated and customer-concentration disclosures are read. The value is exactly `yes` or `no`: the renderer tests `chokepoint === 'yes'`, so anything else renders as not a chokepoint, silently.
 - Overlap with 01-semiconductor is intentional: Nvidia, TSMC, SK hynix, Samsung, Micron, Broadcom, Marvell and Intel appear in both maps because the AI-compute chokepoints and the semiconductor chokepoints are, in several cases, literally the same company viewed through a different lens.

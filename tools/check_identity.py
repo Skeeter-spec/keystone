@@ -25,11 +25,21 @@ So the binding is DATA, not a guess: shared/edgar_registrants.csv records (cik, 
 approved once by a human. This check asserts membership, exactly. A new or changed CIK is not silently
 accepted -- it fails until someone looks at the registrant name and approves the pair, which is precisely
 the moment the NEO error would have died.
+
+ONE NAME PER ENTITY IS NOT REALISTIC, SO ALIASES COUNT (added 2026-07-20). The atlas deliberately shares
+companies between maps, and the maps name them differently: 01 says "Micron", 04 says "Micron Technology";
+01 says "Amazon", 04 says "Amazon (AWS)". When tools/reuse_costed.py copied 01's figures into 04, all four
+renamed rows failed this check, because the CIK was bound to 01's spelling. The wrong fix is to paste the
+same CIK in four more times, which is how two files drift apart. shared/company_aliases.csv ALREADY
+records "these two names are the same legal entity, approved by a human", and that is precisely the fact
+this rule tests -- so an approved alias of a bound name is bound too. Still data, still approved once,
+still no fuzzy matching: an UNAPPROVED alias row buys nothing, and a name in neither file still fails.
 """
 import csv, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).parent.parent
 MAP_PATH = ROOT / "shared" / "edgar_registrants.csv"
+ALIAS_PATH = ROOT / "shared" / "company_aliases.csv"
 EDGAR_RE = re.compile(r"sec\.gov/Archives/edgar/data/(\d+)/")
 
 
@@ -49,7 +59,21 @@ def load_map(rows):
     return out
 
 
-def check(company_rows, bindings, label):
+def load_aliases(rows):
+    """{name: {approved same-entity names}}. Symmetric. Unapproved rows are ignored entirely."""
+    out = {}
+    for r in rows:
+        if (r.get("approved") or "").strip().lower() != "yes":
+            continue
+        a, b = (r.get("name_a") or "").strip(), (r.get("name_b") or "").strip()
+        if a and b:
+            out.setdefault(a, set()).add(b)
+            out.setdefault(b, set()).add(a)
+    return out
+
+
+def check(company_rows, bindings, label, aliases=None):
+    aliases = aliases or {}
     problems = []
     for i, r in enumerate(company_rows, start=2):
         company = (r.get("company") or "").strip()
@@ -57,6 +81,10 @@ def check(company_rows, bindings, label):
         if not cik:
             continue  # not an EDGAR citation; HKEX/SSE/other routes are out of scope for this rule
         known = bindings.get(cik)
+        if known and company not in known:
+            # An approved alias of a bound name is bound. Data, not a guess: see the module docstring.
+            if aliases.get(company, set()) & set(known):
+                continue
         if not known:
             problems.append(
                 f"{label}:{i} {company} cites EDGAR CIK {cik}, which has no approved binding in "
@@ -76,10 +104,14 @@ def run(root):
         return 1
     with open(MAP_PATH, newline="") as fh:
         bindings = load_map(list(csv.DictReader(fh)))
+    aliases = {}
+    if ALIAS_PATH.exists():
+        with open(ALIAS_PATH, newline="") as fh:
+            aliases = load_aliases(list(csv.DictReader(fh)))
     problems = []
     for p in sorted(root.glob("projects/*/data/companies.csv")):
         with open(p, newline="") as fh:
-            problems += check(list(csv.DictReader(fh)), bindings, p.parent.parent.name)
+            problems += check(list(csv.DictReader(fh)), bindings, p.parent.parent.name, aliases)
     for msg in problems:
         print("  " + msg)
     return 1 if problems else 0
@@ -95,10 +127,25 @@ def selftest():
         {"cik": "1077183", "sec_registrant": "NEOGENOMICS INC",
          "company": "NeoGenomics Inc", "approved": "yes"},
     ])
+    # The alias fixture is the real 04 case: 01 costed "Micron", 04 renamed the node "Micron Technology".
+    aliases = load_aliases([
+        {"name_a": "Micron", "name_b": "Micron Technology", "approved": "yes"},
+        {"name_a": "MP Materials", "name_b": "MP Minerals Holdings", "approved": "no"},
+    ])
+    MU_URL = "https://www.sec.gov/Archives/edgar/data/723125/000072312525000028/mu-20250828.htm"
+    bindings["723125"] = {"Micron": "MICRON TECHNOLOGY INC"}
     cases = [
         # (name, rows, must_flag)
         ("CONTROL (real): Neo Performance Materials cites NeoGenomics' CIK",
          [{"company": "Neo Performance Materials", "filing_source": NEO_URL}], True),
+        ("alias: an APPROVED same-entity name of a bound company must NOT flag",
+         [{"company": "Micron Technology", "filing_source": MU_URL}], False),
+        ("🔴 alias: an UNAPPROVED alias row buys nothing, still flags",
+         [{"company": "MP Minerals Holdings", "filing_source": MP_URL}], True),
+        ("🔴 alias: a name in NEITHER file still flags (the alias path is not a hole)",
+         [{"company": "Micron Devices Ltd", "filing_source": MU_URL}], True),
+        ("alias: an approved alias does NOT license a DIFFERENT company's CIK",
+         [{"company": "Micron Technology", "filing_source": NEO_URL}], True),
         ("CONTROL: an EDGAR CIK with no approved binding at all",
          [{"company": "Lynas Rare Earths",
            "filing_source": "https://www.sec.gov/Archives/edgar/data/9999999/x/"}], True),
@@ -112,7 +159,7 @@ def selftest():
     ]
     fails = []
     for name, rows, must_flag in cases:
-        got = bool(check(rows, bindings, "fixture"))
+        got = bool(check(rows, bindings, "fixture", aliases))
         ok = got == must_flag
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:

@@ -80,7 +80,9 @@ those bursts should pull from.
 
 ## Companies seeded
 
-27 companies across mining, refining/separation, magnet-making, battery chemicals, recycling, and
-trading. See `data/companies.csv`. 16 are flagged `chokepoint = TRUE` at this hypothesis stage; every
-flag above still needs a RELATIONSHIPS-burst citation before it should be treated as confirmed rather
-than a starting hunch.
+Companies across mining, refining/separation, magnet-making, battery chemicals, recycling, trading, and
+the downstream buyers that make their offtakes visible. **`data/companies.csv` holds the roster and the
+`chokepoint = yes` flags; count them there, not here.** This paragraph used to state both numbers and
+both had rotted: it said 27 companies when there were 33, and 16 chokepoints when the 2026-07-14
+tightening had already cut them to 5. Every flag still needs a RELATIONSHIPS-burst citation before it
+should be treated as confirmed rather than a starting hunch.

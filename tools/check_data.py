@@ -28,12 +28,21 @@ The rules, each tied to the promise or the mechanism it protects:
   5. timeseries  Every financial-history row carries its own source_url and tier.
   6. readme      The status table matches the data. "Mapped" must have edges; "Foundation only" must
                  not. A status typed in prose is a COPY of the truth, and copies rot.
-  7. runbooks    No AGENT-RUNBOOK tells a research agent to write TRUE/FALSE for chokepoint. This rule
-                 gates the GENERATOR, not the output. The TRUE/FALSE drift was not agent sloppiness:
+  7. prose       Nothing an agent READS teaches it to write TRUE/FALSE for chokepoint. This rule gates
+                 the GENERATOR, not the output. The TRUE/FALSE drift was not agent sloppiness:
                  projects/_kit/AGENT-RUNBOOK.md literally SAID "set chokepoint TRUE", shared/new-map.sh
                  copied the kit into all nine maps, and each research agent did as it was told. Fixing
                  the 163 rows without fixing the instruction would just have rebuilt the bug on the next
                  foundation burst. Rule 3 catches the symptom; this catches the cause.
+
+                 WIDENED 2026-07-20, because the first version only looked at AGENT-RUNBOOK.md and the
+                 vocabulary had survived everywhere else. The 2026-07-16 sweep normalised the chokepoint
+                 COLUMN in 163 rows and left the PROSE alone, so six files still said TRUE/FALSE --
+                 including 04's own FOUNDATION.md ("Six nodes are flagged chokepoint=TRUE in
+                 data/companies.csv", which by then was false as well as banned) and two companies.csv
+                 notes. A burst agent reads the foundation brief for context and the neighbouring rows
+                 for style; both teach vocabulary just as effectively as the runbook does. So this rule
+                 now covers AGENT-RUNBOOK.md, FOUNDATION.md, and the notes column of companies.csv.
 
 Exit 0 = clean. Exit 1 = a real problem. Exit 2 = the checker itself is broken.
 """
@@ -138,13 +147,27 @@ def check_readme(readme_text, facts):
     return problems
 
 
+CHOKE_PROSE_RE = re.compile(r"chokepoint[ =]*(TRUE|FALSE)", re.I)
+
+
 def check_runbook(text, label):
     """Rule 7. The instruction that produced the drift, not the drift."""
     problems = []
-    if re.search(r"chokepoint[ =]+(TRUE|FALSE)", text, re.I):
+    if CHOKE_PROSE_RE.search(text):
         problems.append(
             f"{label} tells research agents to write TRUE/FALSE for chokepoint. The template tests "
             f"chokepoint==='yes', so this instruction regenerates the silent-zero bug on the next burst")
+    return problems
+
+
+def check_notes_prose(rows, label):
+    """Rule 7, in the notes column. A neighbouring row teaches vocabulary too."""
+    problems = []
+    for i, r in enumerate(rows, start=2):
+        if CHOKE_PROSE_RE.search(g(r, "notes")):
+            problems.append(
+                f"{label}:{i} {g(r, 'company')} has TRUE/FALSE chokepoint vocabulary in its notes. The "
+                f"column is right, but the next agent reads these rows for style and copies the words")
     return problems
 
 
@@ -166,14 +189,17 @@ def run(root):
         rels = load(d / "relationships.csv")
         ts = load(d / "financials_timeseries.csv")
         problems += check_companies(companies, f"{slug}/companies.csv")
+        problems += check_notes_prose(companies, f"{slug}/companies.csv")
         problems += check_relationships(rels, f"{slug}/relationships.csv")
         problems += check_timeseries(ts, f"{slug}/financials_timeseries.csv")
         facts[slug] = {"edges": len(rels), "costed": sum(1 for c in companies if has_financials(c))}
     # Rule 7 covers _kit too: it is the template every future map is stamped from, so it is the
-    # one file where a wrong instruction costs the most.
-    for rb in sorted(glob.glob(str(root / "projects" / "*" / "AGENT-RUNBOOK.md"))):
-        p = pathlib.Path(rb)
-        problems += check_runbook(p.read_text(), f"{p.parent.name}/AGENT-RUNBOOK.md")
+    # one file where a wrong instruction costs the most. FOUNDATION.md is in scope because a burst
+    # agent is handed the foundation brief as context, so it teaches vocabulary the same way.
+    for pattern in ("AGENT-RUNBOOK.md", "FOUNDATION.md"):
+        for rb in sorted(glob.glob(str(root / "projects" / "*" / pattern))):
+            p = pathlib.Path(rb)
+            problems += check_runbook(p.read_text(), f"{p.parent.name}/{pattern}")
     readme = (root / "README.md")
     if readme.exists():
         problems += check_readme(readme.read_text(), facts)
@@ -223,6 +249,22 @@ def selftest():
          check_relationships, [{**good_edge, "source_tier": ""}], True),
         ("rule 5: timeseries with no source_url",
          check_timeseries, [{**good_ts, "source_url": ""}], True),
+        # Rule 7 in the notes column. The CONTROL is the real 2026-07-20 case: the row's chokepoint
+        # value was already correct ('no'), so rule 3 was silent and only this catches the prose.
+        ("rule 7: TRUE/FALSE vocabulary in a note whose column is already correct (the real case)",
+         check_notes_prose,
+         [{"company": "Alphabet", "chokepoint": "no",
+           "notes": "routable-around at the cloud layer, so chokepoint=FALSE"}], True),
+        ("rule 7: the 09-aerospace phrasing with a space",
+         check_notes_prose,
+         [{"company": "Spirit AeroSystems", "chokepoint": "no",
+           "notes": "Not separately flagged chokepoint = TRUE because the bottleneck moved"}], True),
+        ("NEGATIVE: a note that discusses chokepoints in the right vocabulary must NOT fire",
+         check_notes_prose,
+         [{"company": "Nvidia", "chokepoint": "yes",
+           "notes": "Flagged chokepoint=yes; CUDA lock-in makes switching costly. TRUE sole source."}], False),
+        ("NEGATIVE: a row with no notes at all must NOT fire",
+         check_notes_prose, [{"company": "Groq", "chokepoint": "no"}], False),
     ]
     failures = []
     for name, fn, rows, expect_fire in cases:

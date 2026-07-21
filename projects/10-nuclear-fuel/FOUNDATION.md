@@ -94,7 +94,8 @@ those bursts should pull from.
 ## Companies seeded
 
 24 companies across mining, conversion, enrichment, fuel fabrication, reactor operation/vending, and
-reprocessing. See `data/companies.csv`. 7 are flagged `chokepoint = TRUE` at this hypothesis stage
+reprocessing. See `data/companies.csv`, which holds the roster and the `chokepoint = yes` flags; count
+them there rather than trusting a number typed here
 (Orano, Rosatom / TENEX, TVEL Fuel Company, Urenco Group, CNNC, Centrus Energy Corp, and Honeywell
 International's Metropolis Works conversion plant); every flag above still needs a RELATIONSHIPS-burst
 citation before it should be treated as confirmed rather than a starting hunch.
