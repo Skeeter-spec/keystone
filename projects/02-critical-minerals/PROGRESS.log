@@ -48,3 +48,32 @@ Zhejiang Huayou 603799, Yunnan Chihong 600497) are still 0 financials -- audited
 cninfo.com.cn, deferred this session. Filling THEM is what actually moves 02 toward "Mapped" (a map is not
 mapped until its chokepoints are costed). Also open: AU/UK/EU majors (Lynas, BHP, Rio, Glencore, Umicore,
 Pilbara, Iluka) whose tier-1 reports are not on EDGAR.
+
+2026-07-20 CHOKEPOINT FINANCIALS (dual-listed pair, tier 1). Costed 2 of 02's 5 chokepoints from their
+HKEX English audited FY2025 annual results: Ganfeng Lithium (1772.HK) and JL MAG Rare-Earth (6680.HK).
+Both report in RMB'000; converted at USD/CNY 6.7574 (2026-07-20). Costed 46 -> 48; 02 now 7/33 costed,
+2 of 5 chokepoints costed.
+
+Source discipline: HKEXnews is the exchange's own filing repository (publisher copy, not a mirror -- InDesign
+producer metadata, official host). Each figure was pulled from the audited consolidated statements with
+PyMuPDF, then the statement page was RENDERED and read by eye (the text layer is for locating, not
+transcribing). Cross-confirmed within each filing: attributable profit / basic EPS = share count both times
+(Ganfeng 1,613,671/0.80 = 2.017bn shares; JL MAG 705,607/0.52 = 1.357bn), matching each issuer's shares.
+- Ganfeng FY2025 (RMB'000): revenue 22,797,728; profit attrib. owners 1,613,671 (NCI -350,433, so owners
+  exceed the 1,263,238 total); R&D 1,042,098 (note 8, cross-checked p23 + p86); capital expenditure
+  9,686,216 (note 12, cross-checked segment note p14; incl PP&E + investment properties + intangibles).
+- JL MAG FY2025 (RMB'000): revenue 7,717,522; profit attrib. owners 705,607; R&D 505,687 (on the face of
+  the P&L); capex = purchases of PP&E 434,078 (cash flow; 2025 column confirmed by render vs 674,257 in 2024).
+
+Market cap omitted for both: dual-listed A+H shares trade at different prices in different currencies, so a
+clean total is fiddly; left empty rather than approximate (consistent with SQM in the EDGAR burst).
+
+STILL DEFERRED -- 3 A-share-only chokepoints, no English filing: China Northern Rare Earth 600111.SS,
+Zhejiang Huayou Cobalt 603799.SS, Yunnan Chihong Zinc & Germanium 600497.SS. Their audited reports are
+Chinese-language PDFs on cninfo.com.cn (disclosure API reachable: POST
+www.cninfo.com.cn/new/hisAnnouncement/query with stock=<code> & category=category_ndbg_szsh & column=sse|szse).
+Left uncosted rather than sourced at tier 3. A dedicated session should render+read those 3 Chinese annual
+reports (RMB->USD) to finish 02's chokepoints and move it toward "Mapped".
+
+NEXT: the 3 A-only chokepoints above; then 02's still-empty non-chokepoint majors (Lynas, BHP, Rio, Glencore,
+Umicore, Pilbara, Iluka, plus the automakers/battery cos); then 02 timeseries + politics lens.
