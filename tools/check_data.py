@@ -127,21 +127,42 @@ def check_readme(readme_text, facts):
         if not row:
             problems.append(f"README has no status row for project {slug}")
             continue
-        status = row.group(1)
+        # Take the LAST cell and read the label off its FRONT. The old code substring-matched the
+        # whole captured line, so any mention of another label anywhere in the row flipped the check:
+        # writing "...so it is not yet Mapped" in 04's status made the rule believe the map claimed
+        # Mapped, and it failed for having no edges. A map NAME containing a label word would have
+        # done the same. The rule is about which label the row CLAIMS, which is the leading token of
+        # the status cell, so that is what it now reads. (Rewording the prose to appease the checker
+        # would have left the trap armed for the next writer.)
+        cells = [c.strip() for c in row.group(1).split("|")]
+        status = next((c for c in reversed(cells) if c), "")
+        lead = status.lstrip("*").strip()
         # Three states, because a map earns them in order: no edges -> edges -> edges AND financials.
         # "Edges started" exists because 02 reached a state the first version of this rule could not
         # express, and the honest fix is a new label, not a looser check.
-        mapped = "Mapped" in status
-        foundation = "Foundation only" in status
-        edges_started = "Edges started" in status
-        if not (mapped or foundation or edges_started):
-            problems.append(f"README row {num} has an unrecognised status, expected 'Mapped', 'Edges started' or 'Foundation only'")
+        mapped = lead.startswith("Mapped")
+        foundation = lead.startswith("Foundation only")
+        edges_started = lead.startswith("Edges started")
+        # "Costed" is the mirror image of "Edges started": financials in, edges not yet. 04 reached it
+        # on 2026-07-20 with 24 costed companies and 0 edges, and the rule as written PASSED a README
+        # row still calling it "Foundation only" -- because the foundation check only ever looked at
+        # edges. The README's own prose defines a foundation as having "no financials and no per row
+        # source tier", so that row was false by the repo's own definition and nothing caught it.
+        # Same fix as last time: a state the vocabulary cannot express earns a new label, not a
+        # looser check.
+        costed_only = lead.startswith("Costed")
+        if not (mapped or foundation or edges_started or costed_only):
+            problems.append(f"README row {num} has an unrecognised status, expected 'Mapped', 'Costed', 'Edges started' or 'Foundation only'")
         if mapped and f["edges"] == 0:
             problems.append(f"README calls {slug} 'Mapped' but it has 0 relationship edges")
         if mapped and f["costed"] == 0:
             problems.append(f"README calls {slug} 'Mapped' but not one company is costed")
         if foundation and f["edges"] > 0:
             problems.append(f"README calls {slug} 'Foundation only' but it has {f['edges']} edges, so it has outgrown the label")
+        if foundation and f["costed"] > 0:
+            problems.append(f"README calls {slug} 'Foundation only' but {f['costed']} of its companies are costed. A foundation brief has no financials by definition, so the label is now false")
+        if costed_only and f["costed"] == 0:
+            problems.append(f"README calls {slug} 'Costed' but not one company is costed")
         if edges_started and f["edges"] == 0:
             problems.append(f"README calls {slug} 'Edges started' but it has 0 relationship edges")
     return problems
@@ -291,6 +312,25 @@ def selftest():
          "| 02 | y | Edges started |", {"02-b": {"edges": 0, "costed": 0}}, True),
         ("rule 6: 'Mapped' with edges but nothing costed",
          "| 01 | x | Mapped. |", {"01-a": {"edges": 48, "costed": 0}}, True),
+        # The real 2026-07-20 case: 04 had 24 costed companies and 0 edges, and the old rule passed
+        # a row still labelled "Foundation only" because it only ever looked at the edge count.
+        ("rule 6: 'Foundation only' that has grown FINANCIALS (the real 04 case)",
+         "| 04 | x | Foundation only |", {"04-a": {"edges": 0, "costed": 24}}, True),
+        ("control: 'Costed' with financials but no edges passes",
+         "| 04 | x | Costed. |", {"04-a": {"edges": 0, "costed": 24}}, False),
+        ("rule 6: 'Costed' with nothing costed",
+         "| 04 | x | Costed. |", {"04-a": {"edges": 0, "costed": 0}}, True),
+        ("control: a true foundation (no edges, no financials) still passes",
+         "| 05 | x | Foundation only |", {"05-a": {"edges": 0, "costed": 0}}, False),
+        # The label is the LEADING token of the status cell, not any word appearing in the row.
+        # Real case: 04's honest status said "...so it is not yet Mapped", and the old substring
+        # match read that as a claim of Mapped and failed the row for having no edges.
+        ("control: a status that MENTIONS another label in prose is not claiming it",
+         "| 04 | x | **Costed.** 24 costed, no edges yet, so it is not yet Mapped |",
+         {"04-a": {"edges": 0, "costed": 24}}, False),
+        ("control: a map NAME containing a label word does not set the label",
+         "| 06 | Mapped Shipping Routes | Foundation only |",
+         {"06-a": {"edges": 0, "costed": 0}}, False),
         ("rule 6: an invented status label",
          "| 02 | y | Mostly done |", {"02-b": {"edges": 3, "costed": 0}}, True),
     ]

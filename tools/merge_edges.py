@@ -26,7 +26,15 @@ VOCAB = {"supplies-ore-to", "refines-for", "separates-for", "supplies-magnets-to
          "competes-with", "recycles-for",
          # 01-semiconductor's vocabulary, kept valid so the tool works across maps
          "fabricates-for", "sells-equipment-to", "licenses-ip-to", "supplies-components-to",
-         "packages-for"}
+         "packages-for",
+         # 04-ai-compute. Added BEFORE its burst rather than after, because the lesson from the
+         # chokepoint TRUE/FALSE drift is that a fan-out's vocabulary has to exist before the fan-out
+         # writes, not once its output has already been rejected.
+         "provides-compute-to", "assembles-for"}
+# DESIGN DEBT, deliberate and recorded rather than fixed here: this vocabulary is a UNION across every
+# map, so 02's "supplies-ore-to" is technically legal in the AI compute map. The right home is a
+# relationship_types list in each map's map.json, alongside the layers, which is where this repo already
+# keeps per-map data. Not done now because it is a refactor and the burst needed the two types above.
 FIELDS = ["from_company", "to_company", "relationship_type", "description", "evidence_source",
           "evidence_date", "confidence", "last_updated", "lens", "source_tier"]
 

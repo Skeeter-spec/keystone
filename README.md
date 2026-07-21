@@ -44,7 +44,7 @@ data lands.
 | 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | **Mapped.** 41 companies costed, 48 sourced relationship edges, 8 chokepoints, five year financials for every chokepoint. Politics and economics lenses next |
 | 02 | [Critical minerals](projects/02-critical-minerals/) | **Mapped.** 17 sourced relationship edges, 9 of them real dependencies, all 5 chokepoints costed from FY2025 audited filings. 17 of 33 companies costed (16 of them with revenue; Lithium Americas is pre-revenue), with no timeseries and no politics lens yet, so it is a thinner map than 01 |
 | 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
-| 04 | [AI compute stack](projects/04-ai-compute/) | Foundation only |
+| 04 | [AI compute stack](projects/04-ai-compute/) | **Costed.** 24 of 30 companies costed, including all 6 chokepoints. Twelve figures reused from 01 (shared nodes, same filings), eleven from SEC XBRL, Siemens Energy from its own audited statements. Four companies are private and stay blank. No relationship edges yet, so it is not yet Mapped |
 | 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |
 | 06 | [Shipping](projects/06-shipping/) | Foundation only |
 | 07 | [Food and fertilizer](projects/07-food-fertilizer/) | Foundation only |
@@ -57,6 +57,12 @@ data lands.
 roles and notes but **no financials and no per row source tier**. They are the questions the map intends to
 answer, not answers. Only a map marked **Mapped** has cleared the sourcing bar described above. Treat every
 foundation row as unverified until its relationship and financial bursts land.
+
+A map earns its label in order, and there are four because a map can gain financials and edges in either
+order: **Foundation only** (neither) to **Costed** or **Edges started** (one of the two) to **Mapped**
+(both). `tools/check_data.py` asserts every one of them against the data. Both middle labels exist because
+a real map reached a state the vocabulary could not express, and the honest fix each time was a new label
+rather than a looser check: 02 had edges before financials, and 04 had financials before edges.
 
 ## How a project works
 
