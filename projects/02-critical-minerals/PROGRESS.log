@@ -121,3 +121,49 @@ call, not a side effect of a data burst.
 NEXT: 02's chokepoints are DONE. Remaining for 02: the still-empty non-chokepoint companies (Lynas, BHP,
 Rio Tinto, Glencore, Umicore, Pilbara, Iluka, Tianqi, CMOC, Nornickel, plus the automakers/battery buyers),
 then timeseries and the politics lens.
+
+2026-07-20 EDGAR BATCH 2 (7 companies, tier 1). Costed the SEC-filing remainder of 02: USA Rare Earth,
+Lithium Americas, BHP, Rio Tinto, Tesla, Ford, Lucid. Repo 51 -> 58 costed; 02 now 17/33. Same SEC XBRL
+company-facts extractor as the first EDGAR burst, so no PDFs and no rendering were needed.
+
+TICKER COLLISION, CAUGHT BEFORE IT LANDED. The candidate list came from matching 02's ticker column against
+SEC company_tickers.json. "NEO" matched CIK 1077183 = NEOGENOMICS INC, a cancer diagnostics company. 02's NEO
+is Neo Performance Materials, a rare-earth magnet maker listed in Toronto that does not file with the SEC.
+Ticker-only matching would have written an oncology lab's revenue into a rare-earth row, and NOTHING here
+would have caught it: the row would have been complete, sourced, tier 1 and wrong. The gate checks that a
+costed row HAS a source, never that the source is about the same company. Fix applied: verify the SEC
+REGISTRANT NAME against the company name before fetching. Neo Performance Materials stays uncosted.
+
+Concept forks, adjudicated by printing every candidate at the reporting year before writing:
+- BHP: profit attributable to owners 9.019 vs consolidated ProfitLoss 11.143 -> used attributable. The
+  consolidated line would have overstated BHP's bottom line by 24%.
+- BHP's fiscal year ends 30 JUNE; the period taken is FY2025 ending 2025-06-30, not a December year.
+- Rio Tinto: attributable 9.966 vs consolidated 10.249; no cash-flow capex tag, so capex is IFRS PP&E
+  additions 12.924 (noted in the row), the same fallback used for Vale.
+- Ford: us-gaap NetIncomeLoss is NOT tagged for FY2025, only ProfitLoss (-8.162). Used it and said so in the
+  row rather than pass a consolidated figure off as attributable.
+- USA Rare Earth and Ford tag capex as PaymentsToAcquireProductiveAssets, not ...PropertyPlantAndEquipment.
+
+LEFT EMPTY ON PURPOSE:
+- Lithium Americas REVENUE: pre-revenue (Thacker Pass under construction); the filing carries no revenue tag
+  at all. Empty, NOT zero -- zero would be a claim the filing does not make.
+- R&D for BHP and Lithium Americas (not separately reported).
+- MARKET CAP for four of the seven, each for a named reason: BHP (NYSE ADR = 2 ordinary shares, plus the
+  dual-listed structure), Rio Tinto (dual-listed plc/Limited, the tagged count covers plc only), Ford (the
+  tagged EntityCommonStockSharesOutstanding is dated 2011, stale by fifteen years), USA Rare Earth (tagged
+  count predates the FY2025 year end). A stale or wrong-entity share count yields a confidently wrong market
+  cap, which is worse than a blank.
+
+TWO COUNTERS IN THIS REPO DISAGREE, LEGITIMATELY. tools/check_data.py has_financials() counts a company as
+costed if ANY of the five financial fields is set (02: 17/33). shared/build_map.py counts
+`c.get("revenue_usd_b")` only (02: 16/33). The whole gap is Lithium Americas, which has net income and capex
+but no revenue. Neither is wrong; they answer different questions. Recorded because a future session that
+compares the gate's number to the artifact's number will otherwise think one of them is broken. The README
+row now states both.
+
+NEXT for 02: 16 companies remain uncosted and NONE of them file with the SEC. Lynas, Iluka, Pilbara, Syrah
+(ASX); Glencore (LSE); Umicore (Euronext); Tianqi, CMOC, Shenghe (China); Nornickel (Russia); LG Energy
+Solution, Samsung SDI, POSCO Future M (Korea); Proterial (Japan); Vacuumschmelze (private, Germany); Neo
+Performance Materials (TSX). Each needs its own national filing route, the way the SSE trio did. Also open:
+timeseries, and the politics lens -- export controls on rare earths, gallium and germanium sit directly on
+this map's chokepoints, which is the most valuable thing 02 could gain next.

@@ -42,7 +42,7 @@ data lands.
 | # | Map | Status |
 |---|-----|--------|
 | 01 | [Semiconductor ecosystem](projects/01-semiconductor/) | **Mapped.** 41 companies costed, 48 sourced relationship edges, 8 chokepoints, five year financials for every chokepoint. Politics and economics lenses next |
-| 02 | [Critical minerals](projects/02-critical-minerals/) | **Mapped.** 17 sourced relationship edges, 9 of them real dependencies, all 5 chokepoints costed from FY2025 audited filings. 10 of 33 companies costed, with no timeseries and no politics lens yet, so it is a thinner map than 01 |
+| 02 | [Critical minerals](projects/02-critical-minerals/) | **Mapped.** 17 sourced relationship edges, 9 of them real dependencies, all 5 chokepoints costed from FY2025 audited filings. 17 of 33 companies costed (16 of them with revenue; Lithium Americas is pre-revenue), with no timeseries and no politics lens yet, so it is a thinner map than 01 |
 | 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
 | 04 | [AI compute stack](projects/04-ai-compute/) | Foundation only |
 | 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |
