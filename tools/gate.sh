@@ -23,7 +23,7 @@ fail=0
 echo "GATE"
 echo ""
 
-echo "[1/3] the checks fire (selftest before any verdict is believed)"
+echo "[1/4] the checks fire (selftest before any verdict is believed)"
 python3 tools/check_data.py --selftest >/dev/null || {
   echo "  SELFTEST FAILED. The checker is broken, so its verdict on the data means nothing."
   echo "  Run: python3 tools/check_data.py --selftest"
@@ -34,14 +34,23 @@ python3 tools/check_fresh.py --selftest >/dev/null || {
   echo "  Run: python3 tools/check_fresh.py --selftest"
   exit 2
 }
+python3 tools/check_identity.py --selftest >/dev/null || {
+  echo "  SELFTEST FAILED. The identity checker is broken, so its verdict means nothing."
+  echo "  Run: python3 tools/check_identity.py --selftest"
+  exit 2
+}
 echo "  ok, every rule fires on its own mutant"
 
 echo ""
-echo "[2/3] data matches what the README promises"
+echo "[2/4] data matches what the README promises"
 python3 tools/check_data.py || fail=1
 
 echo ""
-echo "[3/3] every built artifact still renders from its current CSVs"
+echo "[3/4] every EDGAR filing cited belongs to the company citing it"
+python3 tools/check_identity.py || { fail=1; echo "  a lookup that resolves is not the entity you meant; see shared/edgar_registrants.csv"; }
+
+echo ""
+echo "[4/4] every built artifact still renders from its current CSVs"
 python3 tools/check_fresh.py || { fail=1; echo "  a committed artifact drifted from its data; rebuild it with shared/build_map.py"; }
 
 echo ""
