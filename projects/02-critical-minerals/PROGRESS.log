@@ -184,3 +184,22 @@ research at all.
 lens. Against 01 (41/41 costed, 48 edges, 0 unevidenced chokepoints) it is a much thinner map wearing the
 same word. Demoting it to "Edges started" would be defensible and the gate would accept it. Promoting and
 demoting a status is his call, so the numbers are recorded here and the label is untouched.
+
+2026-07-21 NINE CITATIONS POINTED AT A FOLDER, NOT A FILING; NOW 17/17 VERIFY. tools/verify_sources.py
+found nine costed rows citing an EDGAR DIRECTORY LISTING (.../Archives/edgar/data/NNN/NNNN/), which
+returns "Directory List of ..." and names no company. Reachable, and not the document: the sibling repo
+industrial-index learned the identical lesson with landing pages. Each was resolved to its primary
+inline-XBRL document and re-verified against the company name.
+
+⚠ THE RESOLVER'S FIRST RULE WAS WRONG AND THE CHECK CAUGHT IT. Picking "the largest .htm in the folder"
+sent MP Materials to mpmcexhibit961123125.htm, an EXHIBIT, which names the company and would have
+verified clean while citing the wrong filing. Rewritten to match the inline-XBRL convention
+(<ticker>-<date>.htm); MP Materials then resolved to mp-20251231.htm. Vale and BHP are 20-F filers
+outside that convention, so the tool REFUSED to guess and printed the candidates; both were approved by
+eye and verified against the document. A heuristic that picks the biggest file is not evidence.
+
+3 more gap rows, all from THIS FILE's own doubt-blocks, which the 2026-07-20 sweep missed because it
+grepped for phrases instead of reading: the POSCO offtake (FY2025 does not mention POSCO at all, so it
+may have lapsed), the Ford/LG/Samsung SDI MoUs (non-binding, vanish from FY2025), and the Tesla offtake,
+which its own cited filing says is UNDER AN ACTIVE DEFAULT NOTICE with a cure deadline of 1 June 2026 --
+now seven weeks past, while the edge still renders as a plain offtake.

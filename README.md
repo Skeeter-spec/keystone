@@ -125,9 +125,19 @@ map's `companies.csv`, and the builder **aborts** if any company has no matching
 exists because the failure is otherwise invisible: running the old semiconductor renderer against the
 minerals data succeeded, exit 0, and drew a map where 30 of 33 companies appeared in no layer at all.
 
-The loop: run a research burst to grow the CSVs, verify every cited source with
-`tools/verify_edges.py`, merge with `tools/merge_edges.py`, rebuild the page, republish to the same
-place, log it.
+The loop: run a research burst to grow the CSVs, verify every cited source, merge with
+`tools/merge_edges.py`, rebuild the page, republish to the same place, log it.
+
+Two verifiers, asking different questions, both network-dependent and therefore both outside the gate:
+
+```
+python3 tools/verify_edges.py   projects/04-ai-compute   does each EDGE's source name both endpoints?
+python3 tools/verify_sources.py projects/04-ai-compute   does each FIGURE's source name the company?
+```
+
+The second one existed nowhere until 2026-07-21, so every financial citation in this repo went unchecked
+for a week. Running it found a tier-1 row citing a different company's annual report, and nine rows
+citing an EDGAR folder rather than the filing inside it.
 
 ## The gate
 

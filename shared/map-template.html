@@ -539,6 +539,7 @@ const GAP_KIND={
   'unevidenced-flag': ['Flagged without an edge','A claim this map makes with no sourced relationship behind it'],
   'stale-evidence':   ['Evidence overtaken','A sourced claim whose evidence predates a material change'],
   'out-of-scope':     ['Off this map','The counterparty is disclosed, but is not on this map'],
+  'lapsed':           ['No longer disclosed','A newer filing has gone silent on it, and that silence is evidence'],
 };
 function renderGaps(){
   const rows=GAPS.slice().sort((a,b)=>(a.status==='closed')-(b.status==='closed'));

@@ -32,8 +32,6 @@ KEY = {
     "MP Materials": "MP Materials",
     "Lynas Rare Earths": "Lynas",
     "Shenghe Resources Holding": "Shenghe",
-    "China Northern Rare Earth (Group) High-Tech": "Northern Rare Earth",
-    "JL MAG Rare-Earth": "JL MAG",
     "Proterial Ltd (formerly Hitachi Metals)": "Proterial|Hitachi Metals",
     "Vacuumschmelze (VAC)": "Vacuumschmelze",
     "Neo Performance Materials": "Neo Performance",
@@ -55,7 +53,6 @@ KEY = {
     "BHP Group": "BHP",
     "Rio Tinto": "Rio Tinto",
     "Syrah Resources": "Syrah",
-    "Yunnan Chihong Zinc & Germanium": "Chihong",
     # Downstream buyer nodes, added 2026-07-16. Without these, `named()` falls back to the full CSV
     # name and a filing that simply says "Tesla" fails against the literal "Tesla Inc".
     "Tesla Inc": "Tesla",
@@ -92,11 +89,24 @@ KEY = {
     "Siemens Energy": "Siemens Energy",
     "Schneider Electric": "Schneider Electric|Schneider",
     "Cerebras Systems": "Cerebras",
+    # 01 spells some nodes differently from 04, and a name with a parenthetical never appears in a
+    # filing. Found 2026-07-21 when Alphabet's own 10-K index "failed" to name Alphabet.
+    "Alphabet (Google)": "Alphabet|Google",
+    "Taiyo Yuden": "Taiyo Yuden|TAIYO YUDEN",
+    # 🔴 A CHINESE-LANGUAGE FILING NEVER CONTAINS THE LATIN NAME. Yunnan Chihong's SSE annual report
+    # is 203,790 chars and contains 云南驰宏 and 驰宏锌锗 -- and not one occurrence of "Chihong".
+    # Every A-share citation this repo makes is unverifiable without the native-script name, so the
+    # alias carries BOTH scripts. shared/SOURCING-ROUTES.md sends future bursts down these routes.
+    "Yunnan Chihong Zinc & Germanium": "Chihong|驰宏锌锗|云南驰宏",
+    "JL MAG Rare-Earth": "JL MAG|金力永磁",
+    "China Northern Rare Earth (Group) High-Tech": "Northern Rare Earth|北方稀土",
 }
 
 # NOTE: use .search(), never .match(). match() anchors at position 0, so the mid-URL alternatives
 # (/investors/, /news/) could never fire and every landing page would sail through as clean. The
 # selftest caught exactly that, which is the entire reason the selftest has a landing-page fixture.
+CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
+
 LANDING_SMELL = re.compile(r"^https?://[^/]+/?$|/investors/?$|/news/?$|/search|\?q=", re.I)
 
 
@@ -133,7 +143,10 @@ def fetch(url):
 # filing, or one that reads like an error page, is never evidence of anything.
 ERROR_SMELL = re.compile(r"access denied|forbidden|are you a robot|enable javascript|"
                          r"request blocked|errors\.edgesuite\.net|cloudflare", re.I)
-MIN_DOC_BYTES = 2000
+# 500, not 2000. Measured 2026-07-21: an EDGAR filing-index page is a LEGITIMATE 1,670-char document,
+# and the 2000 floor rejected Oracle's citation as a block page. The Akamai refusal this guard exists
+# for is caught by ERROR_SMELL, not by length, so the floor only has to exclude a fragment.
+MIN_DOC_BYTES = 500
 
 
 def looks_like_error_page(text):
@@ -169,7 +182,17 @@ def named(text, company):
     \b fixes both: "Abbotsford" has no word boundary before "ford", and "prevalent" none before "vale".
     """
     pat = KEY.get(company, re.escape(company))
-    return re.search(rf"\b(?:{pat})\b", text, re.I) is not None
+    # 🔴 CJK HAS NO WORD BOUNDARIES. \b is defined against \w, and every character around a Chinese
+    # company name is also a word character: in 云南驰宏锌锗股份有限公司 there is no boundary before
+    # 驰 or after 锗, so \b驰宏锌锗\b can never match and a correct alias silently never fires.
+    # Measured 2026-07-21. So each alternative is wrapped only if it is Latin script; a CJK
+    # alternative is matched as a plain substring, which is safe here because the false positives \b
+    # exists to stop ("Abbotsford" containing "ford", "prevalent" containing "vale") are artefacts of
+    # alphabetic writing and have no CJK equivalent at these lengths.
+    parts = []
+    for alt in pat.split("|"):
+        parts.append(alt if CJK_RE.search(alt) else rf"\b(?:{alt})\b")
+    return re.search("|".join(parts), text, re.I) is not None
 
 
 def verify(project):
@@ -281,6 +304,14 @@ def selftest():
          "Arista Networks", "Aristarchus Capital holds a stake", False),
         ("'TSMC' matches a filing that spells out Taiwan Semiconductor",
          "TSMC", "Taiwan Semiconductor Manufacturing Company fabricates", True),
+        # 🔴 A Chinese-language filing never contains the Latin name. Yunnan Chihong's 203,790-char
+        # SSE annual report has 云南驰宏 and 驰宏锌锗 and ZERO occurrences of "Chihong".
+        ("🔴 a CJK filing matches on the native-script name",
+         "Yunnan Chihong Zinc & Germanium", "云南驰宏锌锗股份有限公司 2025 年年度报告", True),
+        ("🔴 ...and the Latin name alone still matches an English document",
+         "Yunnan Chihong Zinc & Germanium", "Chihong Zinc reported output", True),
+        ("NEGATIVE: an unrelated CJK document must NOT match",
+         "Yunnan Chihong Zinc & Germanium", "宁德时代新能源科技股份有限公司", False),
     ]
     # 🔴 THE REAL AKAMAI BODY from 2026-07-20, verbatim. It names both endpoints and is not a document.
     denied = ('Access Denied Access Denied You don\'t have permission to access '

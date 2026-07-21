@@ -38,3 +38,26 @@ provenance. 04 reduced the exposure by deriving market cap from a filed share co
 but 12 of 04's rows inherit this from the 01 figures they reuse. tools/review.py reports it as a standing
 signal rather than a gap. The real fix is a schema decision (a market_cap_tier, or moving market cap out
 of the tier-1 claim) and it belongs in its own pass, not smuggled into this one.
+
+2026-07-21 EVERY FINANCIAL CITATION REFETCHED FOR THE FIRST TIME, AND ONE OF THEM IS THE WRONG COMPANY.
+tools/verify_sources.py is new: verify_edges.py had been refetching every EDGE's source since 2026-07-16,
+and NOTHING had ever opened the URL under a FINANCIAL FIGURE. 84 citations, 71 distinct documents, none
+checked twice. check_data.py rule 1 only asserts a filing_source EXISTS; check_identity.py only binds an
+EDGAR CIK to a name. Neither opens the document.
+
+🔴 TAIYO YUDEN IS COSTED FROM A DIFFERENT COMPANY'S ANNUAL RESULTS. The row carries ticker 6976.T and
+source_tier 1, and cites a PDF at taiyo-hd.co.jp which states, in its own header, "Company name: TAIYO
+HOLDINGS CO., LTD." and "Stock code: 4626". Taiyo Holdings makes solder resist; Taiyo Yuden makes passive
+components. The cited document reports net sales of JPY137,851M; this row claims JPY355,341M, and NONE of
+its four figures appear anywhere in the cited PDF. So the figures are plausibly real Taiyo Yuden numbers
+from some other source, and the citation is to a company that merely shares a name prefix. This is the
+NEO -> NEOGENOMICS failure again, one layer down: check_identity.py cannot see it because it only guards
+EDGAR CIKs, and a Japanese IR PDF has none. Recorded as a gap, figures LEFT IN PLACE: deleting them would
+destroy information, and asserting a replacement URL would be substituting my guess for evidence.
+
+TDK and Lenovo both 403 to the project UA and to a browser UA, so their citations cannot be machine
+checked from here at all. Recorded as unreachable. Lenovo's is also a press-room INDEX path, not a release.
+
+Also recorded from this log rather than researched: Arm's and SK hynix's market-cap divergence across
+trackers, Samsung's two competing capex figures, and three Arm licensing edges resting on 2021 and 2023
+evidence. 7 gap rows total, 38 of 41 rows now cite a document that names them.

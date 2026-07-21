@@ -82,6 +82,12 @@ VALID_GAP_KIND = {
                          # suspect rather than flagging a missing one: 02's Glencore -> Umicore cobalt
                          # edge rests on a 2019-05-29 release, and Glencore idled the Mutanda mine
                          # shortly after it was published.
+    "lapsed",            # THE COMPANY STOPPED SAYING IT. Distinct from stale-evidence, where an old
+                         # source still stands: here a NEWER filing has gone silent, and that silence is
+                         # itself evidence. 02's POSCO offtake row is dated FY2024 because FY2025 does
+                         # not mention POSCO at all; the Ford, LG and Samsung SDI MoUs appear in FY2023
+                         # and FY2024 and vanish from FY2025, suggesting they never converted. Any map
+                         # that re-reads a filer year over year will meet this.
     "out-of-scope",      # the counterparty IS disclosed, but is not on this map's roster, so the edge
                          # cannot be drawn. 02's Syrah returned zero edges for exactly this reason, and
                          # the repo's own lesson is that a worker returning nothing may be reporting a
@@ -397,7 +403,8 @@ def selftest():
                       {**good_gap, "kind": "unevidenced-flag"},
                       {**good_gap, "kind": "undisclosed"},
                       {**good_gap, "kind": "stale-evidence"},
-                      {**good_gap, "kind": "out-of-scope"}], False),
+                      {**good_gap, "kind": "out-of-scope"},
+                      {**good_gap, "kind": "lapsed"}], False),
         ("control: a CLOSED gap is still a valid row",
          check_gaps, [{**good_gap, "status": "closed"}], False),
     ]

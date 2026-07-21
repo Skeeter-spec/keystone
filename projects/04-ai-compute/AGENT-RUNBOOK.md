@@ -60,3 +60,32 @@ gap_id,kind,subject,sought,searched,found_instead,blocks,would_close_it,status,l
   contradict anything.
 
 These render on the map under **What the filings won't say**, with the open count on the front page.
+
+## Ending a burst: one heading for doubt, and rows in the same commit
+
+Write everything you are unsure about under exactly this heading:
+
+```
+## HONEST WEAKNESSES
+```
+
+Not "fragilities", not "omissions", not "limits of this evidence". Those are all real headings used by
+real bursts in this repo, and on 2026-07-21 a retroactive sweep that grepped for the phrases it expected
+FOUND ONE BLOCK AND MISSED TWO. Sitting in the missed ones: an offtake whose counterparty had vanished
+from the latest filing, and an edge under an active default notice whose cure deadline had already
+passed. A convention beats a regex, because the regex is what failed.
+
+Then, **in the same commit**, every item under that heading that is a claim about evidence becomes a row
+in `data/gaps.csv`. A weakness described only in prose is invisible to a reader of the map, which is the
+whole failure this repo spent 2026-07-20 fixing. The log explains; the CSV is what renders.
+
+Before you finish, run both verifiers. They ask different questions:
+
+```
+python3 tools/verify_edges.py   <project>   does each EDGE's source name both endpoints?
+python3 tools/verify_sources.py <project>   does each FINANCIAL FIGURE's source name the company?
+```
+
+Neither is in `gate.sh`, because both need the network and a gate that needs wifi gives different
+answers on different wifi. `verify_sources.py` is what caught a tier-1 row in the flagship map citing a
+different company's annual results: same name prefix, different listed company, different stock code.
