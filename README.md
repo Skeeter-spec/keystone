@@ -185,4 +185,4 @@ exactly the same clean result as a repo that is genuinely clean.
 
 ## License
 
-Released under AGPL 3.0. You may read, run, and build on this freely under those terms. For other licensing, contact the author.
+Released under AGPL 3.0. You may read, run, and build on this freely under those terms. For other licensing, contact the author at scholarkeaton@protonmail.com.

@@ -17,8 +17,8 @@ fetched, which is exactly the state that hid a row costed from the wrong company
 🔴 SCOPE FOOTERS, and this is the one that matters. review.py printed "No advisory findings: nothing is
 presented as more settled than its evidence supports" -- a REPO-WIDE claim -- from a checker that opens
 three of five data files and has never fetched a URL. I read my own clean output as completeness and
-reported it that way; only Keaton asking "are we leaving work behind?" surfaced it. Both review.py and
-gate.sh now state what they did NOT examine, on every run. The scope list is DERIVED from the same
+reported it that way; only the author asking "are we leaving work behind?" surfaced it. Both review.py
+and gate.sh now state what they did NOT examine, on every run. The scope list is DERIVED from the same
 constant run() loads, so the two cannot drift -- a hand-typed "we checked X, Y, Z" is a copy, and copies
 rot. A clean result that does not name what it did not look at is a false claim you will believe.
 

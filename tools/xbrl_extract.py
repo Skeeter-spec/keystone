@@ -7,7 +7,7 @@
 WHY THIS EXISTS. On 2026-07-20 this extractor was hand-written three times in one session, and each
 rewrite had to re-earn the same four lessons. Three of them were caught only because I happened to print
 the candidates and look; the fourth was caught only because I happened to notice a date. "I will remember
-to look" is not a mechanism, and Keaton's rule is the right one: a solution that can be mechanized gets
+to look" is not a mechanism, and the author's rule is the right one: a solution that can be mechanized gets
 mechanized, not pushed onto a human.
 
 The four traps, all measured on real filings that day:
