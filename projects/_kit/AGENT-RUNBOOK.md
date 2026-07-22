@@ -12,6 +12,38 @@ Shared schema across every Keystone map. Never invent figures; every number and 
 - RELATIONSHIPS: read a company's latest filing customer/supplier/risk sections; add supplier side edges to
   data/relationships.csv with a cited evidence_source.
 
+## Before the fan-out: PILOT THE YIELD PATTERN ON ONE DOCUMENT YOURSELF
+
+**Measured 2026-07-22 on 05-pharma, the first burst in this repo to come in UNDER its estimate.**
+Before writing a single worker prompt, open ONE document by hand and find the sentence shape the whole
+burst depends on. On 05 that was Pfizer's 10-K disclosing customer concentration by name:
+
+> "The following summarizes revenue, as a percentage of Total revenues, from our three largest U.S.
+> wholesaler customers... McKesson, Inc. 25% / Cencora, Inc. 16% / Cardinal Health, Inc. 13%"
+
+That verbatim example, pasted into the prompts, produced **17 of the map's 47 edges**. One document of
+your own time, and the fan-out stops being a gamble.
+
+🔑 **THE GENERALISABLE FORM: FIND THE DISCLOSURE THE FILER IS REQUIRED TO MAKE.** A voluntary
+disclosure says "our largest customer"; a MANDATORY one has to print the name. Pharma's is the >10%
+customer-concentration rule. Every map has an equivalent, and identifying it is a cheap pre-registration
+step that belongs in FOUNDATION.md before anyone spends a worker on it.
+
+⚠ **And when you mint the vocabulary, walk the map's LAYER TAXONOMY and check every adjacent pair has a
+term.** 05 shipped `distributes-for` (distributor -> the manufacturer whose product it moves) and missed
+distributor -> pharmacy entirely, so a correct, well-sourced edge had to wear a wrong label until
+`distributes-to` was added mid-burst. The layers are already written down in `map.json`; read them.
+
+🔴 **A WORKER'S "I COULD NOT REACH IT" IS A QUEUE FOR YOU, NOT A CONCLUSION.** On 05, two of three
+`unreachable` findings were wrong: the FTC PBM report was filed unreachable after two 404s and is live
+at a different URL (it settles a whole chokepoint hypothesis), and congress.gov 403s a fetcher but loads
+in a browser, where reading it showed the worker's premise was also wrong. Re-check every null before
+it hardens into a gap row.
+
+⚠ **Give each worker its OWN gap_id prefix.** Two workers on 05 independently numbered their rows
+`g01..g11` and the ids collided on merge. `check_data.py` now fails the gate on duplicates, but the
+cheap fix is upstream: say `gap-05-<worker>-<n>` in the prompt.
+
 ## Chokepoint discipline (applies whenever chokepoint=yes is set)
 A chokepoint is a node the value chain genuinely CANNOT route around, not merely a big or important
 player. Target roughly 15 to 25 percent of a map's nodes, no more.

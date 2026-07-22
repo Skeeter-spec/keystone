@@ -7,16 +7,53 @@
   "storage_key": "aerospace-map",
   "export_filename": "aerospace-map-notes.json",
   "layers": [
-    {"role": "titanium-supplier", "label": "Titanium suppliers", "desc": "Produce aerospace-grade titanium sponge, ingot and mill products"},
-    {"role": "structural-castings", "label": "Casting makers", "desc": "Cast and forge large titanium and superalloy structural components"},
-    {"role": "engine-maker", "label": "Jet engines", "desc": "Design and manufacture commercial and military jet engines"},
-    {"role": "tier1-systems", "label": "Systems suppliers", "desc": "Supply landing gear, seats, nacelles, hydraulics and integrated systems"},
-    {"role": "avionics", "label": "Avionics suppliers", "desc": "Provide flight control, navigation and cabin electronics"},
-    {"role": "airframe-oem", "label": "Airframe makers", "desc": "Design and assemble commercial jetliners and regional aircraft"},
-    {"role": "defense-prime", "label": "Defense primes", "desc": "Build military aircraft, missiles and defense systems"},
-    {"role": "mro", "label": "MRO providers", "desc": "Provide maintenance, repair and overhaul for commercial aircraft"},
-    {"role": "lessor", "label": "Aircraft lessors", "desc": "Finance and lease commercial aircraft to airlines"}
+    {
+      "role": "titanium-supplier",
+      "label": "Titanium suppliers",
+      "desc": "Produce aerospace-grade titanium sponge, ingot and mill products"
+    },
+    {
+      "role": "structural-castings",
+      "label": "Casting makers",
+      "desc": "Cast and forge large titanium and superalloy structural components"
+    },
+    {
+      "role": "engine-maker",
+      "label": "Jet engines",
+      "desc": "Design and manufacture commercial and military jet engines"
+    },
+    {
+      "role": "tier1-systems",
+      "label": "Systems suppliers",
+      "desc": "Supply landing gear, seats, nacelles, hydraulics and integrated systems"
+    },
+    {
+      "role": "avionics",
+      "label": "Avionics suppliers",
+      "desc": "Provide flight control, navigation and cabin electronics"
+    },
+    {
+      "role": "airframe-oem",
+      "label": "Airframe makers",
+      "desc": "Design and assemble commercial jetliners and regional aircraft"
+    },
+    {
+      "role": "defense-prime",
+      "label": "Defense primes",
+      "desc": "Build military aircraft, missiles and defense systems"
+    },
+    {
+      "role": "mro",
+      "label": "MRO providers",
+      "desc": "Provide maintenance, repair and overhaul for commercial aircraft"
+    },
+    {
+      "role": "lessor",
+      "label": "Aircraft lessors",
+      "desc": "Finance and lease commercial aircraft to airlines"
+    }
   ],
+  "relationship_types": [],
   "chokepoint_why": {
     "Boeing": "No third manufacturer builds and certifies 150+ seat jetliners at commercial scale, and airlines cannot route around Boeing for large narrowbody and widebody orders. The acquisition of Spirit AeroSystems completed in December 2025 concentrated the fuselage bottleneck inside Boeing itself.",
     "Airbus": "Airbus is the other half of the large jetliner duopoly with Boeing, and airlines have no third route around it for large aircraft orders. COMAC's C919 remains reliant on Western engines and avionics, failing to break the Boeing Airbus duopoly at scale as of 2026.",

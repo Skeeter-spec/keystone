@@ -7,14 +7,54 @@
   "storage_key": "pharma-map",
   "export_filename": "pharma-map-notes.json",
   "layers": [
-    {"role": "api-maker", "label": "API producers", "desc": "Manufacture active pharmaceutical ingredients and chemical precursors"},
-    {"role": "originator", "label": "Drug originators", "desc": "Develop and market branded drugs across therapeutic areas"},
-    {"role": "generics-maker", "label": "Generic manufacturers", "desc": "Produce generic versions of off-patent drugs"},
-    {"role": "cdmo", "label": "Contract manufacturers", "desc": "Provide sterile fill-finish, biologics, and small-molecule manufacturing for originators and generics"},
-    {"role": "distributor", "label": "Distributors", "desc": "Move finished pharmaceuticals from makers to pharmacies and hospitals"},
-    {"role": "pharmacy", "label": "Pharmacies", "desc": "Dispense drugs to patients at retail and specialty locations"},
-    {"role": "pbm", "label": "Pharmacy benefit managers", "desc": "Administer insurance claims and manage formulary access and rebates"},
-    {"role": "payer", "label": "Payers", "desc": "Provide health insurance and fund drug purchases"}
+    {
+      "role": "api-maker",
+      "label": "API producers",
+      "desc": "Manufacture active pharmaceutical ingredients and chemical precursors"
+    },
+    {
+      "role": "originator",
+      "label": "Drug originators",
+      "desc": "Develop and market branded drugs across therapeutic areas"
+    },
+    {
+      "role": "generics-maker",
+      "label": "Generic manufacturers",
+      "desc": "Produce generic versions of off-patent drugs"
+    },
+    {
+      "role": "cdmo",
+      "label": "Contract manufacturers",
+      "desc": "Provide sterile fill-finish, biologics, and small-molecule manufacturing for originators and generics"
+    },
+    {
+      "role": "distributor",
+      "label": "Distributors",
+      "desc": "Move finished pharmaceuticals from makers to pharmacies and hospitals"
+    },
+    {
+      "role": "pharmacy",
+      "label": "Pharmacies",
+      "desc": "Dispense drugs to patients at retail and specialty locations"
+    },
+    {
+      "role": "pbm",
+      "label": "Pharmacy benefit managers",
+      "desc": "Administer insurance claims and manage formulary access and rebates"
+    },
+    {
+      "role": "payer",
+      "label": "Payers",
+      "desc": "Provide health insurance and fund drug purchases"
+    }
+  ],
+  "relationship_types": [
+    "competes-with",
+    "distributes-for",
+    "distributes-to",
+    "invests-in",
+    "manufactures-for",
+    "negotiates-rebates-with"
   ],
   "chokepoint_why": {
     "Zhejiang Huahai Pharmaceutical": "A large share of the world's generic drug active pharmaceutical ingredients come from a small number of Chinese and Indian plants; Huahai's 2018 valsartan/sartan API contamination triggered a global multi-country recall, showing how concentrated this layer is and how a single plant failure can halt production worldwide.",

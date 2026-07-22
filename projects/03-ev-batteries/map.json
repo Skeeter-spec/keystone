@@ -7,16 +7,53 @@
   "storage_key": "ev-batteries-map",
   "export_filename": "ev-batteries-map-notes.json",
   "layers": [
-    {"role": "miner", "label": "Miners", "desc": "Pull lithium, nickel, cobalt and graphite out of the ground"},
-    {"role": "refiner", "label": "Refiners", "desc": "Turn ore and brine into battery grade chemicals"},
-    {"role": "cathode-maker", "label": "Cathode makers", "desc": "Build the positive electrode material and its precursor"},
-    {"role": "anode-maker", "label": "Anode makers", "desc": "Purify and graphitize the negative electrode material"},
-    {"role": "electrolyte-maker", "label": "Electrolyte makers", "desc": "Formulate the electrolyte and the lithium salt it carries"},
-    {"role": "separator-maker", "label": "Separator makers", "desc": "Coat the precision film that keeps the electrodes apart"},
-    {"role": "cell-maker", "label": "Cell makers", "desc": "Assemble the finished cells and packs"},
-    {"role": "automaker", "label": "Automakers", "desc": "Buy the packs and build the vehicles"},
-    {"role": "recycler", "label": "Recyclers", "desc": "Recover metal from scrap and spent cells"}
+    {
+      "role": "miner",
+      "label": "Miners",
+      "desc": "Pull lithium, nickel, cobalt and graphite out of the ground"
+    },
+    {
+      "role": "refiner",
+      "label": "Refiners",
+      "desc": "Turn ore and brine into battery grade chemicals"
+    },
+    {
+      "role": "cathode-maker",
+      "label": "Cathode makers",
+      "desc": "Build the positive electrode material and its precursor"
+    },
+    {
+      "role": "anode-maker",
+      "label": "Anode makers",
+      "desc": "Purify and graphitize the negative electrode material"
+    },
+    {
+      "role": "electrolyte-maker",
+      "label": "Electrolyte makers",
+      "desc": "Formulate the electrolyte and the lithium salt it carries"
+    },
+    {
+      "role": "separator-maker",
+      "label": "Separator makers",
+      "desc": "Coat the precision film that keeps the electrodes apart"
+    },
+    {
+      "role": "cell-maker",
+      "label": "Cell makers",
+      "desc": "Assemble the finished cells and packs"
+    },
+    {
+      "role": "automaker",
+      "label": "Automakers",
+      "desc": "Buy the packs and build the vehicles"
+    },
+    {
+      "role": "recycler",
+      "label": "Recyclers",
+      "desc": "Recover metal from scrap and spent cells"
+    }
   ],
+  "relationship_types": [],
   "chokepoint_why": {
     "CATL": "The world's largest EV cell maker, over a third of global output on its own, and most non-Chinese automakers rely on it for at least one platform. The single hardest node to route around in this chain.",
     "BYD": "The second largest cell maker and the only one that is also a top tier automaker, so it does not depend on the rest of the chain the way other cell makers do. Vertically integrated from cells to vehicles, which makes it a chokepoint on the supply and the demand side at once.",

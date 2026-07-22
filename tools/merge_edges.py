@@ -19,7 +19,7 @@ This merges them, and REFUSES rather than guesses:
 Run tools/verify_edges.py first: it refetches each cited URL. This tool does no network work and
 trusts nothing about the sources beyond their shape.
 """
-import csv, glob, pathlib, shutil, sys
+import csv, glob, json, pathlib, shutil, sys
 
 VOCAB = {"supplies-ore-to", "refines-for", "separates-for", "supplies-magnets-to",
          "supplies-chemicals-to", "distributes-for", "offtake-with", "invests-in",
@@ -59,14 +59,43 @@ def key(r):
     return (r["from_company"], r["to_company"], r["relationship_type"])
 
 
-def validate(staged, valid_companies):
+def allowed_types(root):
+    """The vocabulary THIS map may use. Returns (set, declared?).
+
+    🔴 A UNION IS NOT A VOCABULARY. VOCAB above is every term any map has ever needed, and it grew to
+    23 across five maps. Measured 2026-07-22: a `supplies-api-to` edge -- a PHARMA term -- staged onto
+    06-shipping between two real Maersk/MSC nodes merged CLEANLY, exit 0, "+1 new". Nothing was wrong
+    with the file; the checker simply had no idea which map it was looking at. That is the chokepoint
+    TRUE/FALSE bug again: workers agree on the column and disagree on the value, and the union made
+    every map's disagreement legal everywhere.
+
+    So a map declares `relationship_types` in its own map.json, beside `layers`, which is where this
+    repo already keeps per-map data. An UNDECLARED map falls back to the union and says so loudly.
+    An EMPTY declaration is deliberate and means "nobody has decided this map's vocabulary yet" -- it
+    refuses every edge until a burst author declares one, which mechanizes the rule 04 wrote into this
+    file's own comments: the vocabulary must exist BEFORE the fan-out, not after its output is rejected.
+    """
+    mj = root / "map.json"
+    if mj.exists():
+        cfg = json.loads(mj.read_text())
+        if "relationship_types" in cfg:
+            return set(cfg["relationship_types"]), True
+    return VOCAB, False
+
+
+def validate(staged, valid_companies, vocab=None, declared=True):
     problems = []
+    vocab = VOCAB if vocab is None else vocab
+    if declared and not vocab and staged:
+        problems.append("this map's map.json declares relationship_types: [] -- no vocabulary has been "
+                        "decided for it yet. Add the types this burst needs to map.json before merging.")
     for r in staged:
         for side in ("from_company", "to_company"):
             if r[side] not in valid_companies:
                 problems.append(f"{r[side]!r} is not a company in companies.csv (edge {key(r)})")
-        if r["relationship_type"] not in VOCAB:
-            problems.append(f"{r['relationship_type']!r} is outside the vocabulary (edge {key(r)})")
+        if r["relationship_type"] not in vocab:
+            where = "this map's declared relationship_types" if declared else "the shared vocabulary"
+            problems.append(f"{r['relationship_type']!r} is outside {where} (edge {key(r)})")
         if not r.get("evidence_source", "").strip():
             problems.append(f"edge {key(r)} has no evidence_source")
         if r.get("source_tier", "").strip() not in {"1", "2", "3"}:
@@ -104,7 +133,11 @@ def run(project, apply):
         print("no staged edges found")
         return 1
 
-    problems = validate(staged, companies)
+    vocab, declared = allowed_types(root)
+    if not declared:
+        print(f"  NOTE: {root.name}/map.json declares no relationship_types; falling back to the "
+              f"shared {len(VOCAB)}-term union, which is not this map's vocabulary.")
+    problems = validate(staged, companies, vocab, declared)
     if problems:
         print(f"ABORT. {len(problems)} problem(s) in the staged edges, nothing written:")
         for p in problems:
@@ -149,6 +182,47 @@ def selftest():
         if not ok:
             failures.append(name)
 
+    # --- per-map vocabulary. THE REAL CASE, kept as a permanent fixture: a `supplies-api-to` edge
+    # (05-pharma's term) staged onto 06-shipping between two real Maersk/MSC nodes merged CLEANLY on
+    # 2026-07-22, exit 0, "+1 new", because the shared VOCAB is a union and knew nothing about maps.
+    pharma_on_shipping = {**good, "from_company": "A Corp", "to_company": "B Corp",
+                          "relationship_type": "supplies-api-to"}
+    vocab_cases = [
+        ("🔴 the REAL case: a pharma type on a shipping map is REFUSED",
+         pharma_on_shipping, {"sails-for", "charters-to"}, True, True),
+        ("...and the SAME row is accepted by the map that owns the term",
+         pharma_on_shipping, {"supplies-api-to", "manufactures-for"}, True, False),
+        ("an EMPTY declaration refuses every edge until someone decides",
+         good, set(), True, True),
+        ("NEGATIVE: an undeclared map still merges on the union, so nothing breaks",
+         good, VOCAB, False, False),
+    ]
+    for name, row, vocab, declared, expect in vocab_cases:
+        fired = bool(validate([row], companies, vocab, declared))
+        ok = fired == expect
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(name)
+
+    # END-TO-END over run(), because a rule that is never CALLED reports exactly what a clean repo
+    # reports: a mutant that deleted the call site once survived a fully green suite in this repo.
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        proj = pathlib.Path(td) / "99-fake"
+        (proj / "data" / "_incoming").mkdir(parents=True)
+        with open(proj / "data" / "companies.csv", "w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=["company"]); w.writeheader()
+            w.writerow({"company": "A Corp"}); w.writerow({"company": "B Corp"})
+        (proj / "map.json").write_text(json.dumps({"relationship_types": ["refines-for"]}))
+        with open(proj / "data" / "_incoming" / "edges_x.csv", "w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=FIELDS); w.writeheader()
+            w.writerow(pharma_on_shipping)
+        rc = run(str(proj), False)
+        ok = rc == 1
+        print(f"  {'ok  ' if ok else 'DEAD'}  end-to-end: run() itself refuses the foreign type (exit {rc})")
+        if not ok:
+            failures.append("end-to-end run() vocabulary")
+
     # dedupe: same edge twice is a confirmation, not two rows; better tier wins
     rows, added, confirmed = merge([good], [{**good, "source_tier": "3"}])
     ok = len(rows) == 1 and added == 0 and confirmed == 1 and rows[0]["source_tier"] == "1"
@@ -164,7 +238,10 @@ def selftest():
     if failures:
         print(f"SELFTEST FAILED: {failures}")
         return 2
-    print(f"SELFTEST PASSED. {len(cases) + 2} cases.")
+    # Counted, not typed: this line said "7 cases" while 12 ran, because the total was a hand-kept
+    # copy of the case list. A suite that misreports its own size is the smallest possible version of
+    # the bug this repo keeps hitting -- a copy rots, a pointer does not.
+    print(f"SELFTEST PASSED. {len(cases) + len(vocab_cases) + 3} cases.")
     return 0
 
 

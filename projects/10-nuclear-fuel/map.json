@@ -7,15 +7,48 @@
   "storage_key": "nuclear-fuel-map",
   "export_filename": "nuclear-fuel-map-notes.json",
   "layers": [
-    {"role": "uranium-miner", "label": "Miners", "desc": "Extract uranium ore from the ground"},
-    {"role": "converter", "label": "Converters", "desc": "Transform uranium oxide into uranium hexafluoride"},
-    {"role": "enricher", "label": "Enrichers", "desc": "Increase the U 235 concentration through centrifugation"},
-    {"role": "fuel-fabricator", "label": "Fuel fabricators", "desc": "Assemble enriched uranium into reactor fuel assemblies"},
-    {"role": "reactor-vendor", "label": "Reactor vendors", "desc": "Design and build nuclear reactors"},
-    {"role": "utility", "label": "Utilities", "desc": "Operate nuclear power plants"},
-    {"role": "reprocessor", "label": "Reprocessors", "desc": "Extract usable material from spent reactor fuel"},
-    {"role": "trader", "label": "Traders", "desc": "Buy and sell enriched uranium and nuclear materials"}
+    {
+      "role": "uranium-miner",
+      "label": "Miners",
+      "desc": "Extract uranium ore from the ground"
+    },
+    {
+      "role": "converter",
+      "label": "Converters",
+      "desc": "Transform uranium oxide into uranium hexafluoride"
+    },
+    {
+      "role": "enricher",
+      "label": "Enrichers",
+      "desc": "Increase the U 235 concentration through centrifugation"
+    },
+    {
+      "role": "fuel-fabricator",
+      "label": "Fuel fabricators",
+      "desc": "Assemble enriched uranium into reactor fuel assemblies"
+    },
+    {
+      "role": "reactor-vendor",
+      "label": "Reactor vendors",
+      "desc": "Design and build nuclear reactors"
+    },
+    {
+      "role": "utility",
+      "label": "Utilities",
+      "desc": "Operate nuclear power plants"
+    },
+    {
+      "role": "reprocessor",
+      "label": "Reprocessors",
+      "desc": "Extract usable material from spent reactor fuel"
+    },
+    {
+      "role": "trader",
+      "label": "Traders",
+      "desc": "Buy and sell enriched uranium and nuclear materials"
+    }
   ],
+  "relationship_types": [],
   "chokepoint_why": {
     "Orano": "One of only four commercial enrichers globally and a major conversion operator at Malvesi and Comurhex. Also runs La Hague, the world's largest commercial spent fuel reprocessing plant.",
     "Rosatom / TENEX": "Russia controls 40 to 46 percent of global enrichment capacity, making it the single largest node in the cycle. Partially restricted by the US Prohibiting Russian Uranium Imports Act effective 2024.",

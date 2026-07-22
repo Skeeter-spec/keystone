@@ -171,8 +171,30 @@ def check_timeseries(rows, label):
 
 
 def check_gaps(rows, label):
-    """Rule 8. An absence is only evidence if it says where it looked."""
+    """Rule 8. An absence is only evidence if it says where it looked.
+
+    🔴 AND ITS ID MUST BE UNIQUE, which this rule did not check until 2026-07-22. On that day two
+    parallel research workers each numbered their own staging file's rows `g01..g11`. Neither did
+    anything wrong -- nothing had told them the id namespace was shared -- and merged into one
+    gaps.csv the ids collided. It was caught BY EYE, which is exactly the wrong instrument, and the
+    gate was measured saying `data clean` on a gaps.csv holding a duplicate id. gap_id is the key
+    review.py's SUPPRESSION joins on (a subject named in an open gap stops being reported), so a
+    duplicate silently makes one of the two rows unaddressable while both still render.
+    """
     problems = []
+    seen = {}
+    for i, r in enumerate(rows, start=2):
+        gid = g(r, "gap_id")
+        if gid:
+            if gid in seen:
+                problems.append(
+                    f"{label}:{i} gap_id {gid!r} is already used by row {seen[gid]}. Gap ids are the key "
+                    f"suppression joins on, so a duplicate makes one row unaddressable while both render. "
+                    f"Give each worker its own id prefix when a burst stages gaps in parallel")
+            else:
+                seen[gid] = i
+        else:
+            problems.append(f"{label}:{i} has no gap_id")
     for i, r in enumerate(rows, start=2):
         who = g(r, "gap_id") or g(r, "subject") or f"row {i}"
         if not g(r, "searched"):
@@ -439,6 +461,14 @@ def selftest():
         # which matters because a rule that flags every gap would just get the gaps deleted.
         ("control: a well formed gap (the real TSMC case) must NOT fire",
          check_gaps, [{**good_gap}], False),
+        # 🔴 THE REAL CASE, kept as a permanent fixture: two workers each numbered their staging rows
+        # g01.. on 2026-07-22 and the gate said `data clean` on the collision.
+        ("rule 8: 🔴 two gap rows sharing an id (the real g01 collision)",
+         check_gaps, [{**good_gap, "gap_id": "g01"}, {**good_gap, "gap_id": "g01"}], True),
+        ("rule 8: NEGATIVE -- two DIFFERENT ids must stay silent",
+         check_gaps, [{**good_gap, "gap_id": "g01"}, {**good_gap, "gap_id": "g02"}], False),
+        ("rule 8: a gap row with no gap_id at all",
+         check_gaps, [{**good_gap, "gap_id": ""}], True),
         ("rule 8: a gap that does not say where it looked",
          check_gaps, [{**good_gap, "searched": ""}], True),
         ("rule 8: a gap with no would_close_it is a permanent excuse",
@@ -455,13 +485,17 @@ def selftest():
         ("control: a real contradiction naming two sources must NOT fire",
          check_gaps, [{**good_gap, "kind": "contradiction",
                        "searched": "Nvidia FY2026 10-K; Microsoft FY2025 10-K"}], False),
+        # Each row carries its OWN gap_id. It did not need to before the uniqueness rule landed
+        # (2026-07-22) and reusing one fixture id was harmless; once ids are checked, six identical
+        # ids made this kinds control fail for a reason that has nothing to do with kinds. The
+        # fixture was under-specified, not the rule -- so the fixture is what changed.
         ("control: every other valid kind must NOT fire",
-         check_gaps, [{**good_gap, "kind": "unreachable"},
-                      {**good_gap, "kind": "unevidenced-flag"},
-                      {**good_gap, "kind": "undisclosed"},
-                      {**good_gap, "kind": "stale-evidence"},
-                      {**good_gap, "kind": "out-of-scope"},
-                      {**good_gap, "kind": "lapsed"}], False),
+         check_gaps, [{**good_gap, "gap_id": "g-a", "kind": "unreachable"},
+                      {**good_gap, "gap_id": "g-b", "kind": "unevidenced-flag"},
+                      {**good_gap, "gap_id": "g-c", "kind": "undisclosed"},
+                      {**good_gap, "gap_id": "g-d", "kind": "stale-evidence"},
+                      {**good_gap, "gap_id": "g-e", "kind": "out-of-scope"},
+                      {**good_gap, "gap_id": "g-f", "kind": "lapsed"}], False),
         ("control: a CLOSED gap is still a valid row",
          check_gaps, [{**good_gap, "status": "closed"}], False),
     ]

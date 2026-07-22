@@ -7,18 +7,63 @@
   "storage_key": "food-fertilizer-map",
   "export_filename": "food-fertilizer-map-notes.json",
   "layers": [
-    {"role": "phosphate-rock-miner", "label": "Phosphate rock miners", "desc": "Extract phosphate rock from deposits and beneficiate it"},
-    {"role": "phosphate-maker", "label": "Phosphate fertilizer producers", "desc": "Process phosphate rock into fertilizer products"},
-    {"role": "potash-maker", "label": "Potash producers", "desc": "Mine and process potash salts into fertilizer"},
-    {"role": "nitrogen-maker", "label": "Nitrogen fertilizer producers", "desc": "Synthesize ammonia and nitrogen fertilizers from natural gas"},
-    {"role": "salt-miner", "label": "Salt miners", "desc": "Extract salt, often alongside potash production"},
-    {"role": "specialty-minerals", "label": "Specialty mineral suppliers", "desc": "Supply specialized mineral and trace element fertilizers"},
-    {"role": "seed-agrochem", "label": "Seed and agrochemical companies", "desc": "Supply commercial seeds and crop protection chemicals"},
-    {"role": "agrochem", "label": "Agrochemical specialists", "desc": "Develop and supply crop protection chemicals"},
-    {"role": "processor", "label": "Commodity processors", "desc": "Process agricultural commodities into ingredients and products"},
-    {"role": "grain-trader", "label": "Grain and oilseed traders", "desc": "Originate, store, transport and trade grain and oilseeds globally"},
-    {"role": "ag-retailer", "label": "Agricultural retailers", "desc": "Distribute seeds, fertilizers and chemicals to farmers"}
+    {
+      "role": "phosphate-rock-miner",
+      "label": "Phosphate rock miners",
+      "desc": "Extract phosphate rock from deposits and beneficiate it"
+    },
+    {
+      "role": "phosphate-maker",
+      "label": "Phosphate fertilizer producers",
+      "desc": "Process phosphate rock into fertilizer products"
+    },
+    {
+      "role": "potash-maker",
+      "label": "Potash producers",
+      "desc": "Mine and process potash salts into fertilizer"
+    },
+    {
+      "role": "nitrogen-maker",
+      "label": "Nitrogen fertilizer producers",
+      "desc": "Synthesize ammonia and nitrogen fertilizers from natural gas"
+    },
+    {
+      "role": "salt-miner",
+      "label": "Salt miners",
+      "desc": "Extract salt, often alongside potash production"
+    },
+    {
+      "role": "specialty-minerals",
+      "label": "Specialty mineral suppliers",
+      "desc": "Supply specialized mineral and trace element fertilizers"
+    },
+    {
+      "role": "seed-agrochem",
+      "label": "Seed and agrochemical companies",
+      "desc": "Supply commercial seeds and crop protection chemicals"
+    },
+    {
+      "role": "agrochem",
+      "label": "Agrochemical specialists",
+      "desc": "Develop and supply crop protection chemicals"
+    },
+    {
+      "role": "processor",
+      "label": "Commodity processors",
+      "desc": "Process agricultural commodities into ingredients and products"
+    },
+    {
+      "role": "grain-trader",
+      "label": "Grain and oilseed traders",
+      "desc": "Originate, store, transport and trade grain and oilseeds globally"
+    },
+    {
+      "role": "ag-retailer",
+      "label": "Agricultural retailers",
+      "desc": "Distribute seeds, fertilizers and chemicals to farmers"
+    }
   ],
+  "relationship_types": [],
   "chokepoint_why": {
     "OCP Group": "Morocco holds roughly 70 percent of the world's known phosphate rock reserves and OCP Group, state owned, is the dominant miner and processor of that rock into fertilizer. There is no comparable second country to route around Morocco's reserve base over any multi decade horizon, making this the single hardest physical chokepoint in the food and fertilizer chain.",
     "Yara International ASA": "One of the two largest Western nitrogen producers; ammonia and urea synthesis requires natural gas and cost and availability move directly with regional gas prices and gas access. The 2021 to 2023 European gas price spike that curtailed Yara's own ammonia output showed how exposed the nitrogen supply chain is to gas market stress.",

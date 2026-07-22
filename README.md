@@ -79,6 +79,10 @@ Measured on 04 in one session, the sequence that costs least is **not** the obvi
    them. Verify the inheritance before building anything on top of it.
 3. **Then the research bursts:** financials by route (`shared/SOURCING-ROUTES.md`), then relationships.
    Ask workers for **dependencies**; `competes-with` is cheap and they over-produce it.
+   **Pilot the yield pattern on ONE document yourself first, and declare the map's
+   `relationship_types` in its `map.json` before anyone stages an edge.** 05 found the sentence shape
+   the whole burst rested on by opening a single 10-K by hand, pasted it into the prompts, and got 17
+   of its 47 edges from that one pattern. See `projects/_kit/AGENT-RUNBOOK.md`.
 4. **Both verifiers, then `merge_edges.py`, then rebuild, then `gate.sh` and `review.py`.**
 5. **File `gaps.csv` rows in the same commit as the burst.** Expect the famous relationship to be
    undisclosed: no hyperscaler names Nvidia in its own 10-K, and TSMC's 20-F names no customer at all.

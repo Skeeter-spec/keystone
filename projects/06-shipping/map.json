@@ -7,19 +7,68 @@
   "storage_key": "shipping-map",
   "export_filename": "shipping-map-notes.json",
   "layers": [
-    {"role": "shipbuilder", "label": "Shipbuilders", "desc": "Build large commercial vessels and tankers on multiyear order books"},
-    {"role": "liner-operator", "label": "Liner operators", "desc": "Own and operate container ships and bulk carriers in global routes and regional services"},
-    {"role": "port-operator", "label": "Port operators", "desc": "Develop and operate container terminal facilities in major trade hubs"},
-    {"role": "terminal-operator", "label": "Terminal operators", "desc": "Operate container and breakbulk terminals inside port facilities"},
-    {"role": "canal-authority", "label": "Canal authorities", "desc": "Operate the Suez and Panama Canals as transit chokepoints for intercontinental trade"},
-    {"role": "strait-chokepoint", "label": "Strategic straits", "desc": "Geographic chokepoints including Hormuz, Malacca, Bab el Mandeb and Bosphorus"},
-    {"role": "box-lessor", "label": "Box lessors", "desc": "Lease dry containers and refrigerated containers to liners and forwarders"},
-    {"role": "freight-forwarder", "label": "Freight forwarders", "desc": "Book capacity from liners, consolidate small shipments, manage clearance"},
-    {"role": "logistics", "label": "Logistics operators", "desc": "Provide door to door supply chain management and last mile delivery"},
-    {"role": "classification-society", "label": "Classification societies", "desc": "Certify ship design, inspect hulls and machinery, issue class certificates"},
-    {"role": "p&i-insurer", "label": "P&I insurers", "desc": "Pool and reinsure liability, crew and cargo coverage for ocean going vessels"},
-    {"role": "national-authority", "label": "National authorities", "desc": "Exercise sovereign control over straits and maritime governance (Montreux Convention)"}
+    {
+      "role": "shipbuilder",
+      "label": "Shipbuilders",
+      "desc": "Build large commercial vessels and tankers on multiyear order books"
+    },
+    {
+      "role": "liner-operator",
+      "label": "Liner operators",
+      "desc": "Own and operate container ships and bulk carriers in global routes and regional services"
+    },
+    {
+      "role": "port-operator",
+      "label": "Port operators",
+      "desc": "Develop and operate container terminal facilities in major trade hubs"
+    },
+    {
+      "role": "terminal-operator",
+      "label": "Terminal operators",
+      "desc": "Operate container and breakbulk terminals inside port facilities"
+    },
+    {
+      "role": "canal-authority",
+      "label": "Canal authorities",
+      "desc": "Operate the Suez and Panama Canals as transit chokepoints for intercontinental trade"
+    },
+    {
+      "role": "strait-chokepoint",
+      "label": "Strategic straits",
+      "desc": "Geographic chokepoints including Hormuz, Malacca, Bab el Mandeb and Bosphorus"
+    },
+    {
+      "role": "box-lessor",
+      "label": "Box lessors",
+      "desc": "Lease dry containers and refrigerated containers to liners and forwarders"
+    },
+    {
+      "role": "freight-forwarder",
+      "label": "Freight forwarders",
+      "desc": "Book capacity from liners, consolidate small shipments, manage clearance"
+    },
+    {
+      "role": "logistics",
+      "label": "Logistics operators",
+      "desc": "Provide door to door supply chain management and last mile delivery"
+    },
+    {
+      "role": "classification-society",
+      "label": "Classification societies",
+      "desc": "Certify ship design, inspect hulls and machinery, issue class certificates"
+    },
+    {
+      "role": "p&i-insurer",
+      "label": "P&I insurers",
+      "desc": "Pool and reinsure liability, crew and cargo coverage for ocean going vessels"
+    },
+    {
+      "role": "national-authority",
+      "label": "National authorities",
+      "desc": "Exercise sovereign control over straits and maritime governance (Montreux Convention)"
+    }
   ],
+  "relationship_types": [],
   "chokepoint_why": {
     "China CSSC Holdings (CSSC)": "The world's largest shipbuilder by tonnage delivered following the August 2025 merger with rival China Shipbuilding Industry. China alone has built over half of global gross shipbuilding tonnage in recent years; losing this yard constrains the pace at which the entire fleet can be replaced, decarbonized or surged in crisis.",
     "HD Hyundai Heavy Industries": "One of Korea's three premier yards alongside Samsung Heavy and Hanwha Ocean. These four shipyards (China CSSC plus the three Korean yards) build the overwhelming majority of the world's large commercial vessels with multiyear order backlogs, constraining fleet renewal and decarbonization pace.",

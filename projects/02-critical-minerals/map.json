@@ -7,17 +7,69 @@
   "storage_key": "critical-minerals-map",
   "export_filename": "critical-minerals-map-notes.json",
   "layers": [
-    {"role": "miner", "label": "Miners", "desc": "Pull the ore out of the ground"},
-    {"role": "trader", "label": "Traders", "desc": "Aggregate and move concentrate"},
-    {"role": "refiner", "label": "Refiners", "desc": "Turn ore into usable metal and chemicals"},
-    {"role": "separator", "label": "Separators", "desc": "Split mixed rare earths into single elements"},
-    {"role": "battery-chemical-maker", "label": "Battery chemical makers", "desc": "Convert metal into cathode and anode chemicals"},
-    {"role": "anode-maker", "label": "Anode makers", "desc": "Build the negative electrode material"},
-    {"role": "cathode-maker", "label": "Cathode makers", "desc": "Build the positive electrode material"},
-    {"role": "magnet-maker", "label": "Magnet makers", "desc": "Sinter rare earths into permanent magnets"},
-    {"role": "battery-maker", "label": "Cell makers", "desc": "Assemble the finished battery cells"},
-    {"role": "recycler", "label": "Recyclers", "desc": "Recover metal from scrap and spent cells"},
-    {"role": "oem", "label": "Device makers", "desc": "Build the products you buy"}
+    {
+      "role": "miner",
+      "label": "Miners",
+      "desc": "Pull the ore out of the ground"
+    },
+    {
+      "role": "trader",
+      "label": "Traders",
+      "desc": "Aggregate and move concentrate"
+    },
+    {
+      "role": "refiner",
+      "label": "Refiners",
+      "desc": "Turn ore into usable metal and chemicals"
+    },
+    {
+      "role": "separator",
+      "label": "Separators",
+      "desc": "Split mixed rare earths into single elements"
+    },
+    {
+      "role": "battery-chemical-maker",
+      "label": "Battery chemical makers",
+      "desc": "Convert metal into cathode and anode chemicals"
+    },
+    {
+      "role": "anode-maker",
+      "label": "Anode makers",
+      "desc": "Build the negative electrode material"
+    },
+    {
+      "role": "cathode-maker",
+      "label": "Cathode makers",
+      "desc": "Build the positive electrode material"
+    },
+    {
+      "role": "magnet-maker",
+      "label": "Magnet makers",
+      "desc": "Sinter rare earths into permanent magnets"
+    },
+    {
+      "role": "battery-maker",
+      "label": "Cell makers",
+      "desc": "Assemble the finished battery cells"
+    },
+    {
+      "role": "recycler",
+      "label": "Recyclers",
+      "desc": "Recover metal from scrap and spent cells"
+    },
+    {
+      "role": "oem",
+      "label": "Device makers",
+      "desc": "Build the products you buy"
+    }
+  ],
+  "relationship_types": [
+    "competes-with",
+    "distributes-for",
+    "invests-in",
+    "offtake-with",
+    "supplies-chemicals-to",
+    "supplies-ore-to"
   ],
   "chokepoint_why": {
     "China Northern Rare Earth (Group) High-Tech": "The world's largest light rare earth producer; its transfer price sets China's domestic benchmark.",

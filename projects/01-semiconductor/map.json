@@ -53,6 +53,15 @@
       "desc": "Build the products you buy"
     }
   ],
+  "relationship_types": [
+    "competes-with",
+    "fabricates-for",
+    "invests-in",
+    "licenses-ip-to",
+    "packages-for",
+    "sells-equipment-to",
+    "supplies-components-to"
+  ],
   "chokepoint_why": {
     "Nvidia": "Dominant designer of the AI accelerators the whole industry is racing to buy.",
     "TSMC": "Fabricates most of the world's leading-edge chips; almost no one can replace it.",

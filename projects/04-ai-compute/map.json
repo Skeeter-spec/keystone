@@ -68,6 +68,14 @@
       "desc": "Train and deploy frontier foundation models"
     }
   ],
+  "relationship_types": [
+    "assembles-for",
+    "fabricates-for",
+    "invests-in",
+    "provides-compute-to",
+    "sells-equipment-to",
+    "supplies-components-to"
+  ],
   "chokepoint_why": {
     "Nvidia": "The dominant AI accelerator designer with CUDA software ecosystem that creates high switching costs even where rival silicon exists, reinforced by its own networking stack (NVLink and Mellanox InfiniBand) so clusters can be end to end Nvidia.",
     "SK hynix": "Leading supplier of high bandwidth memory to Nvidia; HBM output is a capacity constrained bottleneck across the industry with no fourth viable supplier.",
