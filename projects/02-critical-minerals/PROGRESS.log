@@ -203,3 +203,57 @@ grepped for phrases instead of reading: the POSCO offtake (FY2025 does not menti
 may have lapsed), the Ford/LG/Samsung SDI MoUs (non-binding, vanish from FY2025), and the Tesla offtake,
 which its own cited filing says is UNDER AN ACTIVE DEFAULT NOTICE with a cure deadline of 1 June 2026 --
 now seven weeks past, while the edge still renders as a plain offtake.
+
+2026-07-22 THE GAP ROWS WERE RIGHT AND THE PAGE NEVER SHOWED THEM. Checked this map the same way 05
+was checked. The good news first: 02 is mechanized exactly as well as 05 -- 8 gap rows, all THREE of
+its bare chokepoints named in them, and the unevidenced-chokepoint badge renders. An earlier claim
+this session that 02 was "Mapped without either mechanism behind it" was wrong and is retracted.
+
+🔴 WHAT WAS ACTUALLY BROKEN: three edges were each named by their OWN open gap row, and all three
+rendered clean at confidence "high". The worst was Syrah -> Tesla. The same annual report that
+evidences the 8kt/yr offtake also discloses that TESLA ALLEGED SYRAH DEFAULTED on conforming AAM
+samples with a cure deadline of 1 JUNE 2026, after which Tesla may terminate. That deadline passed
+seven weeks ago and the edge still drew as a live, high-confidence supply agreement. The gap row said
+so in its own words -- "The edge renders as a plain offtake and conveys none of this" -- which means
+a human wrote the finding down and nothing on the page ever read it. That is the whole defect, and it
+is the chokepoint-badge lesson repeating: the data knew, and the claim was drawn without it.
+
+⚠ THIS SHOWS UP IN 02 AND NOWHERE ELSE, AND THAT IS A COMPLIMENT TO 02. It is the only map whose gap
+rows name a specific edge as "A -> B". 01 and 05 record staleness against a COMPANY, which is vaguer
+and therefore unmatchable. 02 was precise enough for the mismatch to be detectable at all.
+
+FIXED IN THE RENDERER, NOT IN PROSE. shared/map-template.html now badges any edge named by an open
+lapsed/stale-evidence gap, in both the company drawer and the relationships table, reusing the
+chokepoint badge pattern rather than inventing a second one. Editing three descriptions would have
+fixed three rows; badging fixes every map and every gap row written from here. tools/review.py gains
+R8 for the offline half. The runbook now states the "A -> B" subject convention that makes both work.
+
+The three rows were also corrected on their own merits, which is separate from the badge:
+  - Syrah -> Tesla: the default notice and the passed deadline added FROM THE SAME ALREADY-CITED
+    FILING, so this completes the description rather than adding a source. high -> medium.
+  - Glencore -> Umicore: evidence is the 2019 release itself, six years older than anything else on
+    this map, covering supply sourced partly from Mutanda. high -> LOW.
+  - MP Materials -> Lynas: FY2022 filing, about three years old, not re-checked. high -> medium.
+Confidence is not something R8 reads, so those downgrades are an independent honesty fix, not the
+checker being appeased.
+
+📏 MEASURED: 3 edges rendering clean before, 0 after. R8's selftest carries the real Syrah case as a
+permanent fixture and, critically, a case proving the rule STILL FIRES on a genuinely clean
+description -- because the cue list had to be widened mid-fix and a widened matcher can quietly
+become a matcher that matches everything.
+
+🔴 TWO INSTRUMENT FAILURES WORTH KEEPING, both mine, both caught by the repo's own rules:
+  1. The first sweep reported 57 OF 57 edges atlas-wide undermined by an open gap. That was the
+     MATCHER, not the data: it substring-matched one company out of a multi-company gap subject and
+     then blamed every edge touching that company, so a single Arm-licensing gap "undermined" 30
+     unrelated 01 edges including Nvidia competes-with AMD. A CHECK THAT FIRES ON EVERYTHING IS THE
+     SUSPECT. Re-measured on exact "A -> B" matching: 3, all in 02.
+  2. After the fix R8 still fired on MP -> Lynas, whose description now plainly says the evidence is
+     three years old and unchecked. That was a FALSE POSITIVE: the cue list had no word for evidence
+     AGE. The tempting fix was to reword the row until the checker went quiet. THAT IS THE BANNED
+     MOVE -- the checker was wrong, so the checker changed, and a selftest case now pins the rule to
+     still firing on a description that admits nothing.
+
+STILL OPEN AND STILL HIS: whether this map's "Mapped" label should stand. 3 of 5 chokepoints carry no
+sourced edge and 47% of edges are competes-with, against 05's 2 of 6 and 36%. Thinner than 05, and
+mechanized the same way.

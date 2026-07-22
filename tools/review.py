@@ -37,6 +37,20 @@ import argparse, collections, csv, glob, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).parent.parent
 FIN = ("revenue_usd_b", "net_income_usd_b", "market_cap_usd_b", "rd_spend_usd_b", "capex_usd_b")
+# R8's test for "does this edge's own description admit the problem its gap row records?". Deliberately
+# generous: a description that gestures at the doubt in ANY of these words is left alone, because the
+# rule's job is to catch an edge that reads as entirely clean, not to grade someone's phrasing.
+CAVEAT_CUE = re.compile(r"default|terminat|lapsed|no longer|expired|cure|non-binding|MoU|superseded|"
+                        r"took .*private|acquired by|predates|may have|since ended|"
+                        # Widened 2026-07-22 after a MEASURED FALSE POSITIVE, and the direction of the
+                        # fix matters. MP Materials -> Lynas was rewritten to say its evidence is "about
+                        # three years older than the rest of this map's sources, and has not been
+                        # re-checked" -- which admits the problem plainly -- and R8 still fired, because
+                        # the list had no word for EVIDENCE AGE. The temptation was to reword the data
+                        # until the checker went quiet. That is the banned move; the checker was wrong,
+                        # so the checker changed. See the "still fires on a genuinely clean row" case in
+                        # selftest, which is what stops this widening from neutering the rule.
+                        r"older than|re-check|re-verif|unverified|not been verified", re.I)
 TRACKERS = ("stockanalysis", "companiesmarketcap", "tracker")
 # A map that presents findings. "Foundation only" and "Costed" make no claim about relationships.
 CLAIMS_EDGES = ("Mapped", "Edges started")
@@ -175,6 +189,36 @@ def review(slug, status, companies, rels, gaps, verified=None):
                         f"last run checked {verified.get('checked')} rows and {verified.get('ok')} "
                         f"passed ({verified.get('verified_utc', '?')}). The rest are unproven"))
 
+    # R8 -- the gap row knows the edge is suspect, and the edge does not say so. Measured 2026-07-22 on
+    # 02: three edges were each named by their OWN open gap row and all three rendered clean at
+    # confidence "high". The worst, Syrah -> Tesla, cites a filing that also discloses Tesla alleging
+    # default with a cure deadline that has since passed; its gap row says in plain words "The edge
+    # renders as a plain offtake and conveys none of this". A human wrote that and nothing read it.
+    # ⚠ MATCHING IS EXACT ON THE `A -> B` SUBJECT CONVENTION, NEVER A SUBSTRING. The sweep that found
+    # this first used substring matching and reported 57 of 57 edges atlas-wide -- one multi-company
+    # subject "undermining" 30 unrelated 01 edges. A rule that fires on everything gets switched off,
+    # so this one only speaks when a gap row points at ONE named edge.
+    if claims_edges(status):
+        for gap in gaps:
+            if g(gap, "kind") not in ("stale-evidence", "lapsed"):
+                continue
+            if (g(gap, "status") or "open") == "closed":
+                continue
+            subj = g(gap, "subject")
+            if "->" not in subj:
+                continue
+            a, b = (x.strip() for x in subj.split("->", 1))
+            for r in rels:
+                pair = {g(r, "from_company"), g(r, "to_company")}
+                if pair != {a, b}:
+                    continue
+                if CAVEAT_CUE.search(g(r, "description")):
+                    continue
+                out.append((1, "R8 edge-contradicts-its-gap", f"{a} -> {b}",
+                            f"an open {g(gap, 'kind')} gap names this edge, but the edge's own "
+                            f"description carries no sign of it and it renders at confidence "
+                            f"{g(r, 'confidence') or '?'}"))
+
     # R6 -- informational. An isolated node is not wrong, but on a map whose product is the edges it is
     # worth seeing the count.
     if claims_edges(status):
@@ -256,7 +300,51 @@ def selftest():
     def rules(*a, **k):
         return {r.split()[0] for _, r, _, _ in review(*a, **k)}
 
+    # R8 fixtures. THE REAL 2026-07-22 CASE, kept verbatim rather than invented alongside the rule:
+    # 02's Syrah -> Tesla offtake, whose own gap row recorded a default notice with a passed cure
+    # deadline while the edge rendered clean at confidence "high".
+    syrah = {"from_company": "Syrah Resources", "to_company": "Tesla Inc",
+             "relationship_type": "offtake-with", "confidence": "high", "evidence_date": "2026-03-26",
+             "description": "Syrah entered into an offtake agreement with Tesla to supply 8kt per "
+                            "annum of active anode material from Vidalia."}
+    syrah_gap = {"subject": "Syrah Resources -> Tesla Inc", "kind": "stale-evidence", "status": "open",
+                 "searched": "Syrah 2025 Annual Report", "would_close_it": "a post-June-2026 disclosure",
+                 "found_instead": "Tesla alleged default with a cure deadline of 1 June 2026"}
+    # The shape 01 and 05 actually use: the gap names a COMPANY, not an edge. R8 must stay silent, or
+    # it fires on every edge touching that company and gets switched off.
+    company_gap = {"subject": "Catalent", "kind": "stale-evidence", "status": "open",
+                   "searched": "FY2024 10-K", "would_close_it": "a Novo disclosure"}
+
     cases = [
+        ("🔴 R8 fires: the REAL Syrah -> Tesla case, gap names the edge and the edge reads clean",
+         lambda: "R8" in rules("m", "Mapped.", [other], [syrah], [syrah_gap])),
+        ("🔴 R8 STILL FIRES on a genuinely clean description -- proves the widened cue list did not "
+         "neuter the rule",
+         lambda: "R8" in rules("m", "Mapped.", [other],
+                               [dict(syrah, description="Syrah supplies active anode material to Tesla "
+                                                        "from its Vidalia facility under a 2021 offtake.")],
+                               [syrah_gap])),
+        ("R8 SILENT when the description admits EVIDENCE AGE (the measured false positive)",
+         lambda: "R8" not in rules("m", "Mapped.", [other],
+                                   [dict(syrah, description=syrah["description"] +
+                                         " Evidence is three years older than the rest of this map and "
+                                         "has not been re-checked.")],
+                                   [syrah_gap])),
+        ("R8 SILENT once the edge's own description admits the default",
+         lambda: "R8" not in rules("m", "Mapped.", [other],
+                                   [dict(syrah, description=syrah["description"] +
+                                         " Tesla has alleged default; the cure deadline has passed.")],
+                                   [syrah_gap])),
+        ("🔴 R8 SILENT when the gap names a COMPANY not an edge (the 01/05 shape, and the 57-of-57 bug)",
+         lambda: "R8" not in rules("m", "Mapped.", [other], [syrah], [company_gap])),
+        ("R8 SILENT on a CLOSED gap",
+         lambda: "R8" not in rules("m", "Mapped.", [other], [syrah],
+                                   [dict(syrah_gap, status="closed")])),
+        ("R8 SILENT for a gap kind that does not undermine an edge",
+         lambda: "R8" not in rules("m", "Mapped.", [other], [syrah],
+                                   [dict(syrah_gap, kind="undisclosed")])),
+        ("🔴 R8 SILENT on a foundation map -- status-scoped like every other rule here",
+         lambda: "R8" not in rules("m", "Foundation only", [other], [syrah], [syrah_gap])),
         # The gaps list here must NOT name Siemens Energy: an earlier version of this fixture passed
         # the suppressing row AND expected R1 to fire, so the case failed on its own contradiction.
         # Worth keeping the note -- it is easy to write a positive case that silently tests suppression.

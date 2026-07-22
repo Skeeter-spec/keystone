@@ -92,6 +92,14 @@ gap_id,kind,subject,sought,searched,found_instead,blocks,would_close_it,status,l
 - 🔴 **`out-of-scope` is the one that is usually YOUR MAP's bug, not the world's.** If a company returns
   no edges, check its counterparties against companies.csv before concluding anything: 02's Syrah looked
   unconnected purely because Ford, LG Energy Solution and POSCO were not on the roster.
+- 🔴 **IF A GAP UNDERMINES ONE SPECIFIC EDGE, WRITE ITS `subject` AS `A -> B`.** That exact form is what
+  lets `review.py`'s R8 and the renderer's edge badge find it, so the doubt reaches the reader instead of
+  living only in the gaps tab. Measured 2026-07-22: 02 had three edges each named by their own open gap
+  row, all rendering clean at confidence "high", including an offtake whose gap row said in plain words
+  "The edge renders as a plain offtake and conveys none of this". A human wrote that and nothing read it.
+  ⚠ Naming a COMPANY instead is still valid for a gap about the company, but it buys none of this: exact
+  `A -> B` matching is deliberate, because the substring version of this check reported 57 of 57 edges
+  atlas-wide and was pure noise.
 - 🔴 **`searched` is what makes it evidence rather than a shrug, and the gate REJECTS a row without it.**
   Name the documents you actually opened: "TSMC FY2025 20-F, full text; Nvidia FY2026 10-K, full text".
   "Could not find anything" is unfalsifiable and worth less than silence.
