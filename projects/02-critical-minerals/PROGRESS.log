@@ -257,3 +257,22 @@ become a matcher that matches everything.
 STILL OPEN AND STILL HIS: whether this map's "Mapped" label should stand. 3 of 5 chokepoints carry no
 sourced edge and 47% of edges are competes-with, against 05's 2 of 6 and 36%. Thinner than 05, and
 mechanized the same way.
+
+2026-07-22 DECISION CONFIRMED: THE LABEL STAYS "Mapped". Keaton's call, made after the check above was
+put to him with the numbers on both sides. Recorded here so it stops being reopened: the 2026-07-20
+retroactive pass left this label described as "arguably wrong", and that phrasing has since been quoted
+back as though it were an unresolved defect -- including by me, earlier the same day, wrongly.
+
+THE REASONING, so a later reader can disagree with the ARGUMENT rather than guess at it. The test this
+repo actually uses is review.py's: a gap is a claim whose evidence is weaker than its PRESENTATION.
+This map's presentation does not exceed its evidence. All three bare chokepoints are named in open gap
+rows, the unevidenced-chokepoint badge renders on each, and as of today the three edges undermined by
+their own gap rows carry an edge badge too. review.py returns 0 must-resolve here. On the numbers 02 is
+thinner than 05 -- 3 of 5 chokepoints unevidenced against 2 of 6, and 47% competes-with against 36% --
+but thinner is not the same as over-claiming, and the gate's own rule is that INCOMPLETE DOES NOT FAIL
+and incorrect does.
+
+⚠ THE WEAKNESSES ARE UNCHANGED AND MUST STAY REPORTED. This map still has three chokepoints with no
+sourced edge and still reads 47% competes-with, which is the highest rivalry share in the atlas. R4 and
+R6 must keep firing on it; if either ever goes quiet without the data changing, something edited a
+weakness and called it a decision. What is settled is the LABEL, not the map's thinness.
