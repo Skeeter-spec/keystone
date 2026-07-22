@@ -157,3 +157,48 @@ and two of the three "unreachable" verdicts from the burst were wrong:
 - NOT CHECKED: I read the sentence behind only two of the 47 edges by hand. verify_edges proves a
   document names both endpoints; it cannot prove the sentence means what the row says. The other 45
   descriptions are the workers' readings, unaudited by a second pair of eyes.
+
+## DECISIONS CONFIRMED 2026-07-22
+
+The three editorial calls above were put to Keaton with pros and cons ranked against the repo's own
+stated principles, and he took the best-aligned option on each. All three landed on the state already
+shipped, so no data changed. Recorded here because an unrecorded decision gets relitigated, and two of
+the items above are phrased as open questions -- one literally reads "a judgement someone may disagree
+with". They are decisions now, not questions.
+
+⚠ THE WEAKNESSES THEMSELVES ARE UNCHANGED AND STAY IN THE LIST ABOVE. This map still has two
+chokepoints with no sourced edge, and still reads 36% competes-with. What is settled is the EDITORIAL
+CHOICE, not the weakness. Collapsing those two would be the exact overclaim that section exists to
+prevent, and review.py must keep reporting R4 and R6 on this map.
+
+1. THE LABEL STAYS "Mapped". The test is review.py's own: a gap is a claim whose evidence is weaker
+   than its PRESENTATION. Here the presentation does not exceed the evidence -- both bare chokepoints
+   render with the "no sourced edge behind it" marker on the page, and the README cell names them in
+   its second sentence. Demoting to "Edges started" was the tempting-but-wrong option: that label was
+   coined for a map with edges and NO financials, and 05 is 26 of 28 costed, so it would have traded an
+   arguable overclaim for a definite misstatement. The gate's rule is that incomplete does not fail and
+   INCORRECT does.
+2. THE 11 ANDA AND PATENT-PROCEEDING EDGES STAY, and R4 keeps firing at 36%. A reviewer that never
+   fails the gate, reporting that a map's edge count overstates its dependency map, is the system
+   working rather than a defect to edit away.
+   🔴 THE REJECTED OPTION IS WORTH WRITING DOWN BECAUSE IT WILL LOOK ATTRACTIVE AGAIN: giving those 11
+   rows their own type (challenges-patent-of) in this map's relationship_types would move the reported
+   figure from 36% to 13% WITHOUT CHANGING A SINGLE FACT, because R4 counts competes-with specifically.
+   That is rewording data to silence your own checker. If the taxonomy is ever genuinely worth
+   refining, R4 must be re-scoped to count all non-dependency types in the same change -- at which
+   point the number does not improve at all, which is the tell that the first version was cosmetic.
+3. THE 8 DROPPED EDGES STAY DROPPED, in data/dropped_edges.csv, restorable in one merge_edges.py run.
+   The rejected alternative was restoring only the Dr. Reddy's -> Zhejiang Huahai row because it cuts
+   against our own chokepoint flag. The instinct is right -- evidence against your own claim is the
+   most valuable kind -- but all 8 rows come from ONE sentence with identical provenance, so keeping
+   one and dropping seven makes the selection criterion "how interesting is it", applied unevenly. It
+   is also unnecessary: that finding is already data, in gap-05-nonroster-api-competitors, which states
+   it more precisely than an edge would (the roster may be undercounting India-based API alternatives).
+
+📏 A CORRECTION TO THE RECORD, made while presenting these options. I told him 02-critical-minerals was
+the genuinely unresolved case, "Mapped without either mechanism behind it". That was FALSE and I wrote
+it from memory inside a document arguing against exactly that habit. Measured in about 30 seconds: 02
+carries 8 gap rows, ALL THREE of its bare chokepoints are named in them, and its artifact renders the
+unevidenced badge. 02 meets the same bar 05 does. The real difference is only degree -- 3 of 5
+unevidenced and 47% competes-with, against 05's 2 of 6 and 36% -- so it is thinner, not unmechanized.
+Whether 02's label should still change remains open and is Keaton's call, untouched.
