@@ -138,9 +138,14 @@ and two of the three "unreachable" verdicts from the burst were wrong:
 - I DROPPED 8 SOURCED EDGES ON EDITORIAL GROUNDS, which is a judgement someone may disagree with.
   All 8 came from a single Dr. Reddy's 20-F sentence enumerating competitors, and would have made
   Dr. Reddy's the most-connected node on the map purely as an artifact of one filing's boilerplate,
-  including "competes with" edges to three CDMOs. They are archived, not destroyed. The substance
-  worth keeping is that Dr. Reddy's names Huahai as one of SEVERAL API competitors, which cuts
-  AGAINST our own chokepoint flag on Huahai.
+  including "competes with" edges to three CDMOs. All 8 are kept in full, with their sources, in
+  data/dropped_edges.csv, and restoring them is one merge_edges.py run. ⚠ That sentence first read
+  "they are archived, not destroyed", which was TRUE WHEN WRITTEN AND ABOUT TO BECOME FALSE: the only
+  copy was in a session scratchpad under /private/tmp, and this map's own _incoming/ is gitignored, so
+  the archive would have evaporated while a public log went on claiming it existed. A claim that names
+  a path a reader can open is checkable; "archived" is not. The substance worth keeping is that
+  Dr. Reddy's names Huahai as one of SEVERAL API competitors, which cuts AGAINST our own chokepoint
+  flag on Huahai.
 - THE THREE negotiates-rebates-with EDGES ARE THE WEAKEST ON THE MAP and the worker said so first.
   They rest on a passage in Sanofi's own risk factors describing PBM formulary-exclusion leverage
   over manufacturers generally, not a Sanofi-specific rebate. They are marked medium confidence and
