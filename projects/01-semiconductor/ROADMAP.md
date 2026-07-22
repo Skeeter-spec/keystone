@@ -38,15 +38,17 @@ Three structural facts that shape everything ahead:
 ```
 companies.csv               identity + roles + latest-snapshot headline figures (have)
 relationships.csv           directed edges, the graph (have)
-financials_timeseries.csv   company, period, revenue, margins, rd, capex, segment... (NEW, Accounting)
+financials_timeseries.csv   company, period, revenue, margins, rd, capex, segment... (have, Accounting)
 segments.csv                company, period, segment, revenue, share (NEW, Accounting/Economics)
 policies.csv                action, agency, date, targets[], type, status, source (NEW, Politics)
 market_stats.csv            metric, segment, period, value, unit, source (NEW, Economics)
-sources.csv                 source_id, tier, publisher, url, retrieved  (NEW, provenance registry)
+sources.csv                 source_id, tier, publisher, url, retrieved  (have, provenance registry)
 ```
 
 Add two columns to every data table over time: `lens` (accounting|politics|economics) and
-`source_tier` (1-4, below). The relationship table gains `evidence_tier` the same way.
+`source_tier` (1-4, below). **Both are live on `companies.csv` and on `relationships.csv` already**, so
+what remains is carrying them into the tables that do not exist yet. The relationship table's tier
+column is named `source_tier` rather than `evidence_tier`.
 
 ---
 

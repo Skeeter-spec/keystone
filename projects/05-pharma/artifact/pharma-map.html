@@ -454,7 +454,7 @@ function renderCards(){
       <span class="star ${S.watch[c.company]?'on':''}" data-star="${encodeURIComponent(c.company)}" title="Add to watchlist">&#9733;</span>
       <div class="cn"><span class="dot ${filled?'filled':'pending'}"></span>${c.company}</div>
       <div class="tick mono">${c.ticker} &middot; ${c.hq_country}</div>
-      <div class="chips">${chips}</div>${fig}</button>`;
+      <div class="chips">${chips}</div>${fig}${gapBadge(c.company)}</button>`;
   }).join('');
   wrap.querySelectorAll('.card').forEach(el=>el.addEventListener('click',e=>{
     if(e.target.closest('[data-star]')) return;
@@ -489,6 +489,7 @@ function openDrawer(name){
     <div class="tick mono">${c.ticker} &middot; ${c.exchange} &middot; ${c.hq_country}</div>
     <div class="sub" style="margin-top:6px;">${c.primary_segment}</div>
     ${c.chokepoint==='yes'?'<div class="chip choke" style="display:inline-block;margin-top:8px;">Industry chokepoint</div>':''}
+    ${gapBadge(c.company)}
     <div class="kv">
       ${money('revenue_usd_b','Revenue')}
       ${money('net_income_usd_b','Net income')}
@@ -566,8 +567,21 @@ function renderGaps(){
 /* A chokepoint flagged with no sourced edge behind it must admit that at the point of the claim,
    not only in the gaps tab. Matching is on the gap's `subject` naming the company, which is the same
    join-by-exact-name the rest of this page uses. */
+/* ⚠ EXACT, NEVER SUBSTRING, AND THE SAME TRAP AS edgeGap() BELOW.
+   Measured 2026-07-22, when this badge was first wired into the company cards and the drawer: a
+   substring test produced 39 FALSE badges atlas-wide, because an EDGE-scoped subject like
+   'Arm -> Nvidia; Arm -> Apple; Arm -> Samsung' contains 'Nvidia', and a multi-company subject
+   contains every company it lists. Nvidia, Microsoft, Apple, TSMC and CVS would each have rendered
+   'this node has an evidence gap' beside financials that have no gap at all.
+   A badge that fires on everything is the same defect as one that never fires, and it is the version
+   a reader believes. So: split the subject on ';', drop any part naming an edge, and match what is
+   left EXACTLY. Edge-scoped gaps already have their own renderer in edgeGapFlag(). */
 function gapsFor(company){
-  return OPEN_GAPS.filter(g=>(g.subject||'').indexOf(company)!==-1);
+  return OPEN_GAPS.filter(function(g){
+    return (g.subject||'').split(';')
+      .map(function(s){return s.trim();})
+      .some(function(s){return s.indexOf('->')<0 && s===company;});
+  });
 }
 /* 🔴 AN EDGE A GAP ROW EXPLICITLY NAMES MUST SAY SO AT THE EDGE, NOT ONLY IN THE GAPS TAB.
    Measured 2026-07-22 on 02: three edges were each undermined by their own open gap row and all three
@@ -600,7 +614,8 @@ function gapBadge(company){
   const flag=gs.some(g=>g.kind==='unevidenced-flag');
   return `<div class="gapnote">${flag
     ? 'Flagged as a chokepoint with <b>no sourced edge behind it</b>.'
-    : 'This node has an evidence gap.'} ${esc(gs[0].blocks||'')}
+    : 'This node has an evidence gap.'}${gs[0].blocks
+      ? ` <b>What it blocks:</b> ${esc(gs[0].blocks)}` : ''}
     <span class="gaplink">See <b>What the filings won&#39;t say</b>.</span></div>`;
 }
 /* ---- chokepoints ---- */
