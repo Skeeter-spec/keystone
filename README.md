@@ -102,7 +102,7 @@ is the one thing that is not derivable from the data.
 | 02 | [Critical minerals](projects/02-critical-minerals/) | **Mapped.** 17 sourced relationship edges, 9 of them real dependencies, all 5 chokepoints costed from FY2025 audited filings. 17 of 33 companies costed (16 of them with revenue; Lithium Americas is pre-revenue), with no timeseries and no politics lens yet, so it is a thinner map than 01 |
 | 03 | [EV batteries](projects/03-ev-batteries/) | Foundation only |
 | 04 | [AI compute stack](projects/04-ai-compute/) | **Mapped.** 24 of 30 companies costed including all 6 chokepoints, and 40 sourced relationship edges, every one of them a dependency rather than a rivalry. Four companies are private and stay blank. Also the first map to record what it could **not** source: 9 gaps, including four hyperscalers whose filings never name Nvidia |
-| 05 | [Pharmaceuticals](projects/05-pharma/) | Foundation only |
+| 05 | [Pharmaceuticals](projects/05-pharma/) | **Costed, not yet mapped.** 26 of 28 companies costed and **26 of 26 citations verified against the document they cite**, with 6 recorded gaps. 4 of the 6 chokepoints are costed; Lonza (publisher returns 403, and the only reachable figures are unaudited and continuing-operations-only) and Scientific Protein Laboratories (private, no audited accounts exist) are recorded gaps rather than silent blanks. **0 sourced relationship edges**, so every chokepoint hypothesis here is still unevidenced. Deliberately NOT called Mapped for that reason |
 | 06 | [Shipping](projects/06-shipping/) | Foundation only |
 | 07 | [Food and fertilizer](projects/07-food-fertilizer/) | Foundation only |
 | 08 | [Payment rails](projects/08-payment-rails/) | Foundation only |

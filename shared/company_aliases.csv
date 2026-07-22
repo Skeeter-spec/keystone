@@ -4,3 +4,10 @@ Micron,Micron Technology,yes,"Same legal entity (Micron Technology Inc, CIK 7231
 Amazon,Amazon (AWS),yes,"Same legal entity (Amazon.com Inc, CIK 1018724). The figures are whole-company in both maps; 04 labels the node by the segment it plays there. AWS is not separately consolidated."
 Alphabet (Google),Alphabet (Google Cloud),yes,"Same legal entity (Alphabet Inc, CIK 1652044). Whole-company figures in both maps; the parenthetical names the segment each map cares about."
 Meta,Meta Platforms,yes,"Same legal entity (Meta Platforms Inc, CIK 1326801). 01 shortens the name."
+Johnson & Johnson (Innovative Medicine),Johnson & Johnson,yes,"Same legal entity (Johnson & Johnson, CIK 200406). Whole-company figures INCLUDING MedTech; the parenthetical names the arm that places J&J on a pharma map, exactly as Alphabet (Google Cloud) does on 04."
+CVS Health (Caremark),CVS Health,yes,"Same legal entity (CVS Health Corp, CIK 64803). Whole-company figures; Caremark is the PBM arm that makes CVS a chokepoint on this map, not a separate filer."
+Cigna (Express Scripts),Cigna Group,yes,"Same legal entity (The Cigna Group, CIK 1739940). Whole-company figures; Express Scripts is the PBM arm. EDGAR registrant is 'Cigna Group'."
+UnitedHealth Group (OptumRx),UnitedHealth Group,yes,"Same legal entity (UnitedHealth Group Inc, CIK 731766). Whole-company figures; OptumRx is the PBM arm."
+Cencora (formerly AmerisourceBergen),Cencora,yes,"Same legal entity (Cencora Inc, CIK 1140859). The parenthetical is a RENAME annotation, not a segment: AmerisourceBergen became Cencora in 2023."
+Dr. Reddy's Laboratories,DR REDDYS LABORATORIES LTD,yes,Same legal entity (CIK 1135951). EDGAR prints the registrant without the apostrophe; the map keeps it.
+Zhejiang Huahai Pharmaceutical,浙江华海药业股份有限公司,yes,Same legal entity (SSE 600521). The annual report is filed in Chinese and never prints the English name.

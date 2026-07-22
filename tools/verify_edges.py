@@ -100,6 +100,27 @@ KEY = {
     "Yunnan Chihong Zinc & Germanium": "Chihong|驰宏锌锗|云南驰宏",
     "JL MAG Rare-Earth": "JL MAG|金力永磁",
     "China Northern Rare Earth (Group) High-Tech": "Northern Rare Earth|北方稀土",
+    # 05-pharma, added 2026-07-21. Same failure as 04's, and it cost a wrong turn worth recording:
+    # THIS REPO HAS TWO ALIAS TABLES AND NEITHER NAMES THE OTHER. shared/company_aliases.csv is read
+    # by reuse_costed.py and check_identity.py; this KEY dict is read by named(), which is what
+    # verify_sources.py and verify_edges.py actually match on. Seven 05 rows were "failing"
+    # verification, the aliases were added to company_aliases.csv, and the count did not move at all,
+    # because that file never reaches named(). Look at the consumer, not at the filename.
+    # Five of the seven are this map's Parent (Arm) convention, which FOUNDATION.md uses to say WHY a
+    # company is on a pharma map ("the PBM oligopoly, represented here by CVS Health (Caremark)").
+    # No 10-K writes it. Kept TIGHT, per the 04 note: every alternative is a name the company
+    # actually trades under.
+    "Johnson & Johnson (Innovative Medicine)": "Johnson & Johnson|Johnson and Johnson",
+    "CVS Health (Caremark)": "CVS Health|CVS Caremark|Caremark",
+    "Cigna (Express Scripts)": "Cigna|Express Scripts",
+    "UnitedHealth Group (OptumRx)": "UnitedHealth Group|UnitedHealth|OptumRx",
+    "Cencora (formerly AmerisourceBergen)": "Cencora|AmerisourceBergen",
+    # EDGAR prints the registrant without the apostrophe (DR REDDYS LABORATORIES LTD); the map keeps it.
+    "Dr. Reddy's Laboratories": r"Dr\.? ?Reddy|REDDYS LABORATORIES|Reddy's Laboratories",
+    # CJK, same rule as Yunnan Chihong: the SSE annual report is filed in Chinese and never prints the
+    # Latin name. Both scripts carried, and the CJK alternative is matched as a plain substring
+    # because \b can never fire between two Han characters.
+    "Zhejiang Huahai Pharmaceutical": "Huahai|浙江华海药业|华海药业",
 }
 
 # NOTE: use .search(), never .match(). match() anchors at position 0, so the mid-URL alternatives

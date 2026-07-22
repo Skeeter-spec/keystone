@@ -14,6 +14,36 @@ that belongs in a file instead of in one session's memory.
 filing exist, in what language, at what host?" Then batch the extraction by route. Costing companies
 one at a time re-pays the discovery cost once per company.
 
+## 🔴 THE COST COLUMN BELOW IS ROUTE-DISCOVERY COST, NOT THE COST OF COSTING N COMPANIES
+
+Read this before budgeting a burst from the table. "Cheapest by far" answers *how hard is it to find and
+read one filing on this route*, which is a per-jurisdiction question you pay once. It does **not** answer
+*what will N companies cost*, and on 2026-07-21 that distinction blew a session budget by 3x.
+
+**Measured on 05-pharma, three parallel Sonnet workers, one burst:**
+
+| Route | Companies | Tool calls | Tokens |
+|---|---|---|---|
+| SEC EDGAR, **hand-rolled** (worker not told `tools/xbrl_extract.py` exists) | 13 | 54 | 123592 |
+| EU/UK/CH/DK investor relations | 6 | 70 | 130141 |
+| India / mainland China / HK / KR | 9 | 117 | 195955 |
+
+Each was estimated at 45000. Rough planning figure: **8000 to 20000 tokens per company**, rising with
+jurisdiction difficulty, and the EU number is inflated by one company (Lonza) whose publisher 403s.
+
+**The EDGAR row is the important one, and it is an own goal.** That route IS the cheapest, and it still
+cost the most per unit of difficulty, because the worker was never told `tools/xbrl_extract.py` existed
+and rebuilt it from scratch. A route being cheap does not make a burst cheap if the prompt omits the tool
+that makes it cheap. See the "INVENTORY tools/ BEFORE WRITING A WORKER PROMPT" section in any map's
+AGENT-RUNBOOK.md.
+
+**Two route notes from that burst:**
+- Shanghai 600xxx **was** retrieved from `static.cninfo.com.cn` this time. That does not contradict the
+  cninfo trap below, which is about the **query API** returning `totalAnnouncement: 0` for Shanghai
+  codes; static document hosting is a different path. Treat the trap as scoped to the query API.
+- A `data.sec.gov/api/xbrl/companyfacts` URL is a data endpoint, not a document. Cite the filing index
+  (`/Archives/edgar/data/<cik>/<accession>/<accession>-index.htm`); `verify_sources.py` refetches it.
+
 ## The routes
 
 | Jurisdiction | Host | Format | Cost |

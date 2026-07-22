@@ -9,3 +9,53 @@ FOUNDATION.md ("WOULD SETTLE IT"), so a burst opens with a shopping list instead
 and 04 FIRST (before any research), then tools/verify_sources.py on whatever it inherits -- reuse carries
 weaknesses as faithfully as figures -- and only then the financials and relationships bursts. File
 gaps.csv rows in the same commit as the burst, not afterwards.
+
+2026-07-21 FINANCIALS: 26 of 28 companies costed, 26 of 26 citations VERIFIED against the document they
+cite. 6 gap rows. 0 relationship edges, so this map is "Costed, not yet mapped" and NOT Mapped: every
+chokepoint hypothesis in FOUNDATION.md is still unevidenced.
+
+STEP 1 OF THE README'S ORDER RETURNED ZERO, AND THAT IS THE FINDING. reuse_costed.py from 01, 02 and 04
+all report "nothing to do": 05 shares not one company with any finished map. The null was not taken on
+faith -- reuse_costed.py --selftest passes 14 cases including real positives, so the matcher demonstrably
+fires. So the premise in this log's own previous entry, that 05 is the cheapest remaining foundation, was
+half wrong: the saving is the ROUTE (19 of 28 file in English with EDGAR or an EU IR site), not
+inheritance. All 28 rows were fresh.
+
+🔴 THE EXPENSIVE MISTAKE WAS MINE, AND IT WAS A DUPLICATED TOOL. tools/xbrl_extract.py already exists and
+04 used it to cost eleven companies in one batch. The worker prompt never mentioned it, so the EDGAR
+worker hand-rolled its own extraction across 54 tool calls for 13 companies on the route
+SOURCING-ROUTES.md calls "cheapest by far". Measured cost of the three workers: 123592, 130141 and 195955
+tokens (54, 70 and 117 tool calls) against a 45000 estimate each -- 2.7x to 4.4x over, and a large part of
+it avoidable. A FAN-OUT PROMPT MUST INVENTORY tools/ BEFORE IT IS WRITTEN. Now stated in AGENT-RUNBOOK.md.
+
+🔴 THIS REPO HAS TWO ALIAS TABLES AND NEITHER NAMES THE OTHER. Seven costed rows failed verification on
+the roster name, exactly as 04's ten did. shared/company_aliases.csv was the obvious place to fix it --
+and it is the WRONG file: it feeds reuse_costed.py and check_identity.py, never named(). The verifier
+matches on the KEY dict inside tools/verify_edges.py. The aliases were added, verification was re-run,
+and the count did not move by one row. LOOK AT THE CONSUMER, NOT AT THE FILENAME. Five of the seven were
+this map's Parent (Arm) convention, which FOUNDATION.md uses to say why a company is on a pharma map
+("the PBM oligopoly, represented here by CVS Health (Caremark)"); no 10-K writes that string. One was an
+apostrophe (EDGAR prints DR REDDYS LABORATORIES LTD) and one was a Chinese-language filing that never
+prints the Latin name. After the KEY entries landed: 26/26, and the new aliases were then driven against
+a clean unrelated document to prove they can still say NO -- 7 negative and 7 positive cases, because a
+matcher that matches everything passes its own control.
+
+WORKER OUTPUT WAS RIGHT ON IDENTITY AND WRONG ON SCHEMA. All 13 EDGAR registrant names were re-read at
+data.sec.gov and every one matched what the worker reported, including the catch that Catalent has a dead
+second CIK (1416083 Catalent Pharma Solutions, the pre-2014 entity; only 1596783 is bound). But 8 rows
+came back with source_tier as PROSE ("1 (P&L/capex); 3 (market cap)") and 4 cited a companyfacts JSON
+endpoint or a browse-edgar SEARCH PAGE instead of a document. Both were caught and fixed before the merge,
+by a normaliser, not by eye.
+
+NOT MERGED ON PURPOSE. Lonza's only reachable figures are unaudited AND continuing-CDMO-only (excluding
+the divested CHI segment); dropping that into the same column as 27 total-company figures would have made
+one chokepoint quietly non-comparable. Recorded as an unreachable gap instead. The J&J row carries
+consolidated figures INCLUDING MedTech, following this map's own Parent (Arm) convention and 04's
+Alphabet (Google Cloud) precedent; the row note says so rather than leaving a reader to assume the
+parenthetical is the reporting scope.
+
+STILL OPEN: 0 relationship edges. FOUNDATION.md pre-registers what would settle each of the four
+hypotheses (FDA import alerts and the shortages database; Lonza and WuXi capacity plus the BIOSECURE Act
+text; the big-three distributors' own 10-K Business sections; the FTC PBM reports). NEXT is a
+relationships burst, and per the README the documents already in filing_source have never been read for
+relationships -- 26 of them are now sitting in sources.csv.

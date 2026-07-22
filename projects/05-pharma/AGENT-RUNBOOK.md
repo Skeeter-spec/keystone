@@ -25,3 +25,34 @@ language, structured or PDF). Extraction is cheap once the route is known; findi
 It also carries the traps: cninfo serves Shenzhen not Shanghai, consolidated vs parent-company statements
 share row labels, net income means attributable-to-parent, and an identifier that resolves is not the
 entity you meant.
+
+## 🔴 INVENTORY `tools/` BEFORE WRITING A WORKER PROMPT
+
+Measured 2026-07-21 on this map, and it is the single most expensive mistake made here so far. The EDGAR
+worker was not told `tools/xbrl_extract.py` exists, so it hand-rolled its own SEC extraction across **54
+tool calls for 13 companies and 123592 tokens** -- on the route `SOURCING-ROUTES.md` calls "cheapest by
+far", and after 04 had already costed eleven companies with that tool in one batch.
+
+The three workers cost **123592, 130141 and 195955 tokens** against a 45000 estimate each. A worker cannot
+know what it was not told, and it will always be able to reinvent a tool it does not know about.
+
+⇒ **Every fan-out prompt names the tools the worker should use, by path:**
+- `tools/xbrl_extract.py --ticker T --expect "Name"` -- US filers and foreign private issuers. Identity
+  check is built in via `--expect`.
+- `tools/reuse_costed.py <src> <dst>` -- run FIRST, before any research. Free rows, zero fetches.
+- `tools/verify_sources.py`, `tools/check_identity.py` -- what will judge the output afterwards, so the
+  worker knows what it is writing for.
+
+## Naming, and the two alias tables
+
+This map names some companies `Parent (Arm)` -- `CVS Health (Caremark)` -- to say WHY a company is on a
+pharma map. That parenthetical is **not the reporting scope**: the figures are whole-company, exactly as
+04 does with `Alphabet (Google Cloud)`. Say so in the row note.
+
+🔴 A roster name like that appears in no filing, so `verify_sources.py` will fail the row until an alias
+exists. **There are two alias tables and they are not interchangeable:**
+- `shared/company_aliases.csv` → read by `reuse_costed.py` and `check_identity.py`.
+- the `KEY` dict in `tools/verify_edges.py` → read by `named()`, which is what **both verifiers** match on.
+
+Adding a verification alias to the CSV does nothing at all, silently. Look at the consumer, not the
+filename.
