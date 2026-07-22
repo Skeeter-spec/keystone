@@ -157,6 +157,17 @@ def main(argv):
     if bad:
         print("  A failure is a FINDING, not a licence to delete the figure: record it as an")
         print("  'unreachable' gap row, or replace the citation with one that resolves.")
+    # SCOPE FOOTER, same reason gate.sh and review.py carry one: a clean result that does not name
+    # what it did NOT look at is a false claim you will believe. MEASURED 2026-07-22 -- this tool
+    # reported 39/41 GREEN while sources.csv still cited a DIFFERENT COMPANY's document for one of
+    # those rows, because it reads companies.csv filing_source and nothing else. The green was
+    # correct about the field it reads and silent about the field that was broken.
+    print("\n  SCOPE of the result above:")
+    print("    read:       companies.csv filing_source, one url per costed row")
+    print("    NOT read:   sources.csv, relationships.csv, gaps.csv, financials_timeseries.csv")
+    print("    NOT done:   no check that the document supports the FIGURE, only that it names the")
+    print("                company. And no check that sources.csv agrees with the row it describes;")
+    print("                that is check_data.py rule 11, in the gate.")
     return 1 if bad else 0
 
 

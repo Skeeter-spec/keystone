@@ -223,6 +223,49 @@ def check_gaps(rows, label):
     return problems
 
 
+def check_citation_agreement(companies, sources, label):
+    """Rule 11. One company's citation lives in TWO files; they must not disagree.
+
+    THE REAL CASE, 2026-07-22, and it shipped. 01's Taiyo Yuden row cited a PDF on taiyo-hd.co.jp,
+    which is TAIYO HOLDINGS (code 4626), a different company from Taiyo Yuden (6976). The row in
+    companies.csv was corrected. sources.csv SRC026 was NOT, and kept the wrong company's URL under
+    tier 1, publisher "taiyo-hd.co.jp", note "Primary financial source".
+
+    EVERY EXISTING CHECK PASSED WHILE THEY DISAGREED. gate.sh exit 0. verify_sources.py 39/41 green
+    -- because it reads companies.csv filing_source and nothing else, so it re-fetched the CORRECTED
+    url and never saw the stale one. The divergence was caught only by grepping the built artifact,
+    where the References tab was still sending readers to the wrong company.
+
+    That is the shape worth a rule: a checker's green covers only the fields it reads, and a fact
+    duplicated across two files has no owner until something compares them.
+
+    DELIBERATELY LOOSE. filing_source may hold several urls separated by ';', and one company may
+    carry several sources for different facts. So this fires only when a company has sources.csv
+    rows and NONE of their urls appear in its filing_source, which is the disagreement case rather
+    than the incomplete case. Measured on the clean tree: 89 pairs compared, 0 fired.
+    """
+    problems = []
+    by_company = {}
+    for r in sources:
+        c, u = g(r, "company"), g(r, "url")
+        if c and u:
+            by_company.setdefault(c, []).append((g(r, "source_id"), u))
+    for row in companies:
+        name = g(row, "company")
+        fs = g(row, "filing_source")
+        if not name or not fs or name not in by_company:
+            continue
+        urls = by_company[name]
+        if not any(u in fs or fs in u for _, u in urls):
+            sid = urls[0][0] or "?"
+            problems.append(
+                f"{label} {name}: companies.csv and sources.csv cite different documents "
+                f"({sid}). companies.csv={fs[:70]!r} sources.csv={urls[0][1][:70]!r}. "
+                f"One of them is stale; a figure's citation must agree in both files"
+            )
+    return problems
+
+
 def check_cross_map(by_map, aliases=None):
     """Rule 9. Two maps must not report different figures for one company-year.
 
@@ -353,6 +396,7 @@ def run(root):
         problems += check_notes_prose(companies, f"{slug}/companies.csv")
         problems += check_relationships(rels, f"{slug}/relationships.csv")
         problems += check_timeseries(ts, f"{slug}/financials_timeseries.csv")
+        problems += check_citation_agreement(companies, load(d / "sources.csv"), slug)
         facts[slug] = {
             "edges": len(rels),
             "costed": sum(1 for c in companies if has_financials(c)),
@@ -535,6 +579,33 @@ def selftest():
     ]
     for name, by_map, expect_fire in cross_cases:
         fired = bool(check_cross_map(by_map, ALIASES))
+        ok = fired == expect_fire
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}")
+
+    # Rule 11. The control is the REAL 2026-07-22 case, pasted in and kept as a regression fixture:
+    # a corrected companies.csv row against a stale sources.csv row for the same company.
+    TY_RIGHT = "https://pdf.irpocket.com/C6976/Kdx3/QBtb/K4S6.pdf"
+    TY_WRONG = "https://www.taiyo-hd.co.jp/en/investor/irnews/news20260430000001/main/0/link/en20260430_01.pdf"
+    cite_cases = [
+        ("rule 11: the real Taiyo Yuden divergence (companies fixed, sources stale)",
+         [{"company": "Taiyo Yuden", "filing_source": TY_RIGHT}],
+         [{"source_id": "SRC026", "company": "Taiyo Yuden", "url": TY_WRONG}], True),
+        ("control: both files agree",
+         [{"company": "Taiyo Yuden", "filing_source": TY_RIGHT}],
+         [{"source_id": "SRC026", "company": "Taiyo Yuden", "url": TY_RIGHT}], False),
+        ("NEGATIVE: multi-url filing_source that CONTAINS the sources url stays silent",
+         [{"company": "X", "filing_source": f"{TY_RIGHT};https://other.example/a.pdf"}],
+         [{"source_id": "S1", "company": "X", "url": TY_RIGHT}], False),
+        ("NEGATIVE: company with no sources.csv row never fires",
+         [{"company": "Y", "filing_source": TY_RIGHT}], [], False),
+        ("NEGATIVE: company with no filing_source never fires",
+         [{"company": "Z", "filing_source": ""}],
+         [{"source_id": "S2", "company": "Z", "url": TY_WRONG}], False),
+    ]
+    for name, comps, srcs, expect_fire in cite_cases:
+        fired = bool(check_citation_agreement(comps, srcs, "fixture"))
         ok = fired == expect_fire
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:

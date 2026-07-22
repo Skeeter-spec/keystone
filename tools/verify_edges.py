@@ -256,6 +256,16 @@ def verify(project):
     staged = sorted(glob.glob(str(root / "data" / "_incoming" / "edges_*.csv")))
     if not staged:
         print(f"no staged edge files in {root}/data/_incoming/")
+        # SCOPE FOOTER. This tool verifies edges AT STAGING TIME only. Once merge_edges.py folds a
+        # staged edge into relationships.csv, NOTHING re-reads it: this tool never looks there, and
+        # it writes no _verified.json, so unlike figures there is no record of when, or whether, a
+        # merged edge was ever checked against its document. On a finished map that makes the line
+        # above mean "there was nothing here to look at", NOT "the edges are fine".
+        print("\n  SCOPE: this checked ZERO edges. It reads data/_incoming/edges_*.csv only.")
+        print("    NOT read:   relationships.csv, i.e. every edge already merged into the map.")
+        print("    NOT stored: no _verified.json is written for edges, so there is no record of")
+        print("                when any merged edge was last checked. Figures have that trail;")
+        print("                edges do not. Re-checking a merged edge has no tool today.")
         return 1
     rows = []
     for p in staged:
