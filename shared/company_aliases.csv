@@ -11,3 +11,6 @@ UnitedHealth Group (OptumRx),UnitedHealth Group,yes,"Same legal entity (UnitedHe
 Cencora (formerly AmerisourceBergen),Cencora,yes,"Same legal entity (Cencora Inc, CIK 1140859). The parenthetical is a RENAME annotation, not a segment: AmerisourceBergen became Cencora in 2023."
 Dr. Reddy's Laboratories,DR REDDYS LABORATORIES LTD,yes,Same legal entity (CIK 1135951). EDGAR prints the registrant without the apostrophe; the map keeps it.
 Zhejiang Huahai Pharmaceutical,浙江华海药业股份有限公司,yes,Same legal entity (SSE 600521). The annual report is filed in Chinese and never prints the English name.
+Albemarle Corporation,Albemarle,yes,"Same legal entity (Albemarle Corp, CIK 915913, already an approved EDGAR registrant). 02 spells it long, 03 short."
+Ganfeng Lithium Group,Ganfeng Lithium,yes,"Same legal entity (Jiangxi Ganfeng Lithium). 02 carries the Group suffix, 03 does not."
+Tesla Inc,Tesla,yes,"Same legal entity (Tesla Inc, CIK 1318605). 02 carries the Inc, 03 does not."
