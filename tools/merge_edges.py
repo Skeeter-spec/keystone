@@ -30,7 +30,23 @@ VOCAB = {"supplies-ore-to", "refines-for", "separates-for", "supplies-magnets-to
          # 04-ai-compute. Added BEFORE its burst rather than after, because the lesson from the
          # chokepoint TRUE/FALSE drift is that a fan-out's vocabulary has to exist before the fan-out
          # writes, not once its output has already been rejected.
-         "provides-compute-to", "assembles-for"}
+         "provides-compute-to", "assembles-for",
+         # 05-pharma, added 2026-07-22, again BEFORE the burst. Four terms, and only four, because the
+         # rest of this map's edges are already sayable: a distributor-to-originator edge is
+         # "distributes-for", which 02 already defined. A new term per map is how a union vocabulary
+         # becomes unreadable; reuse first, and only mint a word for a relation the atlas cannot
+         # already express.
+         "supplies-api-to",           # API maker -> originator / generics maker
+         "manufactures-for",          # CDMO makes a product the customer owns (Lonza, WuXi, Catalent)
+         "negotiates-rebates-with",   # manufacturer <-> PBM. The money in this chain moves along it
+         "administers-benefits-for",  # PBM -> payer / plan sponsor
+         # Added mid-burst 2026-07-22, and the reason is a direction bug worth keeping. A worker
+         # correctly found that CVS Health is McKesson's largest customer at 24% of revenue, and had
+         # to file it as `distributes-for`, whose direction is from=distributor to=THE MANUFACTURER
+         # WHOSE PRODUCT IT MOVES. CVS is a pharmacy, not a manufacturer, so the row was true and the
+         # label was wrong -- the edge points the other way down the chain. A distributor's two sides
+         # are genuinely two relations: it distributes FOR the maker and TO the pharmacy.
+         "distributes-to"}            # distributor -> pharmacy / retail customer
 # DESIGN DEBT, deliberate and recorded rather than fixed here: this vocabulary is a UNION across every
 # map, so 02's "supplies-ore-to" is technically legal in the AI compute map. The right home is a
 # relationship_types list in each map's map.json, alongside the layers, which is where this repo already

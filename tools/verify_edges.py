@@ -112,7 +112,15 @@ KEY = {
     # actually trades under.
     "Johnson & Johnson (Innovative Medicine)": "Johnson & Johnson|Johnson and Johnson",
     "CVS Health (Caremark)": "CVS Health|CVS Caremark|Caremark",
-    "Cigna (Express Scripts)": "Cigna|Express Scripts",
+    # "Evernorth" added 2026-07-22, and it is an IDENTITY BINDING backed by two documents, not a guess.
+    # Cencora's FY2025 10-K names its second-largest customer as "Evernorth Health Services" at ~13% of
+    # revenue and NEVER says Cigna or Express Scripts (measured: 0 hits for either). Cigna's own FY2025
+    # 10-K says, in prose, "We have two segments: Evernorth Health Services and Cigna Healthcare", and
+    # tags it `ci:EvernorthMember` in its own XBRL -- so Evernorth is a name Cigna itself trades under,
+    # which is exactly the bar the 04 note sets for this table. Without the alias the single strongest
+    # cross-chokepoint edge on this map (a big-three distributor depending on a big-three PBM's parent)
+    # is undrawable, and the two chokepoints render as unconnected when the filing connects them.
+    "Cigna (Express Scripts)": "Cigna|Express Scripts|Evernorth",
     "UnitedHealth Group (OptumRx)": "UnitedHealth Group|UnitedHealth|OptumRx",
     "Cencora (formerly AmerisourceBergen)": "Cencora|AmerisourceBergen",
     # EDGAR prints the registrant without the apostrophe (DR REDDYS LABORATORIES LTD); the map keeps it.
@@ -121,6 +129,33 @@ KEY = {
     # Latin name. Both scripts carried, and the CJK alternative is matched as a plain substring
     # because \b can never fire between two Han characters.
     "Zhejiang Huahai Pharmaceutical": "Huahai|浙江华海药业|华海药业",
+    # 05-pharma EDGE side, added 2026-07-22 before the relationships burst. The seven entries above
+    # were added for verify_sources.py, which asks a WEAKER question: does this company's own filing
+    # name this company? An EDGE needs its cited document to name BOTH endpoints, so every company
+    # that can appear as a COUNTERPARTY needs its document-side name too, not just the ones whose own
+    # citation was failing. Same root cause as 04's ten failures: the roster name is ours, not the
+    # document's. Nothing files as "Teva Pharmaceutical Industries" in a sentence about a supplier.
+    "McKesson Corporation": "McKesson",
+    "Lonza Group": "Lonza",
+    "Teva Pharmaceutical Industries": "Teva",
+    "Roche Holding": "Roche Holding|Roche",
+    "Eli Lilly": "Eli Lilly|Lilly",
+    "Sun Pharmaceutical Industries": "Sun Pharmaceutical|Sun Pharma",
+    "Aurobindo Pharma": "Aurobindo",
+    # 🔴 NOT "SPL". In exactly the corpus this map reads, SPL is the FDA's own abbreviation for
+    # Structured Product Labeling, so the alias that looks obvious would match FDA boilerplate on
+    # documents that have never heard of this company. The whole point of the tool is to catch a row
+    # citing a document that does not support it.
+    "Scientific Protein Laboratories": "Scientific Protein",
+    # CJK carried bare, same rule as Yunnan Chihong and Huahai above: \b cannot fire between Han
+    # characters, so a wrapped CJK alternative silently never matches.
+    "WuXi AppTec": "WuXi AppTec|药明康德",
+    "WuXi Biologics": "WuXi Biologics|药明生物",
+    # ⚠ "Merck & Co" gets NO bare "Merck" alias, deliberately. Merck KGaA is a different listed company
+    # that trades as "Merck" across Europe and as EMD in the US, and this map's Merck is the US one.
+    # A bare alias would verify a Merck & Co edge against a document about a company on another
+    # continent -- the NEO -> NEOGENOMICS failure with better camouflage.
+    "Merck & Co": "Merck & Co|Merck Sharp|MSD",
 }
 
 # NOTE: use .search(), never .match(). match() anchors at position 0, so the mid-URL alternatives

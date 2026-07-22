@@ -59,3 +59,96 @@ hypotheses (FDA import alerts and the shortages database; Lonza and WuXi capacit
 text; the big-three distributors' own 10-K Business sections; the FTC PBM reports). NEXT is a
 relationships burst, and per the README the documents already in filing_source have never been read for
 relationships -- 26 of them are now sitting in sources.csv.
+
+2026-07-22 RELATIONSHIPS: 47 sourced edges, 30 of them dependencies, and this map is now Mapped.
+Four of the six chokepoints carry a sourced edge. Total burst cost 428,299 tokens across three
+Sonnet workers (136,503 / 126,534 / 165,262) against a 450,000 estimate -- the first burst in this
+repo to come in UNDER its estimate, because the map already owned all 26 filings and route
+discovery, which SOURCING-ROUTES.md says is the real cost, had already been paid.
+
+WHAT WORKED, AND IT IS THE REUSABLE PART. The highest-yield pattern on this map was one sentence
+shape: a US originator's 10-K discloses customer concentration and NAMES the big-three wholesalers,
+because each is a >10% customer and the disclosure is mandatory. I verified it on Pfizer BEFORE
+writing the worker prompts -- "McKesson, Inc. 25% / Cencora, Inc. 16% / Cardinal Health, Inc. 13%"
+-- and shipped that worked example inside the prompt. It produced 17 of the map's 47 edges. This is
+the counterparty-side recipe again: the distributor chokepoint was evidenced from the manufacturers'
+filings, not the distributors'. Half the originators still anonymised it ("three wholesalers"), and
+that split is gap-05-wholesaler-identity-anonymised rather than a silent absence.
+
+TWO PRE-BURST FIXES THAT WOULD HAVE BEEN ABORTS AFTERWARDS. merge_edges.py had no pharma vocabulary
+at all, and it ABORTS on an unknown relationship_type, so every staged edge would have been rejected
+after the money was spent. And verify_edges.py's KEY held only the seven 05 names that
+verify_sources.py needed for FINANCIAL citations -- but an EDGE is stricter, because its document
+must name BOTH endpoints, so every company that can appear as a COUNTERPARTY needs its document-side
+name too. Both landed before the fan-out, per the rule 04 wrote into merge_edges.py's own comments.
+
+A GREEN SELFTEST DID NOT COVER THE NEW WORK. Both tools' suites passed after the edits -- and would
+have passed identically without them, because no case touched the new entries. Driving the new
+aliases directly, the first run reported ALL TWELVE positives failing and ALL negatives passing.
+That shape is the dead-checker signature, not a data verdict: a matcher matching NOTHING fails every
+control and passes every negative. The cause was in my harness, not the tool -- named() takes
+(text, company) and I passed (company, text). Corrected: 20/20, both directions. The negatives are
+the sharp half here: "Merck & Co" must NOT match Merck KGaA, and Scientific Protein Laboratories
+must NOT be aliased to "SPL", because in FDA documents SPL means Structured Product Labeling.
+
+THE EVERNORTH BINDING, which is the strongest edge on the map and the one a worker correctly
+refused to write. Cencora's FY2025 10-K names its second-largest customer as "Evernorth Health
+Services" at ~13% of revenue and never writes Cigna or Express Scripts -- measured, zero hits for
+both. The worker logged it as an unevidenced flag rather than guess. It is closeable, but only with
+a SECOND document: Cigna's own 10-K says in prose "We have two segments: Evernorth Health Services
+and Cigna Healthcare" and tags it ci:EvernorthMember in its own XBRL. So Evernorth is a name Cigna
+itself trades under, the alias meets this table's stated bar, and the edge now rests on two
+documents -- Cencora's for the dependency and its size, Cigna's for the identity. Without it, a
+big-three distributor depending on a big-three PBM's parent renders as no connection at all.
+
+THE PRE-REGISTERED TESTS, RUN. FOUNDATION.md named the documents that would settle each hypothesis,
+and two of the three "unreachable" verdicts from the burst were wrong:
+  - FTC PBM report: a worker got 404 on two stale URLs and filed it unreachable. It is reachable at
+    ftc.gov/system/files/ftc_gov/pdf/pharmacy-benefit-managers-staff-report.pdf and it settles
+    hypothesis 4 outright: "the three largest PBMs now manage nearly 80 percent of all prescriptions
+    filled in the United States", naming CVS Caremark, Express Scripts and OptumRx. Gap row deleted
+    rather than left standing as a false claim of unreachability. CAVEAT CARRIED: the same report
+    says the top SIX process >90%, so there is a tail below the big three.
+  - BIOSECURE Act: congress.gov 403s an automated fetcher; the browser reaches it. The bill commonly
+    called BIOSECURE is H.R.8333, NOT S.3558 -- S.3558 contains the word BIOSECURE zero times and
+    names WuXi AppTec only. H.R.8333 defines a "biotechnology company of concern" as "BGI, MGI,
+    Complete Genomics, WuXi AppTec, and WuXi Biologics", so FOUNDATION.md's naming claim is CORRECT.
+    Its STATUS is not: last action 2024-09-10, referred to Senate committee, and the 118th Congress
+    ended in January 2025, so that bill died. Whether it was reintroduced in the 119th is unknown --
+    congress.gov's search returns a Cloudflare bot-detection interstitial, deliberately not bypassed.
+  - FDA import alert 66-40 needed no browser at all; it is plain HTML. It carries a live red-list
+    entry for "Changzhou SPL Company, Ltd." covering crude heparin since 2008 -- the episode this
+    map cites. But it never writes "Scientific Protein Laboratories" (zero hits, as for Huahai and
+    Hepalink), so the best available evidence for the crude-heparin chokepoint cannot be attached to
+    the node. That is a contradiction row, not an edge.
+
+## HONEST WEAKNESSES
+
+- TWO OF SIX CHOKEPOINTS CARRY NO EDGE AT ALL: Zhejiang Huahai and Scientific Protein Laboratories,
+  both in the API layer, which is hypothesis 1. No originator's filing names an active-ingredient
+  supplier anywhere, and neither Chinese filing names a customer. This map is Mapped on the strength
+  of its distributor, PBM and CDMO layers; its API layer is still hypothesis. 02 was labelled Mapped
+  with three of five chokepoints unevidenced and that was called arguably wrong; this is 2 of 6, and
+  both are named in open gap rows, which is the only reason review.py returns 0 must-resolve.
+- 17 OF 47 EDGES (36%) ARE competes-with, and review.py's R4 fires on it. That is better than 02's
+  47% and far worse than 04's zero. The 17 are not padding -- 6 are the three distributors naming
+  ONLY each other, which is the direct test of "no fourth-scale alternative", and 11 are specific
+  named ANDA and patent proceedings. But the honest reading is that this map's edge COUNT overstates
+  its dependency map, and R4 should keep saying so.
+- I DROPPED 8 SOURCED EDGES ON EDITORIAL GROUNDS, which is a judgement someone may disagree with.
+  All 8 came from a single Dr. Reddy's 20-F sentence enumerating competitors, and would have made
+  Dr. Reddy's the most-connected node on the map purely as an artifact of one filing's boilerplate,
+  including "competes with" edges to three CDMOs. They are archived, not destroyed. The substance
+  worth keeping is that Dr. Reddy's names Huahai as one of SEVERAL API competitors, which cuts
+  AGAINST our own chokepoint flag on Huahai.
+- THE THREE negotiates-rebates-with EDGES ARE THE WEAKEST ON THE MAP and the worker said so first.
+  They rest on a passage in Sanofi's own risk factors describing PBM formulary-exclusion leverage
+  over manufacturers generally, not a Sanofi-specific rebate. They are marked medium confidence and
+  should be the first rows re-examined.
+- CATALENT'S TWO EDGES CAN NEVER BE REFRESHED. Both come from its FY2024 10-K, the last one it will
+  ever file: Novo Holdings took it private in December 2024. Recorded as stale-evidence.
+- FIVE COMPANIES REMAIN ISOLATED (Novartis, Huahai, Scientific Protein, Samsung Biologics, WuXi
+  AppTec) and there is still no timeseries and no politics lens, so this is a thinner map than 01.
+- NOT CHECKED: I read the sentence behind only two of the 47 edges by hand. verify_edges proves a
+  document names both endpoints; it cannot prove the sentence means what the row says. The other 45
+  descriptions are the workers' readings, unaudited by a second pair of eyes.
