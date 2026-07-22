@@ -245,24 +245,93 @@ def check_citation_agreement(companies, sources, label):
     than the incomplete case. Measured on the clean tree: 89 pairs compared, 0 fired.
     """
     problems = []
-    by_company = {}
+    # TWO indexes, and the second one is the whole reason this rule works on a retiring archive.
+    # `live` is what a figure may legitimately agree with. `known` is every row regardless of status,
+    # and it answers "does this company have a provenance registry entry at all?".
+    #
+    # Filtering to live ALONE is not enough, and the selftest caught it: a company whose every source
+    # row is retired then vanishes from the live index, the rule skips it as "no sources", and the
+    # exact case this exists to catch -- a figure standing on a document already judged wrong-entity
+    # -- goes silent again. So membership is decided on `known` and agreement on `live`.
+    live, known = {}, {}
     for r in sources:
         c, u = g(r, "company"), g(r, "url")
-        if c and u:
-            by_company.setdefault(c, []).append((g(r, "source_id"), u))
+        if not (c and u):
+            continue
+        known.setdefault(c, []).append((g(r, "source_id"), u))
+        # A row with no status is treated as live, so a map that has not migrated yet is not
+        # silently exempted from the rule.
+        if (g(r, "status") or "live").strip().lower() == "live":
+            live.setdefault(c, []).append((g(r, "source_id"), u))
     for row in companies:
         name = g(row, "company")
         fs = g(row, "filing_source")
-        if not name or not fs or name not in by_company:
+        if not name or not fs or name not in known:
             continue
-        urls = by_company[name]
-        if not any(u in fs or fs in u for _, u in urls):
-            sid = urls[0][0] or "?"
+        if any(u in fs or fs in u for _, u in live.get(name, [])):
+            continue
+        if not live.get(name):
+            sid = known[name][0][0] or "?"
             problems.append(
-                f"{label} {name}: companies.csv and sources.csv cite different documents "
-                f"({sid}). companies.csv={fs[:70]!r} sources.csv={urls[0][1][:70]!r}. "
-                f"One of them is stale; a figure's citation must agree in both files"
+                f"{label} {name}: every sources.csv row for this company is RETIRED "
+                f"(newest: {sid}), but companies.csv still cites {fs[:70]!r}. A figure may not "
+                f"stand on a source that has been marked superseded, dead or wrong-entity"
             )
+            continue
+        sid = live[name][0][0] or "?"
+        problems.append(
+            f"{label} {name}: companies.csv and sources.csv cite different documents "
+            f"({sid}). companies.csv={fs[:70]!r} sources.csv={live[name][0][1][:70]!r}. "
+            f"One of them is stale; a figure's citation must agree in both files"
+        )
+    return problems
+
+
+SOURCE_STATUS = ("live", "superseded", "dead-link", "wrong-entity")
+
+
+def check_sources_status(sources, label):
+    """Rule 12. sources.csv retires rows in place; the retirement vocabulary must be real.
+
+    THE POLICY (Keaton, 2026-07-22): a source is NEVER deleted. When it is superseded, dies, or turns
+    out to describe the wrong entity, its row stays and is marked. That keeps the audit trail of what
+    a figure was cited to at the time, which deletion destroys and git only half preserves.
+
+    ROT IS NOT DEATH, and that is deliberate. A 404 or a 403 on a document that was validly retrieved
+    does NOT invalidate the figure -- TDK and Lenovo both 403 to automated clients and are almost
+    certainly fine. So `dead-link` is a RECORD, not a failure, and nothing here fails the gate merely
+    for being unreachable. Reachability is checked by verify_sources.py, which needs the network; this
+    gate stays offline by design.
+
+    What this rule DOES enforce is that the bookkeeping cannot lie:
+      - status is one of the four known values (a typo'd status would silently exempt a row from
+        rule 11's live filter, which is the quiet way this policy would rot)
+      - a retired row names its successor, and a live row does not
+      - superseded_by resolves to a source_id that actually exists in the same file
+    """
+    problems = []
+    ids = {g(r, "source_id") for r in sources if g(r, "source_id")}
+    for i, r in enumerate(sources, start=2):
+        sid = g(r, "source_id") or "?"
+        status = (g(r, "status") or "").strip()
+        sup = g(r, "superseded_by")
+        if not status:
+            continue  # not migrated yet; rule 11 treats a blank status as live
+        if status not in SOURCE_STATUS:
+            problems.append(
+                f"{label}:{i} {sid} has status {status!r}, expected one of {', '.join(SOURCE_STATUS)}")
+            continue
+        if status == "live" and sup:
+            problems.append(
+                f"{label}:{i} {sid} is status 'live' but names superseded_by {sup!r}; "
+                f"a live source has not been replaced")
+        if status != "live" and not sup:
+            problems.append(
+                f"{label}:{i} {sid} is status {status!r} but names no superseded_by; "
+                f"a retired source must say what replaced it, or the figure it backed is orphaned")
+        if sup and sup not in ids:
+            problems.append(
+                f"{label}:{i} {sid} names superseded_by {sup!r}, which is not a source_id in this file")
     return problems
 
 
@@ -396,7 +465,9 @@ def run(root):
         problems += check_notes_prose(companies, f"{slug}/companies.csv")
         problems += check_relationships(rels, f"{slug}/relationships.csv")
         problems += check_timeseries(ts, f"{slug}/financials_timeseries.csv")
-        problems += check_citation_agreement(companies, load(d / "sources.csv"), slug)
+        srcs = load(d / "sources.csv")
+        problems += check_citation_agreement(companies, srcs, slug)
+        problems += check_sources_status(srcs, f"{slug}/sources.csv")
         facts[slug] = {
             "edges": len(rels),
             "costed": sum(1 for c in companies if has_financials(c)),
@@ -436,6 +507,10 @@ def run(root):
 # dead check is indistinguishable from a green from a real one.
 # ---------------------------------------------------------------------------
 def selftest():
+    # Counted where the assertions actually run, not summed from a list of block names. The old
+    # tally added four named lists by hand and silently EXCLUDED three others, so it still read
+    # "56 cases" after 14 more were added. A hand-maintained count of tests is a copy, and copies rot.
+    ran = [0]
     good_company = {
         "company": "Fixture Corp", "revenue_usd_b": "10.0", "filing_source": "https://example.com/10-K",
         "source_tier": "1", "chokepoint": "yes",
@@ -547,6 +622,7 @@ def selftest():
     for name, fn, rows, expect_fire in cases:
         fired = bool(fn(rows, "selftest"))
         ok = fired == expect_fire
+        ran[0] += 1
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
@@ -580,6 +656,7 @@ def selftest():
     for name, by_map, expect_fire in cross_cases:
         fired = bool(check_cross_map(by_map, ALIASES))
         ok = fired == expect_fire
+        ran[0] += 1
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}")
@@ -607,6 +684,59 @@ def selftest():
     for name, comps, srcs, expect_fire in cite_cases:
         fired = bool(check_citation_agreement(comps, srcs, "fixture"))
         ok = fired == expect_fire
+        ran[0] += 1
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}")
+
+    # Rule 11, the archive interaction. MEASURED before the change: with no status filter this case
+    # was SILENT, so a figure could satisfy the agreement check against a row already judged wrong.
+    W = "https://www.taiyo-hd.co.jp/x.pdf"
+    R = "https://pdf.irpocket.com/C6976/x.pdf"
+    archive_cases = [
+        ("rule 11: only match is a RETIRED row (was silent before the live filter)",
+         [{"company": "Taiyo Yuden", "filing_source": W}],
+         [{"source_id": "S1", "company": "Taiyo Yuden", "url": W,
+           "status": "wrong-entity", "superseded_by": "S2"}], True),
+        ("control: live row matches, a retired row also present -> silent",
+         [{"company": "Taiyo Yuden", "filing_source": R}],
+         [{"source_id": "S2", "company": "Taiyo Yuden", "url": R, "status": "live"},
+          {"source_id": "S1", "company": "Taiyo Yuden", "url": W,
+           "status": "wrong-entity", "superseded_by": "S2"}], False),
+        ("NEGATIVE: blank status is treated as live, so an unmigrated map is not exempted",
+         [{"company": "X", "filing_source": R}],
+         [{"source_id": "S3", "company": "X", "url": R}], False),
+    ]
+    for name, comps, srcs, expect_fire in archive_cases:
+        fired = bool(check_citation_agreement(comps, srcs, "fixture"))
+        ok = fired == expect_fire
+        ran[0] += 1
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}")
+
+    # Rule 12: the retirement vocabulary.
+    status_cases = [
+        ("rule 12: unknown status value",
+         [{"source_id": "S1", "status": "retired", "superseded_by": "S2"},
+          {"source_id": "S2", "status": "live"}], True),
+        ("rule 12: retired row names no successor",
+         [{"source_id": "S1", "status": "dead-link", "superseded_by": ""}], True),
+        ("rule 12: live row claims a successor",
+         [{"source_id": "S1", "status": "live", "superseded_by": "S2"},
+          {"source_id": "S2", "status": "live"}], True),
+        ("rule 12: superseded_by points at a source_id that does not exist",
+         [{"source_id": "S1", "status": "superseded", "superseded_by": "NOPE"}], True),
+        ("control: a clean live+retired pair",
+         [{"source_id": "S1", "status": "wrong-entity", "superseded_by": "S2"},
+          {"source_id": "S2", "status": "live", "superseded_by": ""}], False),
+        ("NEGATIVE: unmigrated rows with no status column stay silent",
+         [{"source_id": "S1"}, {"source_id": "S2"}], False),
+    ]
+    for name, srcs, expect_fire in status_cases:
+        fired = bool(check_sources_status(srcs, "fixture"))
+        ok = fired == expect_fire
+        ran[0] += 1
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}")
@@ -661,6 +791,7 @@ def selftest():
     for name, text, expect_fire in runbook_cases:
         fired = bool(check_runbook(text, "selftest"))
         ok = fired == expect_fire
+        ran[0] += 1
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
@@ -668,6 +799,7 @@ def selftest():
     for name, text, facts, expect_fire in readme_cases:
         fired = bool(check_readme(text, facts))
         ok = fired == expect_fire
+        ran[0] += 1
         print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
@@ -701,12 +833,23 @@ def selftest():
         (d2 / "relationships.csv").write_text("from_company,to_company,description\n")
         (d / "companies.csv").write_text(
             "\n".join(costed).replace("10.0", "99.0") + "\n")   # same company-year, different figure
+        # Rules 11 and 12 need a sources.csv on the costed map: one live row citing a DIFFERENT
+        # document than companies.csv (rule 11), and one row with a status outside the vocabulary
+        # (rule 12). Added 2026-07-22 because the comment above is right and was immediately proven
+        # so: two rules landed without growing this test, exactly the way rule 9 did.
+        (d2 / "sources.csv").write_text(
+            "source_id,company,url,status,superseded_by\n"
+            "S1,Fixture Corp,https://example.com/DIFFERENT,live,\n"
+            "S2,Fixture Corp,https://example.com/b,bogus-status,\n")
         (root / "README.md").write_text(
             "| 01 | Fixture | Foundation only |\n| 04 | Fixture | Foundation only |\n")
         found = run(root)[0]
         for rule, needle in (("rule 8 (gaps)", "gaps.csv"),
-                             ("rule 9 (cross-map)", "disagrees with itself")):
+                             ("rule 9 (cross-map)", "disagrees with itself"),
+                             ("rule 11 (citation agreement)", "cite different documents"),
+                             ("rule 12 (source status)", "expected one of")):
             wired = any(needle in p for p in found)
+            ran[0] += 1
             print(f"  {'ok  ' if wired else 'DEAD'}  WIRING: run() actually reaches {rule}")
             if not wired:
                 failures.append(f"{rule} is never called by run(); the rule is dead code")
@@ -718,7 +861,7 @@ def selftest():
             print(f"  - {f}")
         return 2
     # +1 for the end-to-end WIRING case, which is not in any list.
-    print(f"SELFTEST PASSED. {len(cases) + len(readme_cases) + len(runbook_cases) + len(cross_cases) + 2} cases: every rule fires on its own mutant "
+    print(f"SELFTEST PASSED. {ran[0]} cases: every rule fires on its own mutant "
           f"and stays silent on clean and on merely-incomplete data.")
     return 0
 

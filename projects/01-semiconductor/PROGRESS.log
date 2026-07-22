@@ -61,3 +61,36 @@ checked from here at all. Recorded as unreachable. Lenovo's is also a press-room
 Also recorded from this log rather than researched: Arm's and SK hynix's market-cap divergence across
 trackers, Samsung's two competing capex figures, and three Arm licensing edges resting on 2021 and 2023
 evidence. 7 gap rows total, 38 of 41 rows now cite a document that names them.
+
+2026-07-22 CITATION REBOUND + A CORRECTION TO THIS LOG'S OWN COMMIT MESSAGE.
+Taiyo Yuden's row cited a PDF on taiyo-hd.co.jp. That host is TAIYO HOLDINGS CO., LTD., stock code
+4626, a chemicals and pharma group. This map's row is Taiyo Yuden, 6976. THE FIGURES WERE NEVER WRONG:
+Taiyo Yuden's own FY2026 release states net sales 355,341 JPYm, matching this row exactly, and net
+income 14,806, R&D 14,474 and capital investment 40,416 agree with it too. A correct number was bound
+to another company's document. Read by RENDERING page 4 rather than trusting the text layer, which
+emits that table as "4.1 13,903 355,341 341,438 Net sales" with the columns out of order and 341,438
+being the PRIOR year. verify_sources.py moved 38/41 -> 39/41; the two remaining are hosts that 403 to
+bots, which is unreachability, not error.
+
+⚠ CORRECTION, and it is about a claim this repo published. Commit 5516c41's message says the stale
+sources.csv row meant "the References tab still pointed readers at the wrong company". THAT IS FALSE.
+sources.csv is NOT rendered: shared/build_map.py never loads it, review.py lists it under NOT_READ, and
+renderRefs() reads companies.csv filing_source. The stale row was an INTERNAL provenance defect, never
+reader-facing. The three taiyo-hd strings still in the built page came from this map's own gap row
+prose. History is not being rewritten; the correction lives here, where the newest entry wins.
+
+WHAT THE MISS ACTUALLY TAUGHT. Fixing companies.csv was not enough and every existing check passed
+while the two files disagreed: gate exit 0, verify_sources 39/41 green, because it reads filing_source
+and nothing else. The divergence surfaced only from grepping the BUILT ARTIFACT rather than the field
+just edited. A green covers only the fields the checker reads. Both verifiers now print a scope footer,
+and check_data.py rule 11 compares the two files so this cannot pass silently again.
+
+Two discrepancies are RECORDED, NOT RESOLVED, both in the row note where a reader meets the figure
+(a closed gap row does not render, so parking them there would have reached nobody): the release states
+an actual FX average of 149.99 where this row converts at a blended 151, and states capital investment
+40,416 where the note carries 41,063, most likely a cash-flow line. Neither changes a published figure.
+
+SOURCES NOW RETIRE IN PLACE. sources.csv gained status + superseded_by; a source is never deleted.
+SRC026 points at Taiyo Yuden's own release and stays live; SRC026r holds the wrong document at
+status=wrong-entity, superseded_by=SRC026. Rot is not death: a 403 does not invalidate a figure, so
+nothing in the offline gate fails merely because a URL is unreachable.
