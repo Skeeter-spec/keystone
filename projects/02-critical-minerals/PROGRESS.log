@@ -306,3 +306,12 @@ drawn from the gap row -- i.e. fix the edge, NOT widen the checker (the banned m
 against, which only applies when the checker is wrong; here it is not). The author paused before editing
 crown-jewel edge prose. Until decided, the badge already conveys the doubt to a reader; only the sourced
 text lags. Gate is green with this open.
+
+2026-07-25 R8 RESOLVED (author approved). The Syrah -> POSCO Future M offtake edge, left under-marked on
+2026-07-22, now carries a ⚠ and "may have lapsed", matching its three siblings (Tesla, Glencore->Umicore,
+MP->Lynas). The caveat draws only from documents the prose already names: the 2025 Annual Report's silence
+on POSCO, and the 2023 Annual Report's condition that POSCO notify by 31 Dec 2025 for supply to commence,
+both already sourced in gap-02-posco-offtake-lapsed. review.py's R8 no longer fires; gate green. Fixed the
+EDGE, not the checker. Artifact rebuilt dated 2026-07-25 (a real content change, so the Updated date moved).
+verify_edges NOT re-run: the evidence_source URL and both endpoints are unchanged, so the edge's source
+binding is exactly what was verified before; only its prose sharpened.
