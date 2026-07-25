@@ -293,7 +293,7 @@ SOURCE_STATUS = ("live", "superseded", "dead-link", "wrong-entity")
 def check_sources_status(sources, label):
     """Rule 12. sources.csv retires rows in place; the retirement vocabulary must be real.
 
-    THE POLICY (Keaton, 2026-07-22): a source is NEVER deleted. When it is superseded, dies, or turns
+    THE POLICY (the author, 2026-07-22): a source is NEVER deleted. When it is superseded, dies, or turns
     out to describe the wrong entity, its row stays and is marked. That keeps the audit trail of what
     a figure was cited to at the time, which deletion destroys and git only half preserves.
 
