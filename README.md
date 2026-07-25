@@ -4,6 +4,17 @@ A living atlas of the world's industrial value chains, mapped to find the chokep
 
 In ecology a keystone species holds a whole system together. In an economy a keystone firm is the one a value chain cannot route around: the sole tool maker, the sole refiner, the sole foundry. Keystone hunts for those firms, one industry at a time, and shows the map behind them.
 
+## See the maps
+
+The pages are live at **https://skeeter-spec.github.io/keystone/**. Each map is a single self contained page: a value chain, its companies, their audited size, the dependency edges between them, and what no filing would say. The four furthest along:
+
+- [Semiconductor ecosystem](https://skeeter-spec.github.io/keystone/projects/01-semiconductor/artifact/semiconductor-map.html)
+- [Critical minerals](https://skeeter-spec.github.io/keystone/projects/02-critical-minerals/artifact/critical-minerals-map.html)
+- [AI compute stack](https://skeeter-spec.github.io/keystone/projects/04-ai-compute/artifact/ai-compute-map.html)
+- [Pharmaceuticals](https://skeeter-spec.github.io/keystone/projects/05-pharma/artifact/pharma-map.html)
+
+The other six are foundations so far, taxonomy and chokepoint hypotheses rather than sourced maps; the table below marks each one's state.
+
 ## What this is, and what it is not
 
 Each project traces three things about an industry: **who does what** (design, fabricate, package, sell), **how big each player is** (audited financials), and above all **how they depend on each other** (who licenses, fabricates, supplies, and buys from whom). The payoff is the dependency edges and the chokepoints they reveal.
