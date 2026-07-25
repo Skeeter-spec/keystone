@@ -2,3 +2,53 @@
 2026-07-16 FIX: chokepoint column normalized from TRUE/FALSE to yes/no. Not cosmetic. The artifact template tests c.chokepoint==='yes', so every chokepoint in this map would have rendered as NOT a chokepoint the moment the map was built, showing "0 chokepoints flagged" with no error raised. Six of the nine foundations had this drift (different research agents wrote different vocabularies); the four others were already yes/no. Counts preserved exactly. Now enforced by tools/gate.sh.
 
 2026-07-17 RENDERS NOW: added map.json (9 value-chain layers, 8 chokepoint_why lines) so shared/build_map.py can draw this map. Built artifact/ev-batteries-map.html: 30 companies land in a layer, zero orphans, every chokepoint carries an explanation. Authored mechanically from FOUNDATION.md + companies.csv (a Haiku worker); the layer roles were extracted from companies.csv, not invented, and the build's orphan + chokepoint_why checks were the gate. STILL foundation only: 0 costed companies, 0 sourced relationship edges. NEXT is a financials or relationships burst.
+
+2026-07-25 MAPPED (financials + relationships burst, one session). 03 went Foundation only -> Costed
+-> Mapped. 11 of 30 costed, 38 sourced relationship edges, 37 recorded gaps.
+
+FINANCIALS. All 8 chokepoints (CATL, BYD, CMOC, BTR, SEMCORP, Tinci, Glencore, Asahi Kasei) from
+FY2025 audited filings at tier 1, plus 3 inherited from 02 via reuse_costed (Ganfeng, Albemarle,
+Tesla). Glencore (USD-native) and Asahi Kasei read by hand; the six Chinese-listed issuers by two
+Sonnet workers, every revenue and net-income-attributable figure spot-checked byte-for-byte against
+the filing (营业收入 / 归属于母公司股东的净利润: CATL, Tinci, SEMCORP confirmed in the PDF text).
+
+RELATIONSHIPS. Three workers (automaker<->cell, upstream lithium/cobalt, midstream materials +
+recycling) produced the edges; I added 14 tier-1 edges from SEMCORP's and BTR's OWN annual reports,
+which name their battery-maker customers outright. A worker had gapped BTR->CATL as undisclosed while
+BTR's report, already on disk, named CATL: read the citations you already own.
+
+## HONEST WEAKNESSES
+
+1. FX conventions are NOT uniform across the costed rows. The six Chinese issuers' flow figures use the
+   2025-12-31 period-end rate CNY 6.9961 (the HK worker's original current-spot conversions were
+   renormalized to it from the RMB originals). Asahi's flows use a fiscal-year-average ~JPY 151.
+   Glencore is USD-native. All differ from a strict fiscal-average basis; a USD figure may move 2-3%.
+   Chokepoint ranking is unaffected. This is a method disclosure, not a sourcing gap.
+
+2. verify_edges reaches a document naming BOTH parties for only 14 of 38 edges. The other 24 split three
+   ways, none silent: (a) the 14 SEMCORP + BTR edges are tier 1 from those firms' own annual reports,
+   which name customers in Chinese (宁德时代 = CATL, 贝特瑞 = BTR), so the English-matching verifier
+   reports HALF although the naming sentence was read by hand; (b) four first-party sources (POSCO Future
+   M -> GM, Li-Cycle -> GM, Redwood -> Volkswagen on the GM/VW newsrooms; Ganfeng -> Umicore) were
+   unreachable at verify from bot-block or URL rot, kept per this repo's rot-is-not-death rule after the
+   relationship was confirmed on the publisher's live site; (c) two greencarcongress tier-3 trade-press
+   edges (Ganfeng -> Tesla, Ganfeng -> Volkswagen) were DEMOTED to gaps because that domain will not
+   resolve from here and no first-party source replaced them. See gap-03-unreach-1..2.
+   verify_sources tells the same story on the financials: 9 of 11 costed rows pass; the two failures are
+   BTR and SEMCORP, whose Chinese-language filings name them 贝特瑞 and 恩捷 rather than their English
+   roster names, so the matcher misses them although their revenue lines were spot-checked in the PDF by
+   hand. Both figures stand; the citation resolves.
+
+3. Eleven tier-4 (news-only) edges the workers produced were dropped at merge, which bars tier 4. Where a
+   tier-1 source existed they were upgraded (the SEMCORP/BTR customer edges); the remaining nine are
+   recorded as gap-03-tier4-1..9, not silent deletions.
+
+4. The cell makers' own filings disclose supplier CONCENTRATION as percentages without names (CATL top
+   five suppliers = a few percent each; BYD one customer > RMB 100bn, unnamed). So the largest anode and
+   cathode flows INTO CATL and BYD are unmappable from the buyer side; the edges that exist come from the
+   suppliers naming their customers. Recorded as gaps by the midstream worker (gap-03-matrec-*).
+
+5. Umicore -> Envision AESC: the source names the counterparty only as "AESC"; binding it to Envision
+   AESC is an inference (former NEC/Nissan AESC, now Envision-majority). Confidence medium.
+
+6. Still foundation-thin next to 01: 19 of 30 companies uncosted, no timeseries, no politics lens.

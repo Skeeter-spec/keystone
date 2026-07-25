@@ -53,7 +53,18 @@
       "desc": "Recover metal from scrap and spent cells"
     }
   ],
-  "relationship_types": [],
+  "relationship_types": [
+    "supplies-lithium-to",
+    "supplies-cobalt-to",
+    "supplies-cathode-to",
+    "supplies-anode-to",
+    "supplies-electrolyte-to",
+    "supplies-separator-to",
+    "supplies-cells-to",
+    "offtake-with",
+    "invests-in",
+    "recycles-for"
+  ],
   "chokepoint_why": {
     "CATL": "The world's largest EV cell maker, over a third of global output on its own, and most non-Chinese automakers rely on it for at least one platform. The single hardest node to route around in this chain.",
     "BYD": "The second largest cell maker and the only one that is also a top tier automaker, so it does not depend on the rest of the chain the way other cell makers do. Vertically integrated from cells to vehicles, which makes it a chokepoint on the supply and the demand side at once.",
