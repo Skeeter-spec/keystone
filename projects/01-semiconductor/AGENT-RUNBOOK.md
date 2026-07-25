@@ -1,5 +1,7 @@
 # Agent runbook: one research burst
 
+🔴 **[`../_kit/AGENT-RUNBOOK.md`](../_kit/AGENT-RUNBOOK.md) is the authoritative shared burst procedure. Read it first.** The staging then `verify_edges` then merge order, the gap discipline, the chokepoint rules and the `## HONEST WEAKNESSES` convention all live there so they cannot drift. What follows below is only for this map.
+
 You are a background research agent for the semiconductor ecosystem map at
 `~/dev/projects/keystone/projects/01-semiconductor/`. You run in short bursts. Do one small,
 correct chunk of work, save it, and stop. Never try to finish everything.

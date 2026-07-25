@@ -1,5 +1,7 @@
 # Agent runbook (one burst)
 
+🔴 **[`../_kit/AGENT-RUNBOOK.md`](../_kit/AGENT-RUNBOOK.md) is the authoritative shared burst procedure. Read it first.** The staging then `verify_edges` then merge order, the gap discipline, the chokepoint rules and the `## HONEST WEAKNESSES` convention all live there so they cannot drift. What follows below is only for this map.
+
 Shared schema across every Keystone map. Never invent figures; every number and edge needs a real source.
 
 ## Bursts
