@@ -2,7 +2,7 @@
   "title": "Critical minerals",
   "subtitle": "Who digs, refines and separates the minerals everything else is built from, and who cannot route around whom.",
   "financials_note": "Five-year income-statement trends for the chokepoints. Revenue bars read on the left; margins read on the right. Note that this map's chokepoints are largely Chinese A-share filers, so expect lower source tiers here than in a map of Western filers, and read the tier badge before trusting a number.",
-  "chokepoints_note": "The companies the rest of the chain has the fewest alternatives to, ranked by market value. Mining is comparatively diverse; separation, refining and conversion are where the routing options run out.",
+  "chokepoints_note": "The companies the rest of the chain has the fewest alternatives to, ranked by revenue (market cap was not sourced for these issuers). Mining is comparatively diverse; separation, refining and conversion are where the routing options run out.",
   "notes_placeholder": "General notes on critical minerals...",
   "storage_key": "critical-minerals-map",
   "export_filename": "critical-minerals-map-notes.json",

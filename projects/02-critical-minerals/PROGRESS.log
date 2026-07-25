@@ -277,3 +277,32 @@ and incorrect does.
 sourced edge and still reads 47% competes-with, which is the highest rivalry share in the atlas. R4 and
 R6 must keep firing on it; if either ever goes quiet without the data changing, something edited a
 weakness and called it a decision. What is settled is the LABEL, not the map's thinness.
+
+2026-07-22 REVIEW (Session 2, see mission-control/REVIEW-2026-07.md). Two fixes applied and verified on
+the live render; one item deliberately LEFT OPEN for the author.
+
+F6 APPLIED (shared template, all 10 artifacts rebuilt with dates preserved). The Chokepoints tab showed
+the literal string "null market cap" on all 5 of this map's chokepoints (Chinese issuers whose period-end
+share count was not read), while its header claimed "ranked by market value" -- a claim the all-null data
+could not support, since the market-cap sort collapsed to CSV order. Fix: build_map's chokepoint sort now
+falls back to revenue when market cap is absent, and the card hides the market-cap line entirely rather
+than printing "null". 02's chokepoints_note now says "ranked by revenue (market cap was not sourced for
+these issuers)". This also fixed 04-ai-compute (Siemens Energy). Rebuilt with each artifact's OWN declared
+date, so no map's visible "Updated" date moved on a presentation-only change.
+
+F5 APPLIED (data). gap-02-posco-offtake-lapsed's subject was the bare company "POSCO Future M", so
+edgeGap() -- which matches only on the `A -> B` convention -- never associated it with the Syrah -> POSCO
+edge, and that edge rendered with NO staleness badge while its three siblings (Syrah->Tesla,
+Glencore->Umicore, MP->Lynas) all carried one. It was the worst one to miss: the gap is kind=lapsed, the
+strongest of the four. Subject rewritten to "Syrah Resources -> POSCO Future M" (accurate; the gap is
+specifically about that offtake). The edge now renders the correct "may have lapsed" badge. Verified live.
+
+R8 LEFT OPEN, author's call. The F5 fix made review.py's R8 (edge-contradicts-its-gap) fire: an open
+lapsed gap now names this edge, but the edge's own sourced DESCRIPTION carries no caveat cue (no ⚠, unlike
+its siblings) -- it says only "does not mention POSCO... currency is uncertain". R8 is advisory, not a gate
+failure, and it is RIGHT here: the description is genuinely under-marked versus its siblings. The proposed
+resolution (queued, NOT applied) is to strengthen the description with a ⚠ and "may have lapsed"/"unverified"
+drawn from the gap row -- i.e. fix the edge, NOT widen the checker (the banned move review.py:45-52 warns
+against, which only applies when the checker is wrong; here it is not). The author paused before editing
+crown-jewel edge prose. Until decided, the badge already conveys the doubt to a reader; only the sourced
+text lags. Gate is green with this open.

@@ -621,7 +621,11 @@ function gapBadge(company){
 /* ---- chokepoints ---- */
 function renderChoke(){
   const chokes=COMPANIES.filter(c=>c.chokepoint==='yes')
-    .sort((a,b)=>parseFloat(b.market_cap_usd_b||0)-parseFloat(a.market_cap_usd_b||0));
+    // market value first, then revenue as a fallback so a map whose chokepoints have no
+    // sourced market cap (e.g. issuers whose period-end share count was not read) still ranks
+    // by size instead of collapsing to CSV order.
+    .sort((a,b)=>(parseFloat(b.market_cap_usd_b||0)-parseFloat(a.market_cap_usd_b||0))
+                 ||(parseFloat(b.revenue_usd_b||0)-parseFloat(a.revenue_usd_b||0)));
   const filled=chokes.filter(isFilled);
   const maxV=filled.length?Math.max(...filled.map(c=>parseFloat(c.revenue_usd_b))):1;
   $('#chokelist').innerHTML = chokes.map(c=>{
@@ -642,7 +646,7 @@ function renderChoke(){
     return `<div class="panel">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;">
         <h2>${c.company} <span class="tick mono">${c.ticker}</span></h2>
-        <span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>
+        ${fmtB(c.market_cap_usd_b)!=null?`<span class="mono" style="color:var(--accent-ink);font-weight:600;">${fmtB(c.market_cap_usd_b)} market cap</span>`:''}
       </div>
       <div class="sub" style="margin:6px 0 12px;">${CHOKE_WHY[c.company]||c.primary_segment}</div>
       ${gapBadge(c.company)}
