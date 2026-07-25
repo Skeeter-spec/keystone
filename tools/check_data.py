@@ -420,12 +420,26 @@ CHOKE_PROSE_RE = re.compile(r"chokepoint[ =]*(TRUE|FALSE)", re.I)
 
 
 def check_runbook(text, label):
-    """Rule 7. The instruction that produced the drift, not the drift."""
+    """Rule 7. The instruction that produced the drift, not the drift.
+
+    Rule 13. A per-map AGENT-RUNBOOK.md must POINT at the shared _kit procedure, never re-copy it.
+    Measured 2026-07-25: the per-map runbooks were copies stamped from an older _kit and 8 of 10 had
+    frozen without the staging/verify discipline _kit gained since. new-map.sh now stamps a pointer,
+    but that only defends new maps; this defends the eight that exist and any hand-made re-copy. The
+    exemptions are structural, not incidental: _kit's own runbook IS the source (it cannot point at
+    itself), and FOUNDATION.md is a different document, so only a per-map AGENT-RUNBOOK.md is in scope.
+    """
     problems = []
     if CHOKE_PROSE_RE.search(text):
         problems.append(
             f"{label} tells research agents to write TRUE/FALSE for chokepoint. The template tests "
             f"chokepoint==='yes', so this instruction regenerates the silent-zero bug on the next burst")
+    if label.endswith("AGENT-RUNBOOK.md") and not label.startswith("_kit/"):
+        if not re.search(r"_kit/AGENT-RUNBOOK", text):
+            problems.append(
+                f"{label} does not point at ../_kit/AGENT-RUNBOOK.md. The shared burst procedure lives "
+                f"only in _kit; a per-map runbook must reference it, never re-copy it, because a copy "
+                f"freezes and drifts (8 of 10 had, 2026-07-25)")
     return problems
 
 
@@ -796,6 +810,27 @@ def selftest():
         if not ok:
             failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
 
+    # Rule 13 is label-dependent (only a per-map AGENT-RUNBOOK.md is in scope), so it needs cases that
+    # vary the label, which runbook_cases above do not. Text says "set chokepoint yes" throughout so the
+    # chokepoint rule stays silent and only Rule 13's behaviour is under test.
+    pointer_cases = [
+        ("rule 13: a per-map runbook that does not reference _kit fires",
+         "03-ev-batteries/AGENT-RUNBOOK.md", "# Agent runbook\nseed companies, set chokepoint yes", True),
+        ("control: a per-map runbook that points at ../_kit/AGENT-RUNBOOK.md stays silent",
+         "03-ev-batteries/AGENT-RUNBOOK.md", "Read ../_kit/AGENT-RUNBOOK.md first. set chokepoint yes", False),
+        ("NEGATIVE: _kit's own runbook is exempt (it IS the source, cannot point at itself)",
+         "_kit/AGENT-RUNBOOK.md", "seed companies, set chokepoint yes", False),
+        ("NEGATIVE: a FOUNDATION.md is not required to reference _kit",
+         "06-shipping/FOUNDATION.md", "chokepoint hypotheses, set chokepoint yes", False),
+    ]
+    for name, label, text, expect_fire in pointer_cases:
+        fired = bool(check_runbook(text, label))
+        ok = fired == expect_fire
+        ran[0] += 1
+        print(f"  {'ok  ' if ok else 'DEAD'}  {name}")
+        if not ok:
+            failures.append(f"{name}: expected {'a finding' if expect_fire else 'silence'}, got {'a finding' if fired else 'silence'}")
+
     for name, text, facts, expect_fire in readme_cases:
         fired = bool(check_readme(text, facts))
         ok = fired == expect_fire
@@ -843,11 +878,17 @@ def selftest():
             "S2,Fixture Corp,https://example.com/b,bogus-status,\n")
         (root / "README.md").write_text(
             "| 01 | Fixture | Foundation only |\n| 04 | Fixture | Foundation only |\n")
+        # Rule 13 (runbook pointer): a per-map AGENT-RUNBOOK.md with no _kit reference must surface
+        # via run(), which globs projects/*/AGENT-RUNBOOK.md. Without this file the glob finds none and
+        # the rule would be wiring-untested exactly the way rule 9 was when its call-site mutant survived.
+        (root / "projects" / "04-fixture" / "AGENT-RUNBOOK.md").write_text(
+            "# Agent runbook\nno kit link here, set chokepoint yes\n")
         found = run(root)[0]
         for rule, needle in (("rule 8 (gaps)", "gaps.csv"),
                              ("rule 9 (cross-map)", "disagrees with itself"),
                              ("rule 11 (citation agreement)", "cite different documents"),
-                             ("rule 12 (source status)", "expected one of")):
+                             ("rule 12 (source status)", "expected one of"),
+                             ("rule 13 (runbook pointer)", "does not point at ../_kit")):
             wired = any(needle in p for p in found)
             ran[0] += 1
             print(f"  {'ok  ' if wired else 'DEAD'}  WIRING: run() actually reaches {rule}")
