@@ -167,3 +167,36 @@ customer, and Marvell has no edges because its only source is machine-unreadable
 🔑 UNMINED HERE AND EVERYWHERE: the documents already in filing_source have never been read for
 RELATIONSHIPS. Nvidia's Q4 FY2026 release (01's own citation) names Groq, CoreWeave, Microsoft and
 Anthropic; Groq has zero edges on this map. Read the citations you already own before fetching new ones.
+
+2026-07-25 RELATIONSHIPS (owned-citation mining, no new sourcing bet): read Nvidia's own
+Q4/FY2026 results press release (q4fy26pr.htm, already cited by map 01 as SRC001) for the
+RELATIONSHIP announcements in its recent-highlights section, per the "read the citations you
+already own before fetching new ones" note. Added 7 Nvidia-> edges, all citing that one
+document, and registered it in this map's sources.csv (src-nvda-q4-fy2026, tier 2: a results
+press release / 8-K exhibit is first-party disclosure, not the audited 10-K, so relationship
+claims from it are tier 2 -- same call as the Broadcom->Meta press-release edge). The headline
+result: Groq had ZERO edges and now connects via Nvidia's stated non-exclusive licensing
+agreement.
+
+Edges added (from_company = Nvidia): Groq (licenses-ip-to, medium), Anthropic (invests-in,
+high), Meta Platforms (supplies-components-to, high), and the four Vera Rubin cloud deployers
+Microsoft / Amazon (AWS) / Alphabet (Google Cloud) / Oracle (supplies-components-to, medium).
+
+## HONEST WEAKNESSES
+- The Groq edge direction is inferred. The release says only "a non-exclusive licensing
+  agreement WITH Groq"; it does not state which party licenses which IP. Kept at confidence
+  medium with the ambiguity written into the edge description.
+- The four Vera Rubin cloud edges are FORWARD-LOOKING. The release says these clouds "will be
+  among the first to deploy" a platform that is not yet shipping. They are announced supply
+  commitments, not realised deployments; confidence medium and the future tense is quoted in
+  each description so no reader over-reads them.
+- These new Nvidia->Meta/Microsoft/Amazon/Alphabet edges do NOT close
+  gap-04-hyperscalers-name-no-supplier. That gap is about the HYPERSCALERS' own 10-Ks, which
+  still never name Nvidia. The finding is now sharper, an asymmetry: Nvidia's filing names them
+  as customers, theirs do not name Nvidia as a supplier. The gap row is left verbatim and its
+  last_checked is NOT bumped, because their filings were not re-opened today.
+- Synopsys was named as an expanded Nvidia partner but is off-roster (EDA), recorded as
+  gap-04-synopsys-partnership-off-roster (out-of-scope) rather than drawn as an edge.
+- Nvidia's "strengthened collaboration with CoreWeave (5 GW of AI factories by 2030)" was read
+  and NOT added: CoreWeave already carries two sourced Nvidia edges, so it would be a
+  near-duplicate. Recorded here rather than as a row.
