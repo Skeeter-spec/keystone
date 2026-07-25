@@ -132,6 +132,30 @@ Where a hypothesis is expected to be DISCONFIRMED, say so in the line. 10-nuclea
 uranium mining as its counter-example, so a burst that finds mining concentrated has found something
 genuinely surprising rather than something to quietly drop.
 
+## What the 03 burst learned (apply to every remaining map)
+
+The 2026-07-25 EV batteries burst hit four choreography failures. Each will recur on 06 through 10.
+
+1. **Edges must be tier 1 to 3. `merge_edges` REJECTS tier 4 and aborts the whole batch.** Tell every
+   relationship worker that a news only link is not an edge: file it as a `gaps.csv` row (kind=undisclosed).
+   The 03 burst produced 11 tier 4 edges that aborted the merge and had to be triaged again by hand.
+2. **`verify_edges` reads STAGED edges only (`data/_incoming/edges_*.csv`), never `relationships.csv`. Run
+   it BEFORE `merge_edges --apply`.** Merge archives the staging into `_merged/`, after which verify_edges
+   sees ZERO edges, and no tool checks a merged edge again. Verify is a gate you run before the merge, not
+   after it.
+3. **One FX convention for the whole map, stated in every worker prompt.** 03 used three (period end CNY,
+   fiscal average JPY, current spot) and needed a renormalization pass. The rule: flow items (revenue, net
+   income, R&D, capex) at the issuer's fiscal period rate; market cap at current spot, since that pairs with
+   the current price. State the exact rate and date on every row.
+4. **Feed the financials phase filings to the relationship workers.** A supplier's own annual report names
+   its customers. SEMCORP and BTR named CATL, BYD and LG outright, worth 14 tier 1 edges. One of them, BTR
+   to CATL, a worker had already filed as an "undisclosed" gap without ever opening the report the financials
+   phase had downloaded. Hand the workers the file paths. This principle is on the 04 and 05 logs too; it
+   recurs because the workers are never handed the files.
+5. **Chinese named entities false negative both verifiers.** The verifiers match the English roster name,
+   but the filing says 宁德时代, 贝特瑞, 恩捷. Expect a HALF or FAIL that is not real, carry the native name
+   in the edge description, and confirm the naming sentence by eye.
+
 ## Ending a burst: one heading for doubt, and rows in the same commit
 
 Write everything you are unsure about under exactly this heading:
