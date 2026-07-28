@@ -16,16 +16,27 @@ Written after the 2026-07-25 burst (Foundation -> Edges started). Routing only; 
 - **DONE via SEC XBRL (`tools/xbrl_extract.py --ticker <T> --expect "<name>"`):** Centrus (LEU), BWXT,
   Uranium Energy (UEC), Energy Fuels (UUUU), Constellation (CEG), Honeywell (HON), Rio Tinto (RIO).
   Identity bindings already in `shared/edgar_registrants.csv`.
-- 🔴 **Cameco (CCJ), NexGen (NXE), Denison (DNN) return "no annual revenue tag" from xbrl_extract, BUT
-  Cameco's companyfacts carries `ifrs-full:Revenue` + `ProfitLossAttributableToOwnersOfParent` (Rio
-  Tinto costed fine off those same ifrs-full tags).** Before defaulting to expensive PDF extraction,
-  check whether xbrl_extract's annual-period selection is missing the ifrs-full annual instance for
-  these 40-F filers -- a small tool fix may cost all three nearly free.
-- **PDF / IR route, NOT yet costed (the next financials pass):** Orano (orano.group/en/finance, EUR,
-  unlisted), Urenco (urenco.com results, EUR, unlisted), EDF (edf.fr finance, EUR, delisted 2023 --
-  net income ATTRIBUTABLE TO OWNERS, minorities are large), Kazatomprom (kazatomprom.kz/en/investors,
-  IFRS English, attributable), Cameco (fallback if the XBRL fix fails: cameco.com/invest or SEDAR+,
-  CAD). FX + market-cap conventions per `shared/SOURCING-ROUTES.md`.
+- ✅ **RESOLVED 2026-07-28, and the hypothesis above it was WRONG. It was never the tag list or the
+  annual-period selection: it was the CURRENCY.** `xbrl_extract.py` dropped every fact whose unit was
+  not `USD`, before any period logic ran. Cameco and Denison are 40-F filers tagging `ifrs-full` in
+  **CAD**, so their revenue, attributable profit, capex and R&D were all present and all discarded,
+  and the tool reported "no annual revenue tag" -- which reads as *the filer does not disclose it*.
+  Rio Tinto only ever worked because Rio tags in USD. The filter now accepts any ISO-4217 unit, the
+  report labels the currency on every line, and a non-USD fixture guards it. **Cameco and Denison are
+  now costed straight from XBRL. NexGen is a genuinely different case** -- it has no revenue concept
+  in any currency, being exploration stage, so its revenue stays EMPTY, never 0.
+- **DONE via publisher PDF / IR (2026-07-28):** Orano, Urenco, Kazatomprom, EDF. Exact document URLs are
+  the `filing_source` on each row in `companies.csv`; start there rather than re-searching the host.
+  🔴 **Each of these four publishes a prominent ADJUSTED earnings figure next to the reported one, and
+  the adjusted one is the decoy** (Orano's adjusted attributable was -25 EUR m against a reported
+  404; EDF leads with 9.6 EUR bn "excluding non-recurring items" against a reported 8,367 EUR m).
+  Take the IAS 1 line that allocates profit to owners of the parent, and CROSS-CHECK attributable +
+  non-controlling interests == total. That check is exact for EDF and Kazatomprom, off by 1 EUR m on
+  the face of Orano's own statement, and IMPOSSIBLE for Urenco, which discloses no NCI split at all.
+- 🔴 **`edf.fr` is UNREACHABLE to this repo's verifiers on this machine** -- system Python 3.9.6 links
+  LibreSSL 2.8.3 and cannot negotiate the TLS version the host demands, and curl is served 403. EDF is
+  the one costed row `verify_sources.py` cannot check. See gap-10-6. Do not "fix" this by swapping in
+  a weaker reachable citation.
 - **Leave UNCOSTED (blank, NOT gap rows -- honest "not yet costed"):** Rosatom/TENEX, TVEL, Uranium One
   (ARMZ), GLE, Westinghouse, CNNC parent, Framatome -- state-owned / private / JV, no standalone
   audited public financials (Framatome may be reachable via EDF segment reporting).

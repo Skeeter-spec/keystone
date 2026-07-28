@@ -51,6 +51,9 @@ CAP = ["PaymentsToAcquirePropertyPlantAndEquipment",
        "AdditionsOtherThanThroughBusinessCombinationsPropertyPlantAndEquipment"]
 SHARES = ["EntityCommonStockSharesOutstanding", "NumberOfSharesOutstanding"]
 NAMESPACES = ("us-gaap", "ifrs-full", "dei")
+# ISO 4217, exactly three capitals. Deliberately NOT a substring test: XBRL also carries compound
+# units like "USD/shares" (per-share EPS) and "pure" (ratios), and neither is a money amount.
+CURRENCY = re.compile(r"^[A-Z]{3}$")
 
 
 def _days(a, b):
@@ -66,7 +69,13 @@ def candidates(facts, concepts, flow=True):
     for ns in NAMESPACES:
         for c in concepts:
             for unit, arr in facts.get(ns, {}).get(c, {}).get("units", {}).items():
-                if unit not in ("USD", "shares"):
+                # TRAP 5: this was `unit not in ("USD", "shares")` until 2026-07-28, which threw away
+                # every fact from a filer that does not report in USD -- BEFORE any period logic ran.
+                # Cameco and Denison are 40-F filers tagging ifrs-full in CAD: their annual revenue,
+                # attributable profit, capex and R&D were all present and all discarded, and the tool
+                # said "no annual revenue tag", which reads as "the filer does not disclose it".
+                # A currency that is not USD is a CONVERSION job, not an absence.
+                if unit != "shares" and not CURRENCY.match(unit):
                     continue
                 for e in arr:
                     if e.get("form") not in ANNUAL:
@@ -134,9 +143,12 @@ def resolve(ticker):
 
 def report(facts, period_end, label):
     print(f"\n== {label} == reporting period end {period_end}")
+    picked = set()
     for name, concepts, flow in [("REVENUE", REV, True), ("NET_INCOME", NI, True),
                                  ("R&D", RD, True), ("CAPEX", CAP, True), ("SHARES", SHARES, False)]:
         chosen, allc = pick(facts, concepts, period_end, flow=flow)
+        if chosen and chosen["unit"] != "shares":
+            picked.add(chosen["unit"])
         # TRAP 4: the fork is ALWAYS printed. There is no quiet mode.
         year = int(period_end[:4]) if period_end else None
         # newest-first, so the per-concept dedup keeps the CURRENT entry, not the oldest.
@@ -150,11 +162,24 @@ def report(facts, period_end, label):
             fresh = (int(x["end"][:4]) == year) if flow else (x["end"] >= period_end)
             mark = "<-- USED" if chosen and x["concept"] == chosen["concept"] and fresh else \
                    ("" if fresh else "(stale, rejected)")
-            v = x["val"] / 1e9 if x["unit"] == "USD" else x["val"] / 1e6
-            print(f"   {name:11} {v:>14.4f}{'B' if x['unit']=='USD' else 'M sh'} "
+            # The unit is ALWAYS printed. Before 2026-07-28 this branched on == "USD" and any other
+            # currency fell to the shares path, so a CAD figure would have rendered "3481.9330M sh".
+            # Widening the filter above without changing this line is how a CAD number becomes a
+            # confident USD number, which is the failure this whole tool exists to prevent.
+            if x["unit"] == "shares":
+                v, suffix = x["val"] / 1e6, "M sh"
+            else:
+                v, suffix = x["val"] / 1e9, f"B {x['unit']}"
+            print(f"   {name:11} {v:>14.4f} {suffix:<7} "
                   f"{x['end']}  [{x['ns']}:{x['concept']}] {mark}")
         if not allc:
             print(f"   {name:11} {'--':>14}   not reported -> leave EMPTY, do not write 0")
+    if len(picked) > 1:
+        print(f"\n   MIXED CURRENCIES across the chosen figures: {', '.join(sorted(picked))}.")
+        print(f"   These do NOT belong on one row. Choose the filer's reporting currency by hand.")
+    elif picked and picked != {"USD"}:
+        print(f"\n   NOTE: the figures above are {picked.pop()}, NOT USD. Convert at the issuer's")
+        print(f"   fiscal-period rate and record the rate and date on the row (SOURCING-ROUTES.md).")
 
 
 def main(argv):
@@ -211,6 +236,23 @@ def selftest():
     tsla = {"us-gaap": {"Revenues": {"units": {"USD": [flow("", "", 94.827e9, "2025-12-31")]}}},
             "dei": {"EntityCommonStockSharesOutstanding": {"units": {"shares": [
                 {"form": "10-K", "end": "2026-01-23", "val": 3_752_430_000, "accn": "x"}]}}}}
+    # Cameco's REAL shape, read off data.sec.gov companyfacts 2026-07-28. Every fact below was
+    # silently discarded until that date: the unit filter took USD only, so this 40-F filer came
+    # back "no annual revenue tag" and three roster companies looked un-costable from XBRL. The
+    # runbook's hypothesis (a missing ifrs-full annual instance) was wrong; the currency was the bug.
+    def cad(val, end="2025-12-31"):
+        return dict(flow("", "", val, end), form="40-F")
+    ccj = {"ifrs-full": {
+        "Revenue": {"units": {"CAD": [cad(3_481_933_000)]}},
+        "ProfitLossAttributableToOwnersOfParent": {"units": {"CAD": [cad(589_577_000)]}},
+        "ProfitLoss": {"units": {"CAD": [cad(589_542_000)]}}}}
+    # A filer whose revenue and profit are tagged in DIFFERENT currencies. Nothing stops this in the
+    # data, and the two figures must never land on one row.
+    mixed = {"ifrs-full": {
+        "Revenue": {"units": {"CAD": [cad(3_481_933_000)]}},
+        "ProfitLossAttributableToOwnersOfParent": {"units": {"USD": [cad(2_500_000_000)]}}}}
+    # EPS carries unit "USD/shares". It is not a money amount and must not survive the filter.
+    eps_only = {"ifrs-full": {"Revenue": {"units": {"USD/shares": [flow("", "", 4.21, "2025-12-31")]}}}}
 
     cases = []
     def check(name, got, want):
@@ -248,6 +290,38 @@ def selftest():
           "9.0190" in out and "<-- USED" in out, True)
     check("the losing sibling is still SHOWN, so the fork stays visible",
           "11.1430" in out, True)
+
+    # --- non-USD filers (2026-07-28). Selection and DISPLAY are tested separately, because the
+    # display is the half that turns a correct CAD number into a confident USD one.
+    check("a CAD-reporting 40-F filer is REACHABLE at all (was None: every fact dropped by the unit filter)",
+          reporting_period(ccj), "2025-12-31")
+    p, _ = pick(ccj, NI, reporting_period(ccj))
+    # `p and ...` deliberately: when the currency filter regresses, pick() returns None and a bare
+    # p["val"] raises TypeError, so the run dies with a traceback instead of naming the failing case
+    # AND every check below it stops running. A suite that crashes reports less than one that fails.
+    check("Cameco net income takes ATTRIBUTABLE 589.577M, not consolidated 589.542M (the rule holds in CAD)",
+          p and p["val"], 589_577_000)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        report(ccj, reporting_period(ccj), "fixture")
+    cad_out = buf.getvalue()
+    check("DISPLAY: a CAD figure is LABELLED CAD, never bare billions",
+          "B CAD" in cad_out, True)
+    check("DISPLAY: CAD renders as billions (3.4819), not down the shares path (3481.9330M sh)",
+          "3.4819" in cad_out and "3481.9330" not in cad_out, True)
+    check("DISPLAY: a non-USD filer is told to convert, with the currency named",
+          "NOT USD" in cad_out, True)
+    check("CONTROL: a USD filer is NOT told to convert (the note must be SILENT on the clean case)",
+          "NOT USD" in out, False)
+    check("CONTROL: a single-currency filer raises no MIXED CURRENCIES warning",
+          "MIXED CURRENCIES" in cad_out, False)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        report(mixed, reporting_period(mixed), "fixture")
+    check("two currencies among the chosen figures are FLAGGED, not silently merged",
+          "MIXED CURRENCIES" in buf.getvalue(), True)
+    check("NEGATIVE: unit 'USD/shares' (EPS) is not money and does not survive the filter",
+          candidates(eps_only, REV, flow=True), [])
 
     b = load_bindings()
     check("CONTROL: (NeoGenomics CIK, Neo Performance Materials) is NOT an approved binding",
