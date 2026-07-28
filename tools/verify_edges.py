@@ -156,6 +156,34 @@ KEY = {
     # A bare alias would verify a Merck & Co edge against a document about a company on another
     # continent -- the NEO -> NEOGENOMICS failure with better camouflage.
     "Merck & Co": "Merck & Co|Merck Sharp|MSD",
+    # 10-nuclear-fuel, added 2026-07-25 before its relationships burst. Same root cause as 02/04/05:
+    # the roster name is ours, not the document's. Kept TIGHT -- every alternative is a name the entity
+    # actually trades under, and two dangerous bare forms are deliberately EXCLUDED:
+    #   - "China National Nuclear Corporation (CNNC)" gets NO bare "China National Nuclear", because the
+    #     map also carries the listed subsidiary China National Nuclear Power (601985); a bare alias
+    #     would verify a CNNC-parent edge against the subsidiary's filing. Same class as Merck above.
+    #   - "CGN Mining Company Limited" gets NO bare "CGN": the parent China General Nuclear (CGN) is a
+    #     different entity than the HK-listed CGN Mining offshoot on this roster.
+    "Rosatom / TENEX": "TENEX|Rosatom",
+    "TVEL Fuel Company": "TVEL",
+    "Uranium One (ARMZ)": "Uranium One|ARMZ",
+    "Urenco Group": "Urenco",
+    "China National Nuclear Corporation (CNNC)": "CNNC|China National Nuclear Corporation",
+    "CGN Mining Company Limited": "CGN Mining",
+    "Westinghouse Electric Company": "Westinghouse",
+    "National Atomic Company Kazatomprom": "Kazatomprom",
+    "Cameco Corporation": "Cameco",
+    "Centrus Energy Corp": "Centrus",
+    "Constellation Energy Corporation": "Constellation Energy|Constellation",
+    "Electricite de France (EDF)": "Electricite de France|Électricité de France|EDF",
+    "Global Laser Enrichment (GLE)": "Global Laser Enrichment|GLE",
+    "Silex Systems Limited": "Silex",
+    "NexGen Energy": "NexGen",
+    "Denison Mines": "Denison",
+    "Paladin Energy": "Paladin",
+    "Honeywell International (Metropolis Works)": "Honeywell",
+    "BWX Technologies": "BWX Technologies|BWXT",
+    "Uranium Energy Corp": "Uranium Energy Corp|Uranium Energy",
 }
 
 # NOTE: use .search(), never .match(). match() anchors at position 0, so the mid-URL alternatives

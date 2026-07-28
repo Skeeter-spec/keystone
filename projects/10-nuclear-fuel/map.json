@@ -48,7 +48,16 @@
       "desc": "Buy and sell enriched uranium and nuclear materials"
     }
   ],
-  "relationship_types": [],
+  "relationship_types": [
+    "supplies-uranium-to",
+    "supplies-uf6-to",
+    "supplies-enrichment-to",
+    "fabricates-fuel-for",
+    "reprocesses-fuel-for",
+    "invests-in",
+    "jv-partner-with",
+    "offtake-with"
+  ],
   "chokepoint_why": {
     "Orano": "One of only four commercial enrichers globally and a major conversion operator at Malvesi and Comurhex. Also runs La Hague, the world's largest commercial spent fuel reprocessing plant.",
     "Rosatom / TENEX": "Russia controls 40 to 46 percent of global enrichment capacity, making it the single largest node in the cycle. Partially restricted by the US Prohibiting Russian Uranium Imports Act effective 2024.",

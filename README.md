@@ -122,7 +122,7 @@ is the one thing that is not derivable from the data.
 | 07 | [Food and fertilizer](projects/07-food-fertilizer/) | Foundation only |
 | 08 | [Payment rails](projects/08-payment-rails/) | Foundation only |
 | 09 | [Aerospace](projects/09-aerospace/) | Foundation only |
-| 10 | [Nuclear fuel](projects/10-nuclear-fuel/) | Foundation only |
+| 10 | [Nuclear fuel](projects/10-nuclear-fuel/) | **Edges started.** 7 of 24 companies costed, all from SEC XBRL primary filings (the US and Canada listed enrichers, converters, fabricators and miners). 6 sourced relationship edges: TENEX and Orano each supply enrichment to Centrus (two dependencies, both from Centrus's own 10-K), plus four ownership and joint venture edges from Cameco's annual information form (its 49% of Westinghouse, the Cameco and Kazatomprom Inkai JV, and the Cameco and Silex split of GLE). Well short of Mapped: the state owned and EU chokepoints (Orano, Urenco, Rosatom, TVEL, CNNC) are uncosted, there is no timeseries, and only 3 of the 7 chokepoints yet carry a sourced edge. 5 open gaps record the rest, including the utility customers that enricher filings decline to name, and the Honeywell figure being the whole conglomerate rather than the Metropolis conversion plant |
 
 **What "foundation only" means, precisely.** A foundation brief is a taxonomy, a ranked set of chokepoint
 *hypotheses*, and the list of free filing portals a later burst should pull from. Its seed companies carry
